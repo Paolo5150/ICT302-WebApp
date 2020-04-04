@@ -1,7 +1,7 @@
 // Generic function
 
-//var address = "http://localhost/ict302-server/"
-var address = "https://unreckoned-worry.000webhostapp.com/"
+var address = "http://localhost/ict302-server/"
+//var address = "https://unreckoned-worry.000webhostapp.com/"
 
 function DoGet(to, data, onSuccess)
 {

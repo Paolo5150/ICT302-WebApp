@@ -45,7 +45,7 @@
 			$reply->Data->AccountActive = $data['AccountActive'];
 
 			// If password reset is not required, still check
-			if($reply->Data->PasswordResetRequired == false)
+			if($reply->Data->PasswordResetRequired == 0)
 			{
 				// Check token
 				// If there is a token set but it's expired,
@@ -69,14 +69,14 @@
 					{
 						$stmt = $con->prepare("update user set PasswordResetRequired = 1 WHERE  MurdochUserNumber = ?");
 						$reply->Data->PasswordResetRequired = 1;	
-						$stmt->bind_param("s", $id);
+						$stmt->bind_param("i", $id);
 						$stmt->execute();			
 					}
 				}
 			}
 
 			// If password reset is reuqired, send email
-			if($reply->Data->PasswordResetRequired == true)
+			if($reply->Data->PasswordResetRequired == 1)
 			{
 				//Generate a random string.
 				$token = bin2hex(openssl_random_pseudo_bytes(16));

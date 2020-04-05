@@ -8,10 +8,12 @@ $(document).ready(function () {
 
     var myData = {
         MurdochUserNumber: id,
+        Token: token
     }
     //Check if link is valid
-    DoPost("server/getUserDetails.php",myData,(response)=>{
+    DoPost("server/checkToken.php",myData,(response)=>{
         
+        console.log(response)
         // Check if link is valid
         var responseObj = JSON.parse(response);
         if(responseObj.Status == 'ok')

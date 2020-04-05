@@ -60,10 +60,10 @@
 				if($result && $result->num_rows > 0)
 				{
 					$data = $result->fetch_assoc(); //Get first fow
-					$tokenExpiration = $data['TokenExpireTime'];
+					$tokenExpiration = strtotime($data['TokenExpireTime']);
 					$tokenSaved = $data['Token'];
 					$now = strtotime(date('G:i:s'));
-
+					
 					//If the token waws set and is expired, require password reset
 					if($tokenSaved != "" && $now > $tokenExpiration)
 					{
@@ -80,7 +80,7 @@
 			{
 				//Generate a random string.
 				$token = bin2hex(openssl_random_pseudo_bytes(16));
-				//strtotime will convert time into an integer, so we can easily add seconds to is (expirationSeconds is defined in dbConnection, where other globals are)
+				//strtotime will convert time into an integer, so we can easily add seconds to it (expirationSeconds is defined in dbConnection, where other globals are)
 				$TokenExpireTime = strtotime(date('G:i:s')) + $expirationSeconds; 
 				// However, in the database we save time im format hh:mm:ss, so this convert the time back to that format
 				$TokenExpireTimeFormat = date("G:i:s",$TokenExpireTime); 

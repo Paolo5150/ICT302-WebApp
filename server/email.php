@@ -28,7 +28,7 @@ try {
 		$mail->SMTPSecure = 'tsl';
 		$mail->Password   = "realtech_ict302";        // SMTP account password
 		$mail->From = "	ict302it07@gmail.com";
-		$mail->addAddress($to, "I don't know what this is");
+		$mail->addAddress($to, "WHAT");
 		$mail->Subject = $subject;
 		$mail-> IsHTML(true);
 

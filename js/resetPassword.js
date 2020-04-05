@@ -1,5 +1,36 @@
-
 $(document).ready(function () {
+
+    // Hide content first
+    $("#main-content").hide();
+
+    var id = location.search.split('&')[0].substring(1,location.search.length);
+    var token = location.search.split('&')[1];
+
+    var myData = {
+        MurdochUserNumber: id,
+    }
+    //Check if link is valid
+    DoPost("server/getUserDetails.php",myData,(response)=>{
+        
+        // Check if link is valid
+        var responseObj = JSON.parse(response);
+        if(responseObj.Status == 'ok')
+        {
+            if(!responseObj.Data.TokenValid)
+            {
+                $("#main-content").html("Link has expired")
+                
+            }
+        }
+        else
+        {
+            //The database didn't find the user
+            alert("An error occurred")
+        }
+
+        $("#main-content").show();
+
+    })
 
 
     $("#submit-btn").click(function(e){
@@ -7,7 +38,7 @@ $(document).ready(function () {
 
         var psw = $("#psw-field").val();
         var pswConf = $("#confirm-psw-field").val();
-        var id = location.search.substring(1,location.search.length);
+
 
         if(psw === "" || pswConf === "")
         {
@@ -31,6 +62,7 @@ $(document).ready(function () {
                 var data = {
                     MurdochUserNumber: id,
                     Password: psw,
+                    Token: token
 
                 }
 
@@ -42,11 +74,20 @@ $(document).ready(function () {
 
     })
 })
-
+// Is the server reported no internal errors
 function onSuccess(response)
 {
-      //console.log("Server said " + response)
-      alert("Password successfully changed")
+      console.log("Server said " + response)
+      // Password was changed
+      if(response == 'ok')
+      {
+        alert("Password successfully changed")
+        
+      }
+      else
+      {
+        alert("An error occurred")
+      }
       $("#submit-btn").hide();
 
 }

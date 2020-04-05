@@ -1,7 +1,8 @@
 <?php
 
-
+date_default_timezone_set('Australia/Perth');
 $serverAddress = 'http://localhost/ict302-server/';
+$expirationSeconds = 1800; // 30 minutes
 function connectToDb()
 {
 	$databaseName = 'ict302';

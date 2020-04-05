@@ -6,7 +6,7 @@
 	{
 		//Incoming variables
 		$id = $_POST['MurdochUserNumber'];
-        $token = $_POST['MurdochUserNumber'];
+        $token = $_POST['Token'];
 
 		$con = connectToDb();
 
@@ -30,15 +30,19 @@
 			$tokenSaved = $data['Token'];
 
 			$now = strtotime(date('G:i:s'));
-			if($token != $token || $now > $tokenExpiration)
-				$reply->Data->TokenValid = false;
+			if($token == $tokenSaved && $now < $tokenExpiration)
+				$reply->Data->TokenValid = 1;
 			else
-			    $reply->Data->TokenValid = true;
+			{
+			    $reply->Data->TokenValid = 0;
+				$reply->Message = 'Link expired';
+
+			}
 		}
 		else
 		{
-			$reply->Status = 'ok';
-			$reply->Data = 'User not found';
+			$reply->Status = 'fail';
+			$reply->Message = 'User not found';
 		}
 
 		// Send reply in JSON format

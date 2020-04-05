@@ -28,9 +28,8 @@ try {
 		$mail->SMTPSecure = 'tsl';
 		$mail->Password   = "realtech_ict302";        // SMTP account password
 		$mail->From = "	ict302it07@gmail.com";
-		$mail->addAddress($to, "WTF");
+		$mail->addAddress($to, "I don't know what this is");
 		$mail->Subject = $subject;
-		$mail->Body = '<div><img width="50pt" src=\"cid:Twinkllin\" /></div><div>'.$message.'</div>';
 		$mail-> IsHTML(true);
 
 		$mail->send();

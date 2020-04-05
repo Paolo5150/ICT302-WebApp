@@ -1,11 +1,14 @@
 <?php
 
-	require 'D:\Composer\vendor\autoload.php';
+	include("phpmailer/PHPMailer.php");
+	include("phpmailer/SMTP.php");
+
 	function sendEmail($to, $subject, $message)
 	{
 		mail($to,$subject,$message);
 	}
-	
+
+
 	use PHPMailer\PHPMailer\PHPMailer;
 	use PHPMailer\PHPMailer\Exception;	
 

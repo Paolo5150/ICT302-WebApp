@@ -1,6 +1,3 @@
-// Hide content first
-$("#main-content").hide();
-
 $(document).ready(function () {
 
 
@@ -14,18 +11,15 @@ $(document).ready(function () {
     }
     //Check if link is valid
     DoPost("server/checkToken.php",myData,(response)=>{
-        console.log(response)
+
         var responseObj = JSON.parse(response);
         if(responseObj.Status == 'ok')
         {
             if(responseObj.Data.TokenValid == 0)
                 $("#main-content").html(responseObj.Message);
         }
-        else
-        {
-            alert(responseObj.Message);
-        }      
-
+    
+        $("#main-content").show();
     })
 
 
@@ -55,26 +49,3 @@ $(document).ready(function () {
 
     })
 })
-// Is the server reported no internal errors
-function onSuccess(response)
-{
-      console.log("Server said " + response)
-      // Password was changed
-      if(response == 'ok')
-      {
-        alert("Password successfully changed")
-        
-      }
-      else
-      {
-        alert("An error occurred")
-      }
-      $("#submit-btn").hide();
-
-}
-
-// If post request doesn't go through
-function onFail(response)
-{
-    
-}

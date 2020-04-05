@@ -90,7 +90,7 @@
 				$stmt->execute();
 
 				$link =  $serverAddress . 'web/resetPassword.html?' . $reply->Data->MUN . '&' . $token;
-				sendEmailLocal($reply->Data->Email, "Password reset required", "Reset your password link: " . $link);
+				sendEmail($reply->Data->Email, "Password reset required", "Reset your password link: " . $link);
 				// Update PasswordResetRequired in daabase
 				$stmt = $con->prepare("update user set PasswordResetRequired = 0 WHERE  MurdochUserNumber = ?");
 				$stmt->bind_param("i", $id );

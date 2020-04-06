@@ -20,7 +20,12 @@ $(document).ready(function () {
         }
     
         $("#main-content").show();
-    })
+    },
+    (data, status, error)=>
+    {
+        alert("An error occurred")
+    } 
+    )
 
 
     $("#submit-btn").click(function(e){
@@ -43,7 +48,14 @@ $(document).ready(function () {
       
                 var responseObj = JSON.parse(response);
                 alert(responseObj.Message); 
-            })
+            },
+            
+            (data, status, error)=>
+            {
+                //console.log(data.status + " - " + error)
+                alert("An error occurred")
+            }             
+            )
 
        
 

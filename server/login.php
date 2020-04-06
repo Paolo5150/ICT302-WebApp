@@ -102,6 +102,7 @@
 		else
 		{
 			$reply->Status = 'fail';
+			$reply->Message = "User not found";
 		}
 		
 		// Send reply in JSON format

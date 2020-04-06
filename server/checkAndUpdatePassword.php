@@ -1,5 +1,5 @@
 <?php
-
+	include("globals.php");
 	include("dbConnection.php");
 
     if(isset($_POST['MurdochUserNumber']) && isset($_POST['Password']) && isset($_POST['Confirm']) && isset($_POST['OldPassword']) && isset($_POST['Token']))

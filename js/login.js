@@ -3,7 +3,7 @@ var password = document.getElementById("password"); //Password field
 var errortext = document.getElementById("errortext"); //errortext entry text
 var submit = document.getElementById("submit"); //Form submit button
 
-var server = "https://unreckoned-worry.000webhostapp.com/server/";
+var server = "../server/";
 var script = "login.php?";
 
 $("#errortext").hide();

@@ -94,48 +94,68 @@ function ValidatePassword()
 
 function Login()
 {
-    var xhr = new XMLHttpRequest();
+    // var xhr = new XMLHttpRequest();
 
-    xhr.onreadystatechange = function ()
-    {
-        if (this.readyState == 4 && this.status == 200)
-        {
-            console.log(this.responseText);
-            var result = JSON.parse(this.responseText);
-            console.log(result);
-            //var split = result.split(",");
+    // xhr.onreadystatechange = function ()
+    // {
+    //     if (this.readyState == 4 && this.status == 200)
+    //     {
+    //         console.log(this.responseText);
+    //         var result = JSON.parse(this.responseText);
+    //         console.log(result);
+    //         //var split = result.split(",");
 
-           /* if (split[0] != "")
-            {
-                switch (split[0])
-                {
-                    case "staff":
-                        valid = true;
-                        break;
-                    case "user":
-                        valid = true;
-                        break;
-                    case "guest":
-                        InvalidUser();
-                        valid = false;
-                        break;
-                    default:
-                        console.log("WARNING: Failed to get a valid user type!");
-                        InvalidUser();
-                        valid = false;
-                        return;
-                }
+    //        /* if (split[0] != "")
+    //         {
+    //             switch (split[0])
+    //             {
+    //                 case "staff":
+    //                     valid = true;
+    //                     break;
+    //                 case "user":
+    //                     valid = true;
+    //                     break;
+    //                 case "guest":
+    //                     InvalidUser();
+    //                     valid = false;
+    //                     break;
+    //                 default:
+    //                     console.log("WARNING: Failed to get a valid user type!");
+    //                     InvalidUser();
+    //                     valid = false;
+    //                     return;
+    //             }
 
-                document.cookie = "access=" + split[0] + "; path=/";
-                document.cookie = "username=" + split[1] + "; path=/";
-            }*/
-        }
+    //             document.cookie = "access=" + split[0] + "; path=/";
+    //             document.cookie = "username=" + split[1] + "; path=/";
+    //         }*/
+    //     }
+    // }
+
+    // xhr.open("POST", server + script + "MurdochUserNumber=" + username.value.toLowerCase() + "&Password=" + password.value, false);
+    // xhr.send();
+
+    var myData = {
+        MurdochUserNumber: username.value,
+        Password: password.value
     }
 
-    xhr.open("POST", server + script + "MurdochUserNumber=" + username.value.toLowerCase() + "&Password=" + password.value, false);
-    xhr.send();
+    DoPost("login.php", myData, PostSuccess, PostFail);
 
     return true;
+}
+
+function PostSuccess(reply)
+{
+    console.log("Success: " + reply);
+}
+
+function PostFail(data, textStatus, errorMessage)
+{
+    // console.log("Failed");
+    // console.log(data);
+    // console.log(textStatus);
+    // console.log(errorMessage);
 }
 
 function InvalidUser()

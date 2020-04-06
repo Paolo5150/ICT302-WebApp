@@ -36,6 +36,9 @@ function DoPost(to, dataIn, onSuccess, onError)
       error: function(x, t, m) {
 
           onError(x)
+          console.log(x);
+          console.log(t);
+          console.log(m);
          // alert("An error occurred. Please try again later")
          /* if(t==="timeout") {
               alert("got timeout");

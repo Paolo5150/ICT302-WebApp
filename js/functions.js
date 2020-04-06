@@ -40,7 +40,6 @@ function DoPost(to, dataIn, onSuccess, onError)
       data: dataIn,
       success: function(response) { onSuccess(response) },
       error: function(data, textStatus, error) {     
-
           onError(data, textStatus, error)
       }
   })    

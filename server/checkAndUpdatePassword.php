@@ -1,6 +1,7 @@
 <?php
-
-	include("dbConnection.php");
+	include("globals.php");
+    include("dbConnection.php");
+    include("functions.php");
 
     if(isset($_POST['MurdochUserNumber']) && isset($_POST['Password']) && isset($_POST['Confirm']) && isset($_POST['OldPassword']) && isset($_POST['Token']))
 	{
@@ -56,9 +57,10 @@
                 $reply->Status = 'ok';
                 $reply->Message = 'Password accepted';
                 
+                $pswEnc = encrypt_decrypt('e',$psw);
                 //Update password, reset token (IMPORTANT)
 				$stmt = $con->prepare("update user set Password = ?, Token = '', TokenExpireTime = '' WHERE  MurdochUserNumber = ?");
-				$stmt->bind_param("si", $psw, $id );
+				$stmt->bind_param("si", $pswEnc, $id );
 				$status = $stmt->execute();
 				$stmt->get_result();	
 				

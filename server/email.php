@@ -10,14 +10,15 @@
 	}
 
 
-	/* Namespace alias. */
-	use PHPMailer\PHPMailer\PHPMailer;
+	/* Uncomment this and comment the function above if needed to send email from local server*/
+
+	/*use PHPMailer\PHPMailer\PHPMailer;
 	use PHPMailer\PHPMailer\Exception;
 
-	/* Include the Composer generated autoload.php file. */
+
 	require 'D:\composer\vendor\autoload.php';
 
-	function sendEmailLocal($to, $subject,$message)
+	function sendEmail($to, $subject,$message)
 	{
 		$mail = new PHPMailer(TRUE);
 		try {
@@ -44,5 +45,5 @@
 		{
 		return false;
 		}
-	}
+	}*/
 ?>

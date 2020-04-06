@@ -8,6 +8,17 @@ var script = "login.php?";
 
 $("#errortext").hide();
 
+$(document).ready(function () {
+
+    $("#submit-btn").click(function(e){
+
+        e.preventDefault();
+        if(ValidateForm())
+            Login();
+
+    })
+})
+
 function ValidateForm()
 {
     errortext.innerHTML = "";
@@ -16,7 +27,6 @@ function ValidateForm()
     if (username.value != "" && password.value != "" && ValidatePassword(password.value) && ValidateUsername(username.value)) //If the form is valid
     {
         var success = Login();
-        return success; //Submit
     }
     else //If the form is not valid
     {
@@ -54,8 +64,6 @@ function ValidateForm()
         {
             $("#errortext").slideUp(1000);
         }, 4000);
-
-        return false; //Don't submit
     }
 }
 
@@ -94,53 +102,12 @@ function ValidatePassword()
 
 function Login()
 {
-    // var xhr = new XMLHttpRequest();
-
-    // xhr.onreadystatechange = function ()
-    // {
-    //     if (this.readyState == 4 && this.status == 200)
-    //     {
-    //         console.log(this.responseText);
-    //         var result = JSON.parse(this.responseText);
-    //         console.log(result);
-    //         //var split = result.split(",");
-
-    //        /* if (split[0] != "")
-    //         {
-    //             switch (split[0])
-    //             {
-    //                 case "staff":
-    //                     valid = true;
-    //                     break;
-    //                 case "user":
-    //                     valid = true;
-    //                     break;
-    //                 case "guest":
-    //                     InvalidUser();
-    //                     valid = false;
-    //                     break;
-    //                 default:
-    //                     console.log("WARNING: Failed to get a valid user type!");
-    //                     InvalidUser();
-    //                     valid = false;
-    //                     return;
-    //             }
-
-    //             document.cookie = "access=" + split[0] + "; path=/";
-    //             document.cookie = "username=" + split[1] + "; path=/";
-    //         }*/
-    //     }
-    // }
-
-    // xhr.open("POST", server + script + "MurdochUserNumber=" + username.value.toLowerCase() + "&Password=" + password.value, false);
-    // xhr.send();
-
     var myData = {
         MurdochUserNumber: username.value,
         Password: password.value
     }
 
-    DoPost("login.php", myData, PostSuccess, PostFail);
+    DoPost("server/login.php", myData, PostSuccess, PostFail);
 
     return true;
 }

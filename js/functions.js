@@ -40,17 +40,7 @@ function DoPost(to, dataIn, onSuccess, onError)
       data: dataIn,
       success: function(response) { onSuccess(response) },
       error: function(data, textStatus, error) {     
-
-          onError(x)
-          console.log(x);
-          console.log(t);
-          console.log(m);
-         // alert("An error occurred. Please try again later")
-         /* if(t==="timeout") {
-              alert("got timeout");
-          } else {
-              alert(t);
-          }*/
+          onError(data, textStatus, error)
       }
   })    
 }

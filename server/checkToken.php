@@ -2,11 +2,11 @@
 
 	include("dbConnection.php");
 
-    if(isset($_POST['MurdochUserNumber']))
+    if(isset($_POST['MurdochUserNumber']) && isset($_POST['Token']))
 	{
 		//Incoming variables
 		$id = $_POST['MurdochUserNumber'];
-
+        $token = $_POST['Token'];
 
 		$con = connectToDb();
 
@@ -25,29 +25,24 @@
 			$reply->Status = 'ok';
 			$reply->Data = new stdClass();
 
-			$reply->Data->FirstName = $data['FirstName'];
-			$reply->Data->LastName = $data['LastName'];
-			$reply->Data->Email = $data['Email'];
-			$reply->Data->MUN = $data['MurdochUserNumber'];
-			$reply->Data->UserID = $data['UserID'];
-			$reply->Data->PasswordResetRequired = $data['PasswordResetRequired'];
-			$reply->Data->AccountActive = $data['AccountActive'];
-			$reply->Data->IsAdmin = $data['IsAdmin'];
-
 			// Add additional info about the status of the token
 			$tokenExpiration = strtotime($data['TokenExpireTime']);
-			$token = $data['Token'];
+			$tokenSaved = $data['Token'];
 
 			$now = strtotime(date('G:i:s'));
-			if($token == "" || $now > $tokenExpiration)
-				$reply->Data->TokenValid = false;
+			if($token == $tokenSaved && $now < $tokenExpiration)
+				$reply->Data->TokenValid = 1;
 			else
-			$reply->Data->TokenValid = true;
+			{
+			    $reply->Data->TokenValid = 0;
+				$reply->Message = 'Link expired';
+
+			}
 		}
 		else
 		{
-			$reply->Status = 'ok';
-			$reply->Data = 'User not found';
+			$reply->Status = 'fail';
+			$reply->Message = 'User not found';
 		}
 
 		// Send reply in JSON format

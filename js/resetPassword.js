@@ -1,35 +1,25 @@
 $(document).ready(function () {
 
-    // Hide content first
-    $("#main-content").hide();
+
 
     var id = location.search.split('&')[0].substring(1,location.search.length);
     var token = location.search.split('&')[1];
 
     var myData = {
         MurdochUserNumber: id,
+        Token: token
     }
     //Check if link is valid
-    DoPost("server/getUserDetails.php",myData,(response)=>{
-        
-        // Check if link is valid
+    DoPost("server/checkToken.php",myData,(response)=>{
+
         var responseObj = JSON.parse(response);
         if(responseObj.Status == 'ok')
         {
-            if(!responseObj.Data.TokenValid)
-            {
-                $("#main-content").html("Link has expired")
-                
-            }
+            if(responseObj.Data.TokenValid == 0)
+                $("#main-content").html(responseObj.Message);
         }
-        else
-        {
-            //The database didn't find the user
-            alert("An error occurred")
-        }
-
+    
         $("#main-content").show();
-
     })
 
 
@@ -38,62 +28,24 @@ $(document).ready(function () {
 
         var psw = $("#psw-field").val();
         var pswConf = $("#confirm-psw-field").val();
+        var oldPsw = $("#old-psw-field").val();
 
 
-        if(psw === "" || pswConf === "")
-        {
-            // empty string not allowed
-            alert("Empty password not accepted")
-        }
-        else
-        {
-            if(psw != pswConf)
-            {
-                // not matching
-                alert("The fields are not matching")
+        var myData = {
+            MurdochUserNumber: id,
+            Password: psw,
+            OldPassword: oldPsw,
+            Confirm: pswConf,
+            Token: token}
 
-            }
-            else
-            {
-                // more check (password length, capital letters)
+                //Check if link is valid
+            DoPost("server/checkAndUpdatePassword.php",myData,(response)=>{           
+      
+                var responseObj = JSON.parse(response);
+                alert(responseObj.Message); 
+            })
 
-                // otherwise ok
-
-                var data = {
-                    MurdochUserNumber: id,
-                    Password: psw,
-                    Token: token
-
-                }
-
-                DoPost("server/updatePsw.php",data,onSuccess, onFail)
-
-            }
-        }
-
+       
 
     })
 })
-// Is the server reported no internal errors
-function onSuccess(response)
-{
-      console.log("Server said " + response)
-      // Password was changed
-      if(response == 'ok')
-      {
-        alert("Password successfully changed")
-        
-      }
-      else
-      {
-        alert("An error occurred")
-      }
-      $("#submit-btn").hide();
-
-}
-
-// If post request doesn't go through
-function onFail(response)
-{
-    
-}

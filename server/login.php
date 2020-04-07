@@ -32,6 +32,8 @@
 		
 		if($result && $result->num_rows > 0)
 		{
+			$now = strtotime(date('G:i:s'));
+
 			$data = $result->fetch_assoc(); //Get first fow
 
 			//Get token, used later
@@ -64,34 +66,46 @@
 				// First thing, check if a password reset was requested
 				if($data['PasswordResetRequired'] == 1)
 				{
-					//Generate a random string.
-					$token = bin2hex(openssl_random_pseudo_bytes(16));
-					//strtotime will convert time into an integer, so we can easily add seconds to it (expirationSeconds is defined in dbConnection, where other globals are)
-					$TokenExpireTime = strtotime(date('G:i:s')) + $expirationSeconds; 
-					// However, in the database we save time im format hh:mm:ss, so this convert the time back to that format
-					$TokenExpireTimeFormat = date("G:i:s",$TokenExpireTime); 
-					//Save to db
-					$stmt = $con->prepare("update user set Token = ?, TokenExpireTime = ? WHERE  MurdochUserNumber = ?");	
-					$stmt->bind_param("sss", $token, $TokenExpireTimeFormat, $id);
-					$stmt->execute();
+					//If the token is still alive
+					if($tokenSaved != "" && $now < $tokenExpiration)
+					{
+						$reply->Status = 'fail';
+						$reply->Message = "Please check your email";					
+						
+					}	
+					else
+					{
+						//Generate a random string.
+						$token = bin2hex(openssl_random_pseudo_bytes(16));
+						//strtotime will convert time into an integer, so we can easily add seconds to it (expirationSeconds is defined in dbConnection, where other globals are)
+						$TokenExpireTime = strtotime(date('G:i:s')) + $expirationSeconds; 
+						// However, in the database we save time im format hh:mm:ss, so this convert the time back to that format
+						$TokenExpireTimeFormat = date("G:i:s",$TokenExpireTime); 
+						//Save to db
+						$stmt = $con->prepare("update user set Token = ?, TokenExpireTime = ? WHERE  MurdochUserNumber = ?");	
+						$stmt->bind_param("sss", $token, $TokenExpireTimeFormat, $id);
+						$stmt->execute();
 
-					$link =  $serverAddress . 'web/resetPassword.html?' . $data['MurdochUserNumber'] . '&' . $token;
-					sendEmail($data['Email'], "Password reset required", "Reset your password link: " . $link);
-					// Update PasswordResetRequired in daabase
-					$stmt = $con->prepare("update user set PasswordResetRequired = 0 WHERE  MurdochUserNumber = ?");
-					$stmt->bind_param("i", $id );
-					$stmt->execute();
+						$link =  $serverAddress . 'web/resetPassword.html?' . $data['MurdochUserNumber'] . '&' . $token;
+						sendEmail($data['Email'], "Password reset required", "Reset your password link: " . $link);
+						// Update PasswordResetRequired in daabase
+						/*$stmt = $con->prepare("update user set PasswordResetRequired = 0 WHERE  MurdochUserNumber = ?");
+						$stmt->bind_param("i", $id );
+						$stmt->execute();*/
 
-					$reply->Status = 'fail';
-					$reply->Message = "PASSWORD RESET REQUIRED: An email has been sent to you, please follow the link to reset your password.";
+						$reply->Status = 'fail';
+						$reply->Message = "PASSWORD RESET REQUIRED: An email has been sent to you, please follow the link to reset your password.";
+						//TODO: remove this data before shipping (not urgent though)
+						$reply->Data = $token;
+					}
+		
 				}
 				else
 				{
 					//If account not acative
 					if($data['AccountActive'] == 0)
 					{
-						//Check if there is a valid token set, which means that the user was sent an activation link
-						$now = strtotime(date('G:i:s'));
+						
 						
 						//If the token is still alive
 						if($tokenSaved != "" && $now < $tokenExpiration)

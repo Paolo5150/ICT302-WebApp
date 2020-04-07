@@ -35,7 +35,7 @@ function DoPost(to, dataIn, onSuccess, onError)
   $.ajax({
       url: address + to,
       type: "POST",
-      timeout: 5000,
+      timeout: 15000,
       ContentType: 'application/json',
       data: dataIn,
       success: function(response) { onSuccess(response) },

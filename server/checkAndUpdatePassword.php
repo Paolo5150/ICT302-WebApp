@@ -54,12 +54,9 @@
             }
             else
             {
-                $reply->Status = 'ok';
-                $reply->Message = 'Password accepted';
-                
                 $pswEnc = encrypt_decrypt('e',$psw);
                 //Update password, reset token (IMPORTANT)
-				$stmt = $con->prepare("update user set Password = ?, Token = '', TokenExpireTime = '' WHERE  MurdochUserNumber = ?");
+				$stmt = $con->prepare("update user set Password = ?, PasswordResetRequired = 0 ,Token = '', TokenExpireTime = '' WHERE  MurdochUserNumber = ?");
 				$stmt->bind_param("si", $pswEnc, $id );
 				$status = $stmt->execute();
 				$stmt->get_result();	
@@ -69,12 +66,16 @@
 					// If ok, activate account
 					$stmt = $con->prepare("update user set AccountActive = 1 WHERE  MurdochUserNumber = ?");
 					$stmt->bind_param("i", $id );
-					$stmt->execute();
+                    $stmt->execute();
+                    
+                    $reply->Status = 'ok';
+                    $reply->Message = 'Password accepted';
 					
 				}
 				else
 				{
-					
+					$reply->Status = 'fail';
+                    $reply->Message = 'Internal error occurred';
 				}
             }
 

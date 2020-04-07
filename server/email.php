@@ -15,22 +15,22 @@
 			sendRemote($to, $subject, $message);
 	}
 
-	// function sendRemote($to, $subject, $message)
-	// {
-	// 	mail($to,$subject,$message);
+	function sendRemote($to, $subject, $message)
+	{
+		mail($to,$subject,$message);
 
-	// }
-
-
+	}
 
 
-	// /* Uncomment this and comment the function above if needed to send email from local server*/
+
+
+	/* Uncomment this and comment the function above if needed to send email from local server*/
 
 	use PHPMailer\PHPMailer\PHPMailer;
 	use PHPMailer\PHPMailer\Exception;
 
 
-	// //require 'D:\composer\vendor\autoload.php';
+	//require 'D:\composer\vendor\autoload.php';
 
 	function sendLocal($to, $subject,$message)
 	{

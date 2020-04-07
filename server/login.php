@@ -87,11 +87,7 @@
 						$stmt->execute();
 
 						$link =  $serverAddress . 'web/resetPassword.html?' . $data['MurdochUserNumber'] . '&' . $token;
-						sendEmail($data['Email'], "Password reset required", "Reset your password link: " . $link);
-						// Update PasswordResetRequired in daabase
-						/*$stmt = $con->prepare("update user set PasswordResetRequired = 0 WHERE  MurdochUserNumber = ?");
-						$stmt->bind_param("i", $id );
-						$stmt->execute();*/
+						sendEmail($data['Email'], "Password reset required", "Reset your password link: " . $link);		
 
 						$reply->Status = 'fail';
 						$reply->Message = "PASSWORD RESET REQUIRED: An email has been sent to you, please follow the link to reset your password.";
@@ -129,17 +125,13 @@
 							// However, in the database we save time im format hh:mm:ss, so this convert the time back to that format
 							$TokenExpireTimeFormat = date("G:i:s",$TokenExpireTime); 
 							//Save to db
-							$stmt = $con->prepare("update user set Token = ?, TokenExpireTime = ? WHERE  MurdochUserNumber = ?");	
+							$stmt = $con->prepare("update user set PasswordResetRequired = 1, Token = ?, TokenExpireTime = ? WHERE  MurdochUserNumber = ?");	
 							$stmt->bind_param("sss", $token, $TokenExpireTimeFormat, $id);
 							$stmt->execute();
 
 							$link =  $serverAddress . 'web/resetPassword.html?' . $data['MurdochUserNumber'] . '&' . $token;
 							sendEmail($data['Email'], "Password reset required", "Reset your password link: " . $link);
-							// Update PasswordResetRequired in daabase
-							$stmt = $con->prepare("update user set PasswordResetRequired = 0 WHERE  MurdochUserNumber = ?");
-							$stmt->bind_param("i", $id );
-							$stmt->execute();
-
+				
 							$reply->Status = 'fail';
 							$reply->Message = "PASSWORD RESET REQUIRED: An email has been sent to you, please follow the link to reset your password.";
 						}	

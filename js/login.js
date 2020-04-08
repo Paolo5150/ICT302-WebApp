@@ -81,7 +81,7 @@ function Login()
 {
     var myData = {
         MurdochUserNumber: username.value,
-        Password: password.value
+        Password: password.value,
     }
 
     errortext.innerHTML = "Logging in..."; //Let the user know the server is waiting
@@ -98,7 +98,7 @@ function PostSuccess(reply)
     if(obj.Status == "fail")
         errortext.innerHTML = obj.Message;
     else if(obj.Status == "ok")
-        window.location = "user.html?" + username.value + "&" + obj.Data.Token; //Move to student portal
+        window.location = "index.php?";//Move to student portal
 }
 
 function PostFail(data, textStatus, errorMessage)

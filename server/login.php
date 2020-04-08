@@ -1,4 +1,5 @@
 <?php
+	session_start();
 	include("globals.php");
 	include("dbConnection.php");
 	include("email.php");
@@ -101,7 +102,9 @@
 					//If account not acative
 					if($data['AccountActive'] == 0)
 					{
-						
+						// If there are cookies, destroy them
+						setcookie("MurdochUserNumber", $id, time() + $cookieExpiration, "/"); // 86400 = 1 day
+						setcookie("Token", $token, time() + $cookieExpiration, "/"); // 86400 = 1 day
 						
 						//If the token is still alive
 						if($tokenSaved != "" && $now < $tokenExpiration)
@@ -138,18 +141,25 @@
 					}
 					else if($data['AccountActive'] == 1) //If the account is active
 					{
-					
+						// Set cookies and session variables if the login is not coming from the simulation
+						if(!isset($_POST['IsSim']))
+						{
+								//Generate a random string.
+							$token = bin2hex(openssl_random_pseudo_bytes(16));
+							//Save to db
+							$stmt = $con->prepare("update user set Token = ? WHERE  MurdochUserNumber = ?");	
+							$stmt->bind_param("ss", $token, $id);
+							$stmt->execute();
+				
+							$_SESSION['MurdochUserNumber'] = $id;
+							$_SESSION['Token'] = $token;
+							setcookie("MurdochUserNumber", $id, time() + $cookieExpiration, "/"); // 86400 = 1 day
+							setcookie("Token", $token, time() + $cookieExpiration, "/"); // 86400 = 1 day
+						}
 						
-						//Generate a random string.
-						$token = bin2hex(openssl_random_pseudo_bytes(16));
-						//Save to db
-						$stmt = $con->prepare("update user set Token = ? WHERE  MurdochUserNumber = ?");	
-						$stmt->bind_param("ss", $token, $id);
-						$stmt->execute();
+
 						$reply->Status = 'ok';
 						$reply->Data->FirstName = $data['FirstName'];
-						$reply->Data->Token = $token;
-
 					}
 				}
 			}	

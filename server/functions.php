@@ -32,7 +32,7 @@
         if($result && $result->num_rows > 0)
         {
             $data = $result->fetch_assoc(); //Get first fow
-            if($data['Token'] == $_COOKIE['Token'])
+            if(isset($data['Token']) && isset($_COOKIE['Token']) && $data['Token'] == $_COOKIE['Token'])
                 return true;
             else
                 return false;

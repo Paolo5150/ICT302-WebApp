@@ -138,8 +138,18 @@
 					}
 					else if($data['AccountActive'] == 1) //If the account is active
 					{
+					
+						
+						//Generate a random string.
+						$token = bin2hex(openssl_random_pseudo_bytes(16));
+						//Save to db
+						$stmt = $con->prepare("update user set Token = ? WHERE  MurdochUserNumber = ?");	
+						$stmt->bind_param("ss", $token, $id);
+						$stmt->execute();
 						$reply->Status = 'ok';
 						$reply->Data->FirstName = $data['FirstName'];
+						$reply->Data->Token = $token;
+
 					}
 				}
 			}	

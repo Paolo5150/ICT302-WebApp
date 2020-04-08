@@ -1,42 +1,8 @@
 <?php
     // Summary of php below: if there's no valid login token, redirect to loginClient.php
-    
     include("../server/globals.php");
-    include("../server/dbConnection.php");
-
-    session_start();
-    function IsTokenOk()
-    {
-        $con = connectToDb();
-		$stmt = $con->prepare("select * from user where MurdochUserNumber = ?");
-		$stmt->bind_param("s", $_COOKIE['MurdochUserNumber']);
-        $stmt->execute();
-        $result = $stmt->get_result();
-		if($result && $result->num_rows > 0)
-        {
-            $data = $result->fetch_assoc(); //Get first fow
-            if($data['Token'] == $_COOKIE['Token'])
-                return true;
-            else
-                return false;
-        }
-        mysqli_close($con);
-    }
-    if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
-    {
-       if(!IsTokenOk())
-        header("Location: " . $serverAddress . "web/loginClient.php");
-
-    }
-    else if(isset($_COOKIE['MurdochUserNumber']) && isset($_COOKIE['Token']))
-    {
-        if(!IsTokenOk())
-            header("Location: " . $serverAddress . "web/loginClient.php");		
-    }
-    else
-    {        
-        header("Location: " . $serverAddress . "web/loginClient.php");
-    }
+    include("../server/functions.php");
+    RedirectIfTokenNotValid($serverAddress . "web/loginClient.php")
 
 ?>
 

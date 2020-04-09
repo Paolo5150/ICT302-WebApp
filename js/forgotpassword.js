@@ -1,17 +1,24 @@
 var username = document.getElementById("username"); //Username field
-var password = document.getElementById("password"); //Password field
+var email = document.getElementById("email"); //Email field
 var errortext = document.getElementById("errortext"); //errortext entry text
 var submit = document.getElementById("submit-btn"); //Form submit button
 
-var loginScriptTarget = "server/login.php?"; //The login script location
+var scriptTarget = "server/forgotPassword.php?"; //The forgot password script location
 
 $(document).ready(function () {
+
+    $("#back-btn").click(function(e){
+
+        e.preventDefault();
+        if(ValidateForm())
+            ForgotPassword();
+    })
 
     $("#submit-btn").click(function(e){
 
         e.preventDefault();
         if(ValidateForm())
-            Login();
+            ForgotPassword();
     })
 })
 
@@ -22,7 +29,7 @@ function ValidateForm()
 
     errortext.innerHTML = "";
 
-    if (ValidateUsername(username.value) & ValidatePassword(password.value)) //If the form is valid
+    if (ValidateFields()) //If the form is valid
     {
         return true;
     }
@@ -31,7 +38,7 @@ function ValidateForm()
         setTimeout(function () //After 0.5 seconds, set the elements' colors back to normal if they were changed by the validation functions
         {
             username.style.backgroundColor = textDefaultColor;
-            password.style.backgroundColor = textDefaultColor;
+            email.style.backgroundColor = textDefaultColor;
             submit.style.backgroundColor = submitDefaultColor;
         }, 500);
 
@@ -39,18 +46,19 @@ function ValidateForm()
     }
 }
 
-function ValidateUsername()
+function ValidateFields()
 {
-    if (username.value == "")
+    if (username.value == "" && email.value == "")
     {
-        errortext.innerHTML += "Username must not be empty<br/>" //Add fail text
+        errortext.innerHTML += "Username OR Email must not be empty<br/>" //Add fail text
         
         username.style.backgroundColor = "red"; //Flash username field red
+        email.style.backgroundColor = "red"; //Flash email field red
         submit.style.backgroundColor = "red"; //Flash submit button red
 
         return false;
     }
-    else if (isNaN(username.value))
+    else if (username.value != "" && isNaN(username.value))
     {
         errortext.innerHTML += "Username must be a number<br/>" //Add fail text
 
@@ -59,17 +67,12 @@ function ValidateUsername()
 
         return false;
     }
-
-    return true;
-}
-
-function ValidatePassword()
-{
-    if (password.value == "")
+    else if (username.value != "" && email.value != "")
     {
-        errortext.innerHTML += "Password must not be empty<br/>" //Add fail text
+        errortext.innerHTML += "Please only enter text in Username OR Email<br/>" //Add fail text
 
-        password.style.backgroundColor = "red"; //Flash password field red
+        username.style.backgroundColor = "red"; //Flash username field red
+        email.style.backgroundColor = "red"; //Flash email field red
         submit.style.backgroundColor = "red"; //Flash submit button red
 
         return false;
@@ -78,29 +81,28 @@ function ValidatePassword()
     return true;
 }
 
-function Login()
+function ForgotPassword()
 {
     var myData = {
         MurdochUserNumber: username.value,
-        Password: password.value,
+        Email: email.value,
     }
 
-    errortext.innerHTML = "Logging in..."; //Let the user know the server is waiting
+    errortext.innerHTML = "Sending Request..."; //Let the user know the server is waiting
 
-    DoPost(loginScriptTarget, myData, PostSuccess, PostFail);
+    DoPost(scriptTarget, myData, PostSuccess, PostFail);
 
     return true;
 }
 
 function PostSuccess(reply)
 {
-    console.log(reply)
     var obj = JSON.parse(reply);
 
     if(obj.Status == "fail")
         errortext.innerHTML = obj.Message;
     else if(obj.Status == "ok")
-        window.location = "../index.php";//Move to student portal
+        errortext.innerHTML = obj.Message;
 }
 
 function PostFail(data, textStatus, errorMessage)

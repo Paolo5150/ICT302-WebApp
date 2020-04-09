@@ -1,3 +1,10 @@
+<?php
+session_start();
+include("../server/globals.php");
+include("../server/functions.php");
+RedirectIfTokenIsValid($serverAddress . "index.php")
+?>
+
 <!DOCTYPE html>
 
 <html lang="en-AU" xmlns="http://www.w3.org/1999/xhtml">
@@ -36,7 +43,9 @@
                 <p style="text-align: center; margin-bottom: 50px;">Log In</p>
                 <form class="loginform" method="post">
                   <input type="text" id="username" class="textfield" style="margin-bottom: 5px;" placeholder="Username"><br>
-                  <input type="password" id="password" class="textfield" placeholder="Password" style="margin-bottom: 20px;"><br>
+                  <input type="password" id="password" class="textfield" placeholder="Password" style="margin-bottom: 5px;"><br>
+                  <!-- <button id="forgotpassword-btn" style="margin-bottom: 20px;">Forgot my password</button> -->
+                  <a href="forgotPasswordClient.php?">Forgot your password?</a>
                   <p id="errortext"></p>
                   <input type="button" class="btn btn-primary" value="Back">
                   <input type="submit" id="submit-btn" class="btn btn-primary" value="Submit">

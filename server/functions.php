@@ -21,4 +21,64 @@
 
         return $output;
     }
+
+    function IsTokenOk($id, $token)
+    {
+        $con = connectToDb();
+        $stmt = $con->prepare("select * from user where MurdochUserNumber = ?");
+        $stmt->bind_param("s", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if($result && $result->num_rows > 0)
+        {
+            $data = $result->fetch_assoc(); //Get first fow
+            if(isset($data['Token']) && $data['Token'] == $token)
+                return true;
+            else
+                return false;
+        }
+        mysqli_close($con);
+    }
+
+    function RedirectIfTokenNotValid($redirect)
+    {
+        include("globals.php");
+        include("dbConnection.php");
+    
+        if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
+        {
+           if(!IsTokenOk($_SESSION['MurdochUserNumber'],$_SESSION['Token']))
+            header("Location: " . $redirect);
+    
+        }
+        else if(isset($_COOKIE['MurdochUserNumber']) && isset($_COOKIE['Token']))
+        {
+            if(!IsTokenOk($_COOKIE['MurdochUserNumber'], $_COOKIE['Token']))
+                header("Location: " . $redirect);		
+        }
+        else
+        {        
+            header("Location: " . $redirect);
+        }
+    }
+
+    function RedirectIfTokenIsValid($redirect)
+    {
+        include("../server/globals.php");
+        include("../server/dbConnection.php");    
+
+        if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
+        {
+           if(IsTokenOk($_SESSION['MurdochUserNumber'],$_SESSION['Token']))
+            header("Location: " . $redirect);
+    
+        }
+        else if(isset($_COOKIE['MurdochUserNumber']) && isset($_COOKIE['Token']))
+        {
+            if(IsTokenOk($_COOKIE['MurdochUserNumber'],$_COOKIE['Token']))
+                header("Location: " . $redirect);		
+        } 
+    }
+
+
 ?>

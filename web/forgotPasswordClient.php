@@ -41,12 +41,12 @@ RedirectIfTokenIsValid($serverAddress . "web/index.php")
                 <p style="text-align: center; margin: 5px;"><b><u>Virtual Instruments</u></b></p>
               </div>
               <div class="loginarea">
-                <p style="text-align: center; margin-bottom: 50px;">Log In</p>
+                <p style="text-align: center; margin-bottom: 50px;">Forgot password</p>
                 <form class="loginform" method="post">
                   <input type="text" id="username" class="textfield" style="margin-bottom: 5px;" placeholder="Username"><br>
-                  <input type="password" id="password" class="textfield" placeholder="Password" style="margin-bottom: 5px;"><br>
-                  <!-- <button id="forgotpassword-btn" style="margin-bottom: 20px;">Forgot my password</button> -->
-                  <a href="forgotPasswordClient.php?">Forgot your password?</a>
+                  <p style="text-align: center;">OR</p>
+                  <input type="text" id="email" class="textfield" placeholder="Email" style="margin-bottom: 5px;"><br>
+                  <a href="loginClient.php?">Return to login</a>
                   <p id="errortext"></p>
                   <input type="button" class="btn btn-primary" value="Back">
                   <input type="submit" id="submit-btn" class="btn btn-primary" value="Submit">

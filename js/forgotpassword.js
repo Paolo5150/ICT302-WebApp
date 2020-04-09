@@ -1,9 +1,9 @@
 var username = document.getElementById("username"); //Username field
-var password = document.getElementById("password"); //Password field
+var password = document.getElementById("email"); //Password field
 var errortext = document.getElementById("errortext"); //errortext entry text
 var submit = document.getElementById("submit-btn"); //Form submit button
 
-var loginScriptTarget = "server/login.php?"; //The login script location
+var scriptTarget = "server/forgotPassword.php?"; //The forgot password script location
 
 $(document).ready(function () {
 
@@ -22,12 +22,14 @@ function ValidateForm()
 
     errortext.innerHTML = "";
 
-    if (ValidateUsername(username.value) & ValidatePassword(password.value)) //If the form is valid
+    if (ValidateUsername(username.value) || ValidateEmail(password.value)) //If the form is valid
     {
         return true;
     }
     else //If the form is not valid
     {
+
+
         setTimeout(function () //After 0.5 seconds, set the elements' colors back to normal if they were changed by the validation functions
         {
             username.style.backgroundColor = textDefaultColor;
@@ -63,7 +65,7 @@ function ValidateUsername()
     return true;
 }
 
-function ValidatePassword()
+function ValidateEmail()
 {
     if (password.value == "")
     {
@@ -78,16 +80,16 @@ function ValidatePassword()
     return true;
 }
 
-function Login()
+function ForgotPassword()
 {
     var myData = {
         MurdochUserNumber: username.value,
-        Password: password.value,
+        Email: email.value,
     }
 
-    errortext.innerHTML = "Logging in..."; //Let the user know the server is waiting
+    errortext.innerHTML = "Sending Request..."; //Let the user know the server is waiting
 
-    DoPost(loginScriptTarget, myData, PostSuccess, PostFail);
+    DoPost(scriptTarget, myData, PostSuccess, PostFail);
 
     return true;
 }
@@ -99,7 +101,7 @@ function PostSuccess(reply)
     if(obj.Status == "fail")
         errortext.innerHTML = obj.Message;
     else if(obj.Status == "ok")
-        window.location = "index.php?";//Move to student portal
+        errortext.innerHTML = obj.Message;
 }
 
 function PostFail(data, textStatus, errorMessage)

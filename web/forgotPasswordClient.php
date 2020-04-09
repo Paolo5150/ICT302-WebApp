@@ -45,10 +45,9 @@ RedirectIfTokenIsValid($serverAddress . "web/index.php")
                 <form class="loginform" method="post">
                   <input type="text" id="username" class="textfield" style="margin-bottom: 5px;" placeholder="Username"><br>
                   <p style="text-align: center;">OR</p>
-                  <input type="text" id="email" class="textfield" placeholder="Email" style="margin-bottom: 5px;"><br>
-                  <a href="loginClient.php?">Return to login</a>
+                  <input type="text" id="email" class="textfield" placeholder="Email" style="margin-bottom: 20px;"><br>
                   <p id="errortext"></p>
-                  <input type="button" class="btn btn-primary" value="Back">
+                  <a href="loginClient.php?" class="btn btn-primary" value="Back">Back</a>
                   <input type="submit" id="submit-btn" class="btn btn-primary" value="Submit">
                 </form>
               </div>
@@ -58,7 +57,7 @@ RedirectIfTokenIsValid($serverAddress . "web/index.php")
       </div>
     </section>
   </div>
-  <script src="../js/login.js"></script>
+  <script src="../js/forgotpassword.js"></script>
 </body>
 
 </html>

@@ -38,9 +38,8 @@
             <section class="inner-section" id="main-form-section">
                 <div class="container-fluid"> <!-- Can 'container' or 'container-fluid' -->
                     <div class ="row" id="main-content"> 
-                       
-                            <button type="button" >Regular button which requires our own css style</button>
-                            <button type="button" class="btn btn-primary">Bootstrap button, ready to go!</button>
+
+                            <h1>You logged in!</h1>
                         </div>
                     </div>
                 </div>

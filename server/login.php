@@ -1,5 +1,5 @@
 <?php
-
+	session_start();
 	function GenerateTokenSendEmail($con, $id, $email)
 	{
 		include("globals.php");

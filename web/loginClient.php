@@ -1,9 +1,8 @@
 <?php
-
+session_start();
 include("../server/globals.php");
 include("../server/functions.php");
-RedirectIfTokenIsValid($serverAddress . "web/index.php")
-
+RedirectIfTokenIsValid($serverAddress . "index.php")
 ?>
 
 <!DOCTYPE html>

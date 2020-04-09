@@ -100,7 +100,7 @@ function PostSuccess(reply)
     if(obj.Status == "fail")
         errortext.innerHTML = obj.Message;
     else if(obj.Status == "ok")
-        window.location = "index.php?";//Move to student portal
+        window.location = "../index.php";//Move to student portal
 }
 
 function PostFail(data, textStatus, errorMessage)

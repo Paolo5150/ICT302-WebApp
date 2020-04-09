@@ -22,17 +22,17 @@
         return $output;
     }
 
-    function IsTokenOk()
+    function IsTokenOk($id, $token)
     {
         $con = connectToDb();
         $stmt = $con->prepare("select * from user where MurdochUserNumber = ?");
-        $stmt->bind_param("s", $_COOKIE['MurdochUserNumber']);
+        $stmt->bind_param("s", $id);
         $stmt->execute();
         $result = $stmt->get_result();
         if($result && $result->num_rows > 0)
         {
             $data = $result->fetch_assoc(); //Get first fow
-            if(isset($data['Token']) && isset($_COOKIE['Token']) && $data['Token'] == $_COOKIE['Token'])
+            if(isset($data['Token']) && $data['Token'] == $token)
                 return true;
             else
                 return false;
@@ -42,45 +42,41 @@
 
     function RedirectIfTokenNotValid($redirect)
     {
-        include("../server/globals.php");
-        include("../server/dbConnection.php");
+        include("globals.php");
+        include("dbConnection.php");
     
-        session_start();
-
         if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
         {
-           if(!IsTokenOk())
+           if(!IsTokenOk($_SESSION['MurdochUserNumber'],$_SESSION['Token']))
             header("Location: " . $redirect);
     
         }
         else if(isset($_COOKIE['MurdochUserNumber']) && isset($_COOKIE['Token']))
         {
-            if(!IsTokenOk())
-                header("Location: " . $serverAddress . "web/loginClient.php");		
+            if(!IsTokenOk($_COOKIE['MurdochUserNumber'], $_COOKIE['Token']))
+                header("Location: " . $redirect);		
         }
         else
         {        
-            header("Location: " . $serverAddress . "web/loginClient.php");
+            header("Location: " . $redirect);
         }
     }
 
     function RedirectIfTokenIsValid($redirect)
     {
         include("../server/globals.php");
-        include("../server/dbConnection.php");
-    
-        session_start();
+        include("../server/dbConnection.php");    
 
         if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
         {
-           if(IsTokenOk())
+           if(IsTokenOk($_SESSION['MurdochUserNumber'],$_SESSION['Token']))
             header("Location: " . $redirect);
     
         }
         else if(isset($_COOKIE['MurdochUserNumber']) && isset($_COOKIE['Token']))
         {
-            if(IsTokenOk())
-                header("Location: " . $serverAddress . "web/loginClient.php");		
+            if(IsTokenOk($_COOKIE['MurdochUserNumber'],$_COOKIE['Token']))
+                header("Location: " . $redirect);		
         } 
     }
 

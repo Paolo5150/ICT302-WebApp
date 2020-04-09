@@ -1,4 +1,28 @@
 <?php
+
+	function GenerateTokenSendEmail($con, $id, $email)
+	{
+		include("globals.php");
+
+		//Generate a random string.
+		$token = bin2hex(openssl_random_pseudo_bytes(16));
+		//strtotime will convert time into an integer, so we can easily add seconds to it (expirationSeconds is defined in dbConnection, where other globals are)
+		$TokenExpireTime = strtotime(date('G:i:s')) + $expirationSeconds; 
+		// However, in the database we save time im format hh:mm:ss, so this convert the time back to that format
+		$TokenExpireTimeFormat = date("G:i:s",$TokenExpireTime); 
+		//Save to db
+		$stmt = $con->prepare("update user set Token = ?, TokenExpireTime = ? WHERE  MurdochUserNumber = ?");	
+		$stmt->bind_param("sss", $token, $TokenExpireTimeFormat, $id);
+		$stmt->execute();
+
+		$link =  $serverAddress . 'web/resetPassword.html?' . $id . '&' . $token;
+		sendEmail($email, "Password reset required", "Reset your password link: " . $link);	
+		return $token;	
+	}
+
+?>
+
+<?php
 	session_start();
 	include("globals.php");
 	include("dbConnection.php");
@@ -29,7 +53,6 @@
 		//Prepare reply pbject
 		$reply = new stdClass();
 		$reply->Data = new stdClass();
-
 		
 		if($result && $result->num_rows > 0)
 		{
@@ -59,24 +82,12 @@
 				}	
 				else
 				{
-					//Generate a random string.
-					$token = bin2hex(openssl_random_pseudo_bytes(16));
-					//strtotime will convert time into an integer, so we can easily add seconds to it (expirationSeconds is defined in dbConnection, where other globals are)
-					$TokenExpireTime = strtotime(date('G:i:s')) + $expirationSeconds; 
-					// However, in the database we save time im format hh:mm:ss, so this convert the time back to that format
-					$TokenExpireTimeFormat = date("G:i:s",$TokenExpireTime); 
-					//Save to db
-					$stmt = $con->prepare("update user set Token = ?, TokenExpireTime = ? WHERE  MurdochUserNumber = ?");	
-					$stmt->bind_param("sss", $token, $TokenExpireTimeFormat, $id);
-					$stmt->execute();
-
-					$link =  $serverAddress . 'web/resetPassword.html?' . $data['MurdochUserNumber'] . '&' . $token;
-					sendEmail($data['Email'], "Password reset required", "Reset your password link: " . $link);		
+					$generatedToken = GenerateTokenSendEmail($con, $data['MurdochUserNumber'], $data['Email']);		
 
 					$reply->Status = 'fail';
 					$reply->Message = "PASSWORD RESET REQUIRED: An email has been sent to you, please follow the link to reset your password.";
 					//TODO: remove this data before shipping (not urgent though)
-					$reply->Data = $token;
+					$reply->Data = $generatedToken;
 				}
 	
 			}
@@ -101,19 +112,7 @@
 					//If the token is set but expired, send a new link
 					if($tokenSaved != "" && $now > $tokenExpiration)
 					{
-						//Generate a random string.
-						$token = bin2hex(openssl_random_pseudo_bytes(16));
-						//strtotime will convert time into an integer, so we can easily add seconds to it (expirationSeconds is defined in dbConnection, where other globals are)
-						$TokenExpireTime = strtotime(date('G:i:s')) + $expirationSeconds; 
-						// However, in the database we save time im format hh:mm:ss, so this convert the time back to that format
-						$TokenExpireTimeFormat = date("G:i:s",$TokenExpireTime); 
-						//Save to db
-						$stmt = $con->prepare("update user set PasswordResetRequired = 1, Token = ?, TokenExpireTime = ? WHERE  MurdochUserNumber = ?");	
-						$stmt->bind_param("sss", $token, $TokenExpireTimeFormat, $id);
-						$stmt->execute();
-
-						$link =  $serverAddress . 'web/resetPassword.html?' . $data['MurdochUserNumber'] . '&' . $token;
-						sendEmail($data['Email'], "Password reset required", "Reset your password link: " . $link);
+						GenerateTokenSendEmail($con, $data['MurdochUserNumber'], $data['Email']);
 			
 						$reply->Status = 'fail';
 						$reply->Message = "PASSWORD RESET REQUIRED: An email has been sent to you, please follow the link to reset your password.";
@@ -157,8 +156,8 @@
 				
 							$_SESSION['MurdochUserNumber'] = $id;
 							$_SESSION['Token'] = $token;
-							setcookie("MurdochUserNumber", $id, time() + $cookieExpiration, "/"); // 86400 = 1 day
-							setcookie("Token", $token, time() + $cookieExpiration, "/"); // 86400 = 1 day
+							setcookie("MurdochUserNumber", $id, time() + $cookieExpiration, "/");
+							setcookie("Token", $token, time() + $cookieExpiration, "/");
 						}
 						
 

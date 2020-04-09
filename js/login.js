@@ -94,6 +94,7 @@ function Login()
 
 function PostSuccess(reply)
 {
+    console.log(reply)
     var obj = JSON.parse(reply);
 
     if(obj.Status == "fail")

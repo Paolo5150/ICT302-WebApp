@@ -63,12 +63,6 @@
 			//Get token, used later
 			$tokenExpiration = strtotime($data['TokenExpireTime']);
 			$tokenSaved = $data['Token'];
-			//Check password
-			$pswSaved = $data['Password'];
-			//Try to decrypt
-			$pswDec = encrypt_decrypt('d',$pswSaved);
-			$paswOK = true;
-
 
 			// First thing, check if a password reset was requested
 			if($data['PasswordResetRequired'] == 1)
@@ -96,7 +90,6 @@
 				//If account not acative
 				if($data['AccountActive'] == 0)
 				{
-				
 					//If the token is still alive
 					if($tokenSaved != "" && $now < $tokenExpiration)
 					{
@@ -125,6 +118,11 @@
 				}
 				else if($data['AccountActive'] == 1) //If the account is active
 				{
+					//Check password
+					$pswSaved = $data['Password'];
+					//Try to decrypt
+					$pswDec = encrypt_decrypt('d',$pswSaved);
+					$paswOK = true;
 					// If fails to decrypt, compare with unencrypted password
 					if($pswDec == false)
 					{

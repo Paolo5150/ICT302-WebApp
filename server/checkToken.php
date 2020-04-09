@@ -1,6 +1,6 @@
 <?php
 	include_once("globals.php");
-	include("dbConnection.php");
+	include("functions.php");
 
     if(isset($_POST['MurdochUserNumber']) && isset($_POST['Token']))
 	{

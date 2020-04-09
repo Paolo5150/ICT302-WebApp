@@ -10,7 +10,7 @@ $(document).ready(function () {
     //Check if link is valid
     DoPost("server/checkToken.php",myData,
         (response)=>{
-
+			console.log(response)
             var responseObj = JSON.parse(response);
             if(responseObj.Status == 'ok')
             {

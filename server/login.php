@@ -25,8 +25,6 @@
 <?php
 	session_start();
 	include("globals.php");
-	include("dbConnection.php");
-	include("email.php");
 	include("functions.php");
 
     if(isset($_POST['MurdochUserNumber']) && isset($_POST['Password']))

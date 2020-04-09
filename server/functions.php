@@ -1,4 +1,11 @@
 <?php
+    function connectToDb()
+    {
+        include("globals.php");
+        $con = mysqli_connect($databaseAddress,$databaseUsername,$databasePassword,$databaseName);
+        return $con;
+    }
+
     function encrypt_decrypt($action, $string) {
         $output = false;
 
@@ -32,7 +39,7 @@
         if($result && $result->num_rows > 0)
         {
             $data = $result->fetch_assoc(); //Get first fow
-            if(isset($data['Token']) && $data['Token'] == $token)
+            if(isset($data['Token']) && $data['Token'] == $token && $data['PasswordResetRequired'] == 0)
                 return true;
             else
                 return false;
@@ -40,10 +47,10 @@
         mysqli_close($con);
     }
 
+
+
     function RedirectIfTokenNotValid($redirect)
     {
-        include("globals.php");
-        include("dbConnection.php");
     
         if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
         {
@@ -64,9 +71,6 @@
 
     function RedirectIfTokenIsValid($redirect)
     {
-        include("../server/globals.php");
-        include("../server/dbConnection.php");    
-
         if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
         {
            if(IsTokenOk($_SESSION['MurdochUserNumber'],$_SESSION['Token']))
@@ -79,6 +83,57 @@
                 header("Location: " . $redirect);		
         } 
     }
+
+    function sendEmail($to, $subject, $message)
+	{
+		include("globals.php");
+		if($serverAddress == 'http://localhost/ict302-webapp/')
+			sendLocal($to, $subject,$message);
+		else
+			sendRemote($to, $subject, $message);
+	}
+
+	function sendRemote($to, $subject, $message)
+	{
+		mail($to,$subject,$message);
+
+	}
+
+	use PHPMailer\PHPMailer\PHPMailer;
+	use PHPMailer\PHPMailer\Exception;
+
+	function sendLocal($to, $subject,$message)
+	{
+        include("phpmailer/PHPMailer.php");
+        include("phpmailer/SMTP.php");
+        include("phpmailer/Exception.php");
+
+		$mail = new PHPMailer(TRUE);
+		try {
+
+		$mail->IsSMTP();                           // telling the class to use SMTP
+		$mail->SMTPAuth   = true;                  // enable SMTP authentication
+		$mail->Host       = "smtp.gmail.com"; // set the SMTP server
+		$mail->Port       = 587;                    // set the SMTP port
+		$mail->Username   = "ict302it07@gmail.com"; // SMTP account username
+		$mail->SMTPSecure = 'tsl';
+		$mail->Password   = "realtech_ict302";        // SMTP account password
+		$mail->From = "ict302it07@gmail.com";
+		$mail->addAddress($to, "WTF");
+		$mail->Subject = $subject;
+		$mail->Body = '<div></div><div>'.$message.'</div>';
+		$mail-> IsHTML(true);
+
+		$mail->send();
+		return true;
+
+
+		}
+		catch (Exception $e)
+		{
+		return false;
+		}
+	}
 
 
 ?>

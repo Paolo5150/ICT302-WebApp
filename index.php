@@ -2,7 +2,7 @@
     session_start();
     include("server/globals.php");
     include("server/functions.php");
-    RedirectIfTokenNotValid($serverAddress . "web/loginClient.php");
+    RedirectIfTokenNotValid($serverAddress . "web/loginClient.php");    
 ?>
 
 <!DOCTYPE html>
@@ -26,12 +26,28 @@
 
         <!-- Import generic functions to do http requests -->
         <script src="js/functions.js"></script>
-        <script src="js/user.js"></script>
-
-
-
+        <script src="js/indexPage.js"></script>
+        <script src="js/logout.js"></script>
     </head>
     <body>      
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="mx-auto order-0">
+            <a class="navbar-brand mx-auto" href="#">Welcome</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Account</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="logout-btn">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
         <div id="main-container">
 
             <section class="inner-section" id="main-form-section">

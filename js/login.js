@@ -100,7 +100,11 @@ function PostSuccess(reply)
     if(obj.Status == "fail")
         errortext.innerHTML = obj.Message;
     else if(obj.Status == "ok")
+    {
+        localStorage.setItem("Token",obj.Data.Token)
         window.location = "../index.php";//Move to student portal
+
+    }
 }
 
 function PostFail(data, textStatus, errorMessage)

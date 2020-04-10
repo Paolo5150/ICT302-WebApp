@@ -159,6 +159,9 @@
 
 						$reply->Status = 'ok';
 						$reply->Data->FirstName = $data['FirstName'];
+						$reply->Data->LastName = $data['LastName'];
+						$reply->Data->MurdochUserNumber = $data['MurdochUserNumber'];
+
 					}	
 					
 				}

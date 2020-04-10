@@ -1,10 +1,22 @@
 $(document).ready(function () {
 
-    var token = localStorage.getItem("Token");
+        var token = localStorage.getItem("Token");
 
-    var myData = {
-        Token: token
-    }
+        var myData = {
+            Token: token
+        }
+
+        DoPost("server/getUserInfo.php",myData,(response)=>{
+
+                var obj = JSON.parse(response)       
+                $("#welcome-title").html("Welcome " + obj.Data.FirstName)    
+                $("#main-content").html(obj.Data.TableContent)
+            },
+            (data, status, error)=>
+            {
+                alert("An error occurred")
+            } 
+        )
 
       $("#logout-btn").click(function(e){
 
@@ -17,6 +29,6 @@ $(document).ready(function () {
                 alert("An error occurred")
             } 
         )
-    })
+        })       
  
 })

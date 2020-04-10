@@ -149,6 +149,8 @@
 							$_SESSION['Token'] = $token;
 							setcookie("MurdochUserNumber", $id, time() + $cookieExpiration, "/");
 							setcookie("Token", $token, time() + $cookieExpiration, "/");
+							$reply->Data->Token = $token;
+
 						}
 						
 
@@ -156,7 +158,6 @@
 						$reply->Data->FirstName = $data['FirstName'];
 						$reply->Data->LastName = $data['LastName'];
 						$reply->Data->MurdochUserNumber = strval($data['MurdochUserNumber']);
-						$reply->Data->Token = $token;
 
 					}	
 					

@@ -32,7 +32,7 @@
     <body>      
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <div class="mx-auto order-0">
-            <a class="navbar-brand mx-auto" href="#">Welcome</a>
+            <a class="navbar-brand mx-auto" href="#" id="welcome-title">Welcome</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -54,8 +54,8 @@
                 <div class="container-fluid"> <!-- Can 'container' or 'container-fluid' -->
                     <div class ="row" id="main-content"> 
 
-                            <h1>You logged in!</h1>
-                        </div>
+                            
+                    </div>
                     </div>
                 </div>
             </section>

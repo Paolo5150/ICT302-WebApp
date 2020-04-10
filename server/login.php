@@ -149,6 +149,8 @@
 							$_SESSION['Token'] = $token;
 							setcookie("MurdochUserNumber", $id, time() + $cookieExpiration, "/");
 							setcookie("Token", $token, time() + $cookieExpiration, "/");
+							$reply->Data->Token = $token;
+
 						}
 						
 

@@ -1,5 +1,7 @@
 <?php
 	session_start();
+	include("globals.php");
+	include("functions.php");
 	function GenerateTokenSendEmail($con, $id, $email)
 	{
 		include("globals.php");
@@ -19,13 +21,6 @@
 		sendEmail($email, "Password reset required", "Reset your password link: " . $link);	
 		return $token;	
 	}
-
-?>
-
-<?php
-	session_start();
-	include("globals.php");
-	include("functions.php");
 
     if(isset($_POST['MurdochUserNumber']) && isset($_POST['Password']))
 	{
@@ -160,7 +155,7 @@
 						$reply->Status = 'ok';
 						$reply->Data->FirstName = $data['FirstName'];
 						$reply->Data->LastName = $data['LastName'];
-						$reply->Data->MurdochUserNumber = $data['MurdochUserNumber'];
+						$reply->Data->MurdochUserNumber = strval($data['MurdochUserNumber']);
 
 					}	
 					

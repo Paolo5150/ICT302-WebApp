@@ -10,8 +10,8 @@
     <head>
         <meta charset = "UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-        <title>Title</title>
-
+        <title>Virtual Instruments</title>
+        <link rel="icon" href="imgs/logo.png">
         <!-- Stylesheets -->
         <link href="css/resetstyle.css" rel="stylesheet" />
    
@@ -30,9 +30,12 @@
         <script src="js/logout.js"></script>
     </head>
     <body>      
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
         <div class="mx-auto order-0">
-            <a class="navbar-brand mx-auto" href="#" id="welcome-title">Welcome</a>
+            <div class="navbar-brand">
+                <img src="imgs/logo.png" style="width: 50px;"/>
+                <a class="" id="welcome-title">Welcome</a>
+            </div>            
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -51,7 +54,7 @@
         <div id="main-container">
 
             <section class="inner-section" id="main-form-section">
-                <div class="container-fluid"> <!-- Can 'container' or 'container-fluid' -->
+                <div class="container"> <!-- Can 'container' or 'container-fluid' -->
                     <div class ="row" id="main-content"> 
 
                             

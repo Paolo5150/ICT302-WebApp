@@ -44,3 +44,49 @@ function DoPost(to, dataIn, onSuccess, onError)
       }
   })    
 }
+
+function getToken()
+{
+    // Check local storage
+    var token = localStorage.getItem("Token");
+
+    // and cookie, just in case
+    var cookie = document.cookie;
+    var cookieValues = cookie.split(";");
+    for(var i=0; i < cookieValues.length; i++)
+    {
+        var cookieValue = cookieValues[i]
+
+        var index = cookieValue.indexOf("Token")
+        if(index != -1)       
+        {
+            if(token == null || token == "")
+            {
+                token = cookieValue.substr(cookieValue.indexOf("=") + 1, cookieValue.length)
+            }
+        } 
+    }
+
+    return token;
+}
+
+function getMUS()
+{
+     // Check local storage
+     var mus = localStorage.getItem("MurdochUserNumber");
+ 
+     // and cookie, just in case
+     var cookie = document.cookie;
+     var cookieValues = cookie.split(";");
+     for(var i=0; i < cookieValues.length; i++)
+     {
+         var cookieValue = cookieValues[i]
+         var index = cookieValue.indexOf("MurdochUserNumber")
+         if(index != -1)
+         {
+             if(mus == null || mus == "")
+              mus = cookieValue.substr(cookieValue.indexOf("=") + 1, cookieValue.length)
+         }
+     }
+     return mus;
+}

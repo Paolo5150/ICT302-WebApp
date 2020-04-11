@@ -90,7 +90,8 @@
 
         $tableHTML = "";
 
-        $stmt = $con->prepare("select * from user where IsAdmin = 0");
+        $stmt = $con->prepare("select * from user where IsAdmin = 0 AND  (MurdochUserNumber LIKE '%" . $searchField . "%' OR  FirstName LIKE '%" .$searchField ."%' OR LastName LIKE '%" . $searchField . "%' OR Email LIKE '%" . $searchField . "%')" );
+        //$stmt->bind_param("s", $searchField);
         $stmt->execute();
 
         $result = $stmt->get_result();
@@ -112,33 +113,13 @@
 
             while($row = $result->fetch_assoc()) 
             {
-                if($searchField != "")
-                {
-                    if( strpos( strtolower($row['FirstName']), strtolower($searchField)) !== false ||
-                        strpos( strtolower($row['LastName']), strtolower($searchField)) !== false ||
-                        strpos( strtolower($row['MurdochUserNumber']), strtolower($searchField)) !== false ||
-                        strpos( strtolower($row['Email']), strtolower($searchField)) !== false)
-                        {
-                            $tableHTML .="<tr>
-                            <td>".$row["MurdochUserNumber"]."</td>
-                            <td>".$row["FirstName"]."</td>
-                            <td>".$row["LastName"]."</td>
-                            <td>".$row["Email"]."</td>   
-                            <td><button type='button' class='btn btn-primary' onClick='onSessionButtonClicked(" .$row["UserID"] .")'>Sessions</button></td>   
-                        </tr>";
-                        }
-                }
-                else
-                {
-                    $tableHTML .="<tr>
-                    <td>".$row["MurdochUserNumber"]."</td>
-                    <td>".$row["FirstName"]."</td>
-                    <td>".$row["LastName"]."</td>
-                    <td>".$row["Email"]."</td>   
-                    <td><button type='button' class='btn btn-primary' onClick='onSessionButtonClicked(" .$row["UserID"] .")'>Sessions</button></td>   
-                    </tr>";
-                }
-             
+                $tableHTML .="<tr>
+                <td>".$row["MurdochUserNumber"]."</td>
+                <td>".$row["FirstName"]."</td>
+                <td>".$row["LastName"]."</td>
+                <td>".$row["Email"]."</td>   
+                <td><button type='button' class='btn btn-primary' onClick='onSessionButtonClicked(" .$row["UserID"] .")'>Sessions</button></td>   
+                </tr>";             
             }
             
             $tableHTML .= "</tbody>

@@ -25,10 +25,10 @@
 		{
             $data = $result->fetch_assoc(); //Get row
             // Add additional info about the status of the token
-			$tokenExpiration = strtotime($data['TokenExpireTime']);
+			$tokenExpiration = $data['TokenExpireTime'];
 			$tokenSaved = $data['Token'];
 
-            $now = strtotime(date('G:i:s'));
+            $now = date("Y-m-d H:i:s");
 
             $reply->Status = 'fail';            
             if($token != $tokenSaved || $now > $tokenExpiration)

@@ -27,9 +27,9 @@
 		if($result && $result->num_rows > 0)
 		{
             $data = $result->fetch_assoc(); //Get first fow
-			$now = strtotime(date('G:i:s'));
+			$now = date("Y-m-d H:i:s");
             
-            $tokenExpiration = strtotime($data['TokenExpireTime']);
+            $tokenExpiration = $data['TokenExpireTime'];
             $tokenSaved = $data['Token'];
             
             if($tokenSaved != "" && $now < $tokenExpiration)
@@ -54,7 +54,7 @@
                 $stmt->execute();
 
                 $link =  $serverAddress . 'web/resetPassword.html?' . $data['MurdochUserNumber'] . '&' . $token;
-                $emailBody = "Reset your password link: " . $link . "\n\nUse " . $tempPsw . " as your old password";
+                $emailBody = "<p>Reset your password link: " . $link . "</p><h1>Use <b>" . $tempPsw . "</b> as your old password</h1>";
                 sendEmail($data['Email'], "Password reset requested", $emailBody );
 
                 $reply->Status = 'ok';

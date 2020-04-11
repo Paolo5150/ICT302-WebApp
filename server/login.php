@@ -8,10 +8,12 @@
 
 		//Generate a random string.
 		$token = bin2hex(openssl_random_pseudo_bytes(16));
+
+		$now = date("Y-m-d H:i:s");		 
 		//strtotime will convert time into an integer, so we can easily add seconds to it (expirationSeconds is defined in dbConnection, where other globals are)
-		$TokenExpireTime = strtotime(date('G:i:s')) + $expirationSeconds; 
+		$TokenExpireTime = strtotime('+0 days', strtotime($now)) + $expirationSeconds; 
 		// However, in the database we save time im format hh:mm:ss, so this convert the time back to that format
-		$TokenExpireTimeFormat = date("G:i:s",$TokenExpireTime); 
+		$TokenExpireTimeFormat = date('Y-m-d H:i:s', $TokenExpireTime);
 		//Save to db
 		$stmt = $con->prepare("update user set Token = ?, TokenExpireTime = ? WHERE  MurdochUserNumber = ?");	
 		$stmt->bind_param("sss", $token, $TokenExpireTimeFormat, $id);
@@ -49,12 +51,12 @@
 		
 		if($result && $result->num_rows > 0)
 		{
-			$now = strtotime(date('G:i:s'));
+			$now = date("Y-m-d H:i:s");
 
 			$data = $result->fetch_assoc(); //Get first fow
 
 			//Get token, used later
-			$tokenExpiration = strtotime($data['TokenExpireTime']);
+			$tokenExpiration = $data['TokenExpireTime'];
 			$tokenSaved = $data['Token'];
 
 			// First thing, check if a password reset was requested

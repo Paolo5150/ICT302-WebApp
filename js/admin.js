@@ -86,13 +86,14 @@ $(document).ready(function () {
     }    
     
     DoPost("server/getStudentList.php",myData,(response)=>{
-        console.log(response)
+
         var obj = JSON.parse(response);
-        var list = JSON.parse(obj.Data)
+        var list = JSON.parse(obj.Data.Content)
+
         cachedStudentList = list;
         var table = buildStudentTable(list)
         cachedStudentTable = table;
-
+        $("#welcome-title").html("Welcome " + obj.Data.UserName)
         $("#main-content").html(table)
 
         },

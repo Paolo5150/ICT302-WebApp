@@ -30,7 +30,9 @@
                 $stmt->execute();
                 $result = $stmt->get_result();
                 $encoded = json_encode($result->fetch_all());
-                $reply->Data = $encoded;
+				$reply->Data->Content = $encoded;
+                $reply->Data->UserName = $data['FirstName'];
+				
 			}
 			else
 			{

@@ -1,7 +1,7 @@
 function buildSessionTable(response)
 {
     var obj = JSON.parse(response);
-    var arr = JSON.parse(obj.Data)
+    var arr = JSON.parse(obj.Data.Content)
     var table = `
     <table class='table table-striped'>
     <thead>
@@ -46,9 +46,11 @@ $(document).ready(function () {
     }    
     
     DoPost("server/getStudentSessions.php",myData,(response)=>{
-        console.log(response)
+
         var table = buildSessionTable(response)
+        var obj = JSON.parse(response);
         $("#main-content").html(table)
+        $("#welcome-title").html("Welcome " + obj.Data.UserName)
 
         },
         (data, status, error)=>

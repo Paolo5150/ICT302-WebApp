@@ -68,7 +68,6 @@
 
             <section class="inner-section" id="main-form-section">
                 <div class="container"> <!-- Can 'container' or 'container-fluid' -->
-                <input id='search-field' class='form-control' type='text' placeholder='Search' aria-label='Search' onchange='searchStudent()'>
                     <div class ="row" id="main-content"> 
                                                 
                     </div>  

@@ -29,7 +29,8 @@
         <script src="js/indexPage.js"></script>
         <script src="js/logout.js"></script>
     </head>
-    <body>      
+    <body>    
+
     <nav class="navbar navbar-expand-md navbar-light bg-light">
         <div class="mx-auto order-0">
             <div class="navbar-brand">
@@ -55,11 +56,9 @@
 
             <section class="inner-section" id="main-form-section">
                 <div class="container"> <!-- Can 'container' or 'container-fluid' -->
-                    <div class ="row" id="main-content"> 
-
-                            
-                    </div>
-                    </div>
+                <input id='search-field' class='form-control' type='text' placeholder='Search' aria-label='Search' onchange='searchStudent()'>
+                    <div class ="row" id="main-content">                             
+                    </div>  
                 </div>
             </section>
     </div>

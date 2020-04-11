@@ -29,7 +29,8 @@
             if($data['IsAdmin'] != 0)
             {
                 $table = "<button type='button' class='btn btn-primary' onClick='backToStudentTable()'>Back</button><br>";
-                $table .= MakeSessionTable($_POST['UserID']);
+
+                $table .= MakeSessionTable($_POST['UserID'],"");
                 $reply->Status = 'ok';
                 $reply->Data->TableContent = $table;
 
@@ -58,6 +59,13 @@
         $id = $_POST["MurdochUserNumber"];
 		$con = connectToDb();
 
+        $searchField = "";
+
+        if(isset($_POST["Search"]))
+            $searchField = $_POST["Search"];
+
+
+
 
 		$stmt = $con->prepare("select * from user where Token = ? AND MurdochUserNumber = ?");	
 		$stmt->bind_param("ss", $token, $id);
@@ -74,15 +82,17 @@
 
             if($data['IsAdmin'] == 0)
             {
-                $table = MakeSessionTable($data['UserID']);
+                $table = MakeSessionTable($data['UserID'],$searchField);
                 $reply->Status = 'ok';
                 $reply->Data->TableContent = $table;
+                $reply->Data->SearchEnabled = false;
             }
             else
             {
-                $table = MakeStudentsTable();
+                $table = MakeStudentsTable($searchField);
                 $reply->Status = 'ok';
                 $reply->Data->TableContent = $table;
+                $reply->Data->SearchEnabled = true;
                 
             }
             $reply->Data->FirstName = $data['FirstName'];

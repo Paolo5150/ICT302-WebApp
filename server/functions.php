@@ -84,17 +84,21 @@
         } 
     }
 
-    function MakeStudentsTable()
+    function MakeStudentsTable($searchField)
     {
 		$con = connectToDb();
 
         $tableHTML = "";
-        $stmt = $con->prepare("select * from user where IsAdmin = 0");	
+
+        $stmt = $con->prepare("select * from user where IsAdmin = 0");
         $stmt->execute();
+
         $result = $stmt->get_result();
         if($result && $result->num_rows > 0)
 		{
-            $tableHTML = "            
+        
+            $tableHTML = "        
+                  
             <table class='table table-striped'>
             <thead>
                 <tr>
@@ -108,13 +112,33 @@
 
             while($row = $result->fetch_assoc()) 
             {
-                $tableHTML .="<tr>
+                if($searchField != "")
+                {
+                    if( strpos( strtolower($row['FirstName']), strtolower($searchField)) !== false ||
+                        strpos( strtolower($row['LastName']), strtolower($searchField)) !== false ||
+                        strpos( strtolower($row['MurdochUserNumber']), strtolower($searchField)) !== false ||
+                        strpos( strtolower($row['Email']), strtolower($searchField)) !== false)
+                        {
+                            $tableHTML .="<tr>
+                            <td>".$row["MurdochUserNumber"]."</td>
+                            <td>".$row["FirstName"]."</td>
+                            <td>".$row["LastName"]."</td>
+                            <td>".$row["Email"]."</td>   
+                            <td><button type='button' class='btn btn-primary' onClick='onSessionButtonClicked(" .$row["UserID"] .")'>Sessions</button></td>   
+                        </tr>";
+                        }
+                }
+                else
+                {
+                    $tableHTML .="<tr>
                     <td>".$row["MurdochUserNumber"]."</td>
                     <td>".$row["FirstName"]."</td>
                     <td>".$row["LastName"]."</td>
                     <td>".$row["Email"]."</td>   
                     <td><button type='button' class='btn btn-primary' onClick='onSessionButtonClicked(" .$row["UserID"] .")'>Sessions</button></td>   
-                </tr>";
+                    </tr>";
+                }
+             
             }
             
             $tableHTML .= "</tbody>
@@ -151,13 +175,14 @@
             while($row = $result->fetch_assoc()) 
             {
                 $tableHTML .="<tr>
-                    <td>".$row["SessionID"]."</td>
-                    <td>".$row["Date"]."</td>
-                    <td>".$row["StartTime"]."</td>
-                    <td>".$row["EndTime"]."</td>
-                    <td>".$row["Retries"]."</td>     
-                    <td><button type='button' class='btn btn-primary'>PDF</button></td>   
-                </tr>";
+                <td>".$row["SessionID"]."</td>
+                <td>".$row["Date"]."</td>
+                <td>".$row["StartTime"]."</td>
+                <td>".$row["EndTime"]."</td>
+                <td>".$row["Retries"]."</td>     
+                <td><button type='button' class='btn btn-primary'>PDF</button></td>   
+            </tr>";
+                
             }
             
             $tableHTML .= "</tbody>

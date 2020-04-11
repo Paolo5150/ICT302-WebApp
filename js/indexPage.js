@@ -54,11 +54,15 @@ $(document).ready(function () {
         MurdochUserNumber: mus
     }
 
+    
+
     DoPost("server/getUserInfo.php",myData,(response)=>{
             //console.log(response)
              var obj = JSON.parse(response)       
             $("#welcome-title").html("Welcome " + obj.Data.FirstName)    
             $("#main-content").html(obj.Data.TableContent)
+            if(!obj.Data.SearchEnabled)
+            $("#search-field").hide()
         },
         (data, status, error)=>
         {
@@ -85,11 +89,38 @@ function backToStudentTable()
     window.location = "index.php";
 }
 
+function searchStudent()
+{
+    var token = getToken()
+    var mus = getMUS()
+    var search = $("#search-field").val()
+
+    var myData = {
+        Search: search,
+        Token: token,
+        MurdochUserNumber: mus
+    }    
+
+    DoPost("server/getUserInfo.php",myData,(response)=>{
+
+             var obj = JSON.parse(response)       
+
+            $("#main-content").html(obj.Data.TableContent)
+
+        },
+        (data, status, error)=>
+        {
+            alert("An error occurred")
+        } 
+    )
+
+}
+
 function onSessionButtonClicked(id)
 {
     var token = getToken()
     var mus = getMUS()
-  
+    $("#search-field").hide();
     var myData = {
         UserID: id,
         SessionRequest: 1,

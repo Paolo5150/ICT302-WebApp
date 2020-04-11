@@ -2,6 +2,9 @@
 	include("globals.php");
 	include("functions.php");
 
+    	//Prepare reply object
+		$reply = new stdClass();
+		$reply->Data = new stdClass();
     if(isset($_POST['MurdochUserNumber']) && isset($_POST["SessionString"]))
 	{
         $id = $_POST['MurdochUserNumber'];
@@ -14,10 +17,6 @@
 		
 		//Check if we got something	
 		$result = $stmt->get_result();
-		
-		//Prepare reply object
-		$reply = new stdClass();
-		$reply->Data = new stdClass();
 
 		
 		if($result && $result->num_rows > 0)
@@ -44,17 +43,24 @@
                 $stmt = $con->prepare("INSERT INTO session (UserID, UnityID, Date, StartTime, EndTime, Retries) VALUES (?,?,?,?,?,?)");
                 $stmt->bind_param("iisssi", $userID, $unityID, $date, $startTime, $endTime, $retries);
                 $stmt->execute();
-            }            
+            }  
+            
+            $reply->Status = 'ok';
         }
         else
         {
             $reply->Status = 'fail';
             $reply->Message = 'User not found';
-        }
-        
+        }       
         
     }
     else
-        echo 'IS not set';
+    {
+        $reply->Status = 'fail';
+        $reply->Message = 'Values not set';
+    }
+
+    $myJSON = json_encode($reply);			
+	echo $myJSON;
 
 ?>

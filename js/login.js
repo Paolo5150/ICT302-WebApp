@@ -102,6 +102,7 @@ function PostSuccess(reply)
     else if(obj.Status == "ok")
     {
         localStorage.setItem("Token",obj.Data.Token)
+        localStorage.setItem("MurdochUserNumber",obj.Data.MurdochUserNumber)
         window.location = "../index.php";//Move to student portal
 
     }

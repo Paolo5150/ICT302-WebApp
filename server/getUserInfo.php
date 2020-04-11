@@ -43,15 +43,16 @@
         return $tableHTML;
     }
 
-    if(isset($_POST['Token']))
+    if(isset($_POST['Token']) && $_POST['Token'] != "" && $_POST["MurdochUserNumber"])
 	{
 		//Incoming variables
-		$token = $_POST['Token'];		
+        $token = $_POST['Token'];		
+        $id = $_POST["MurdochUserNumber"];
 		$con = connectToDb();
 
 
-		$stmt = $con->prepare("select * from user where Token = ?");	
-		$stmt->bind_param("s", $token);
+		$stmt = $con->prepare("select * from user where Token = ? AND MurdochUserNumber = ?");	
+		$stmt->bind_param("ss", $token, $id);
         $stmt->execute();
         $result = $stmt->get_result();
 		

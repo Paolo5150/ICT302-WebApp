@@ -47,129 +47,26 @@
         mysqli_close($con);
     }
 
-
-
-    function RedirectIfTokenNotValid($redirect)
+    function IsAdmin($id)
     {
-    
-        if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
-        {
-           if(!IsTokenOk($_SESSION['MurdochUserNumber'],$_SESSION['Token']))
-            header("Location: " . $redirect);
-    
-        }
-        else if(isset($_COOKIE['MurdochUserNumber']) && isset($_COOKIE['Token']))
-        {
-            if(!IsTokenOk($_COOKIE['MurdochUserNumber'], $_COOKIE['Token']))
-                header("Location: " . $redirect);		
-        }
-        else
-        {        
-            header("Location: " . $redirect);
-        }
-    }
-
-    function RedirectIfTokenIsValid($redirect)
-    {
-        if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
-        {
-           if(IsTokenOk($_SESSION['MurdochUserNumber'],$_SESSION['Token']))
-            header("Location: " . $redirect);
-    
-        }
-        else if(isset($_COOKIE['MurdochUserNumber']) && isset($_COOKIE['Token']))
-        {
-            if(IsTokenOk($_COOKIE['MurdochUserNumber'],$_COOKIE['Token']))
-                header("Location: " . $redirect);		
-        } 
-    }
-
-    function MakeStudentsTable()
-    {
-		$con = connectToDb();
-
-        $tableHTML = "";
-        $stmt = $con->prepare("select * from user where IsAdmin = 0");	
+        $con = connectToDb();
+        $stmt = $con->prepare("select * from user where MurdochUserNumber = ?");
+        $stmt->bind_param("s", $id);
         $stmt->execute();
         $result = $stmt->get_result();
         if($result && $result->num_rows > 0)
-		{
-            $tableHTML = "            
-            <table class='table table-striped'>
-            <thead>
-                <tr>
-                    <th>Student ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>";
-
-            while($row = $result->fetch_assoc()) 
-            {
-                $tableHTML .="<tr>
-                    <td>".$row["MurdochUserNumber"]."</td>
-                    <td>".$row["FirstName"]."</td>
-                    <td>".$row["LastName"]."</td>
-                    <td>".$row["Email"]."</td>   
-                    <td><button type='button' class='btn btn-primary' onClick='onSessionButtonClicked(" .$row["UserID"] .")'>Sessions</button></td>   
-                </tr>";
-            }
-            
-            $tableHTML .= "</tbody>
-            </table>";     
-        }
-        
-        return $tableHTML;
-    }
-
-    function MakeSessionTable($userID)
-    {
-		$con = connectToDb();
-
-        $tableHTML = "";
-        $stmt = $con->prepare("select * from session where UserID = ?");	
-		$stmt->bind_param("s", $userID);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if($result && $result->num_rows > 0)
-		{
-            $tableHTML = "
-            <table class='table table-striped'>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Date</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-                <th>Retries</th>
-            </tr>
-            </thead>
-            <tbody>";
-
-            while($row = $result->fetch_assoc()) 
-            {
-                $tableHTML .="<tr>
-                    <td>".$row["SessionID"]."</td>
-                    <td>".$row["Date"]."</td>
-                    <td>".$row["StartTime"]."</td>
-                    <td>".$row["EndTime"]."</td>
-                    <td>".$row["Retries"]."</td>     
-                    <td><button type='button' class='btn btn-primary'>PDF</button></td>   
-                </tr>";
-            }
-            
-            $tableHTML .= "</tbody>
-            </table>";     
-        }
-        else
         {
-            $tableHTML = "<p>No data available</p>";
+            $data = $result->fetch_assoc(); //Get first fow
+            if($data["IsAdmin"] == 1 && $data['AccountActive'] == 1)
+                return true;
+            else
+                return false;
         }
-        
-        return $tableHTML;
+        mysqli_close($con);
     }
+
+    
+
 
     function sendEmail($to, $subject, $message)
 	{

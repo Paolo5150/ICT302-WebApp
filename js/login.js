@@ -94,7 +94,7 @@ function Login()
 
 function PostSuccess(reply)
 {
-    console.log(reply)
+
     var obj = JSON.parse(reply);
 
     if(obj.Status == "fail")
@@ -103,7 +103,7 @@ function PostSuccess(reply)
     {
         localStorage.setItem("Token",obj.Data.Token)
         localStorage.setItem("MurdochUserNumber",obj.Data.MurdochUserNumber)
-        window.location = "../index.php";//Move to student portal
+        window.location = "index.php"; // Refresh this page. Redirection is done by server
 
     }
 }

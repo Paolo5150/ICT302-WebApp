@@ -84,6 +84,46 @@
         } 
     }
 
+    function MakeStudentsTable()
+    {
+		$con = connectToDb();
+
+        $tableHTML = "";
+        $stmt = $con->prepare("select * from user where IsAdmin = 0");	
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if($result && $result->num_rows > 0)
+		{
+            $tableHTML = "            
+            <table class='table table-striped'>
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>";
+
+            while($row = $result->fetch_assoc()) 
+            {
+                $tableHTML .="<tr>
+                    <td>".$row["MurdochUserNumber"]."</td>
+                    <td>".$row["FirstName"]."</td>
+                    <td>".$row["LastName"]."</td>
+                    <td>".$row["Email"]."</td>   
+                    <td><button type='button' class='btn btn-primary' onClick='onSessionButtonClicked(" .$row["UserID"] .")'>Sessions</button></td>   
+                </tr>";
+            }
+            
+            $tableHTML .= "</tbody>
+            </table>";     
+        }
+        
+        return $tableHTML;
+    }
+
     function MakeSessionTable($userID)
     {
 		$con = connectToDb();
@@ -125,7 +165,7 @@
         }
         else
         {
-            $tableHTML .= "<p>No data available</p>";
+            $tableHTML = "<p>No data available</p>";
         }
         
         return $tableHTML;

@@ -1,47 +1,7 @@
 <?php
 	session_start();
 	include("globals.php");
-    include("functions.php");
-    
-    function MakeStudentsTable()
-    {
-		$con = connectToDb();
-
-        $tableHTML = "";
-        $stmt = $con->prepare("select * from user where IsAdmin = 0");	
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if($result && $result->num_rows > 0)
-		{
-            $tableHTML = "            
-            <table class='table table-striped'>
-            <thead>
-                <tr>
-                    <th>Student ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>";
-
-            while($row = $result->fetch_assoc()) 
-            {
-                $tableHTML .="<tr>
-                    <td>".$row["MurdochUserNumber"]."</td>
-                    <td>".$row["FirstName"]."</td>
-                    <td>".$row["LastName"]."</td>
-                    <td>".$row["Email"]."</td>   
-                    <td><button type='button' class='btn btn-primary' onClick='onSessionButtonClicked(" .$row["UserID"] .")'>Sessions</button></td>   
-                </tr>";
-            }
-            
-            $tableHTML .= "</tbody>
-            </table>";     
-        }
-        
-        return $tableHTML;
-    }
+    include("functions.php");    
 
     if(isset($_POST['Token']) && $_POST['Token'] != "" && $_POST["MurdochUserNumber"])
 	{
@@ -97,7 +57,7 @@
 		$reply = new stdClass();
         $reply->Data = new stdClass();
         
-        $table = "<button type='button' class='btn btn-primary' onClick='backToStudentTable()'>Back</button><br/>";
+        $table = "<button type='button' class='btn btn-primary' onClick='backToStudentTable()'>Back</button><br>";
         $table .= MakeSessionTable($_POST['UserID']);
         $reply->Status = 'ok';
         $reply->Data->TableContent = $table;

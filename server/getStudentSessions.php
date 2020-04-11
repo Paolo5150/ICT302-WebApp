@@ -25,8 +25,8 @@
             $data = $result->fetch_assoc();
             if($data['IsAdmin'] == 0)
             {	
-				$stmt = $con->prepare("select * from session where MurdochUserNumber = ?");	
-				$stmt->bind_param("s", $id);
+				$stmt = $con->prepare("select * from session where UserID = ?");	
+				$stmt->bind_param("s", $data['UserID']);
                 $stmt->execute();
                 $result = $stmt->get_result();
                 $encoded = json_encode($result->fetch_all());

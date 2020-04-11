@@ -16,15 +16,16 @@
 
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset = "UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
         <title>Virtual Instruments</title>
-        <link rel="icon" href="imgs/logo.png">
+        <link rel="icon" href="../imgs/logo.png">
         <!-- Stylesheets -->
-        <link href="css/resetstyle.css" rel="stylesheet" />
+        <link href="../css/resetstyle.css" rel="stylesheet" />
    
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -36,16 +37,16 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
         <!-- Import generic functions to do http requests -->
-        <script src="js/functions.js"></script>
-        <script src="js/indexPage.js"></script>
-        <script src="js/logout.js"></script>
+        <script src="../js/functions.js"></script>
+        <script src="../js/student.js"></script>
+
     </head>
     <body>    
 
     <nav class="navbar navbar-expand-md navbar-light bg-light">
         <div class="mx-auto order-0">
             <div class="navbar-brand">
-                <img src="imgs/logo.png" style="width: 50px;"/>
+                <img src="../imgs/logo.png" style="width: 50px;"/>
                 <a class="" id="welcome-title">Welcome</a>
             </div>            
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
@@ -67,8 +68,9 @@
 
             <section class="inner-section" id="main-form-section">
                 <div class="container"> <!-- Can 'container' or 'container-fluid' -->
-                    <div class ="row" id="main-content">  
-                    <p>Student</p>                           
+                <input id='search-field' class='form-control' type='text' placeholder='Search' aria-label='Search' onchange='searchStudent()'>
+                    <div class ="row" id="main-content"> 
+                                                
                     </div>  
                 </div>
             </section>

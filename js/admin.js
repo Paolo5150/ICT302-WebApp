@@ -106,7 +106,7 @@ $(document).ready(function () {
 
     DoPost("server/logout.php",myData,(response)=>{
 
-        window.location = "index.php"   
+        window.location = "../index.php"   
         },
         (data, status, error)=>
         {

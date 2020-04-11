@@ -57,13 +57,15 @@
         if($result && $result->num_rows > 0)
         {
             $data = $result->fetch_assoc(); //Get first fow
-            if($data["IsAdmin"] == 1)
+            if($data["IsAdmin"] == 1 && $data['AccountActive'] == 1)
                 return true;
             else
                 return false;
         }
         mysqli_close($con);
     }
+
+    
 
 
     function sendEmail($to, $subject, $message)

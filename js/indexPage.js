@@ -60,6 +60,11 @@ $(document).ready(function () {
     })
 })
 
+function backToStudentTable()
+{
+    window.location = "index.php";
+}
+
 function onSessionButtonClicked(id)
 {
 console.log(id)   
@@ -70,7 +75,7 @@ var myData = {
 DoPost("server/getUserInfo.php",myData,(response)=>{
     console.log(response)
     var obj = JSON.parse(response)
-    $("#main-content").html(obj.Data.TableContent)   
+    $("#main-content").html(obj.Data.TableContent);   
     },
     (data, status, error)=>
     {

@@ -13,7 +13,7 @@
         $result = $stmt->get_result();
         if($result && $result->num_rows > 0)
 		{
-            $tableHTML = "
+            $tableHTML = "            
             <table class='table table-striped'>
             <thead>
                 <tr>
@@ -97,7 +97,8 @@
 		$reply = new stdClass();
         $reply->Data = new stdClass();
         
-        $table = MakeSessionTable($_POST['UserID']);
+        $table = "<button type='button' class='btn btn-primary' onClick='backToStudentTable()'>Back</button><br/>";
+        $table .= MakeSessionTable($_POST['UserID']);
         $reply->Status = 'ok';
         $reply->Data->TableContent = $table;
         

@@ -7,8 +7,7 @@ $(document).ready(function () {
         }
 
         DoPost("server/getUserInfo.php",myData,(response)=>{
-
-                var obj = JSON.parse(response)       
+                 var obj = JSON.parse(response)       
                 $("#welcome-title").html("Welcome " + obj.Data.FirstName)    
                 $("#main-content").html(obj.Data.TableContent)
             },
@@ -29,6 +28,24 @@ $(document).ready(function () {
                 alert("An error occurred")
             } 
         )
-        })       
- 
+        })
 })
+
+function onSessionButtonClicked(id)
+{
+    console.log(id)   
+    var myData = {
+        UserID: id,
+        SessionRequest: 1
+    }
+    DoPost("server/getUserInfo.php",myData,(response)=>{
+        console.log(response)
+        var obj = JSON.parse(response)
+        $("#main-content").html(obj.Data.TableContent)   
+        },
+        (data, status, error)=>
+        {
+            alert("An error occurred")
+        } 
+    )
+}

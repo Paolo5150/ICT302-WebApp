@@ -24,7 +24,7 @@ function buildStudentTable(list)
             <td>${list[i][2]}</td>
             <td>${list[i][3]}</td>
             <td>${list[i][4]}</td>
-            <td><button type='button' class='btn btn-primary' onClick='onSessionButtonClicked(${list[i][0]})'>Session</button></td>   
+            <td><button type='button' class='btn btn-primary' onClick='onSessionButtonClicked(${list[i][0]},"${list[i][2]}","${list[i][3]}" )'>Session</button></td>   
         </tr>
         `
     }
@@ -40,7 +40,7 @@ function buildSessionTable(response)
     var obj = JSON.parse(response);
     var arr = JSON.parse(obj.Data)
     var table = `
-    <table class='table table-striped'>
+    <table class='table table-striped' style="margin: 10px 10px 10px 10px">
     <thead>
     <tr>
         <th>Session ID</th>
@@ -48,6 +48,7 @@ function buildSessionTable(response)
         <th>Start Time</th>
         <th>End Time</th>
         <th>Retries</th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -143,7 +144,7 @@ function searchStudent()
 
 }
 
-function onSessionButtonClicked(id)
+function onSessionButtonClicked(id,firstname,lastname)
 {
     var token = getToken()
     var mus = getMUS()
@@ -159,6 +160,7 @@ function onSessionButtonClicked(id)
         var table = buildSessionTable(response)
 
         var html = `<button type='button' class='btn btn-primary' onClick='backToStudentTable()'>Back</button>`
+        html += '<h3 style="margin: auto">' + firstname + ' ' +  lastname + '</h3>'
         html += table;
         $("#main-content").html(html);   
 

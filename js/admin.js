@@ -39,8 +39,9 @@ function buildSessionTable(response)
 {
     var obj = JSON.parse(response);
     var arr = JSON.parse(obj.Data)
+    
     var table = `
-    <table class='table table-striped' style="margin: 10px 10px 10px 10px">
+    <table class='table table-striped'>
     <thead>
     <tr>
         <th>Session ID</th>
@@ -48,7 +49,6 @@ function buildSessionTable(response)
         <th>Start Time</th>
         <th>End Time</th>
         <th>Retries</th>
-        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -58,12 +58,15 @@ function buildSessionTable(response)
     {
         table += `
         <tr>
-            <td>${arr[i][0]}</td>
-            <td>${arr[i][3]}</td>
-            <td>${arr[i][4]}</td>
-            <td>${arr[i][5]}</td>
-            <td>${arr[i][6]}</td>
+            <td onClick="Details(${i})">${arr[i][0]}</td>
+            <td onClick="Details(${i})">${arr[i][3]}</td>
+            <td onClick="Details(${i})">${arr[i][4]}</td>
+            <td onClick="Details(${i})">${arr[i][5]}</td>
+            <td onClick="Details(${i})">${arr[i][6]}</td>
+            <td><button type='button' class='btn btn-primary' onClick="Details(${i})">Details</button></td>
             <td><button type='button' class='btn btn-primary'>PDF</button></td>   
+        </tr>
+        <tr id="details-${i}" style="display: none">
         </tr>
         `
     }
@@ -144,6 +147,7 @@ function searchStudent()
 
 }
 
+var sessionObj;
 function onSessionButtonClicked(id,firstname,lastname)
 {
     var token = getToken()
@@ -156,7 +160,7 @@ function onSessionButtonClicked(id,firstname,lastname)
     }
     DoPost("server/getStudentSessions.php",myData,(response)=>{
 
-        var obj = JSON.parse(response)
+        sessionObj = JSON.parse(response)
         var table = buildSessionTable(response)
 
         var html = `<button type='button' class='btn btn-primary' onClick='backToStudentTable()'>Back</button>`
@@ -170,4 +174,22 @@ function onSessionButtonClicked(id,firstname,lastname)
             alert("An error occurred")
         } 
     )
+}
+
+function Details(index)
+{
+    var arr = JSON.parse(sessionObj.Data)
+    var logsObj = JSON.parse(arr[index][7])
+
+    var logsStrings = "";
+    for(var i=0; i < arr[index][7].length; i++)
+    {
+        var logInd = "Log_" + i
+        if(logsObj[logInd] != undefined)        
+           logsStrings+= "<p>" + logsObj[logInd] + "</p>";
+    }
+
+    $("#details-" + index).html(logsStrings)  
+    $("#details-" + index).toggle()  
+
 }

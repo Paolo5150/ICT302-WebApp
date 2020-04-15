@@ -4,16 +4,16 @@
     include("../server/functions.php");
 
     // Check user privileges
-if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
-{
-    if(IsTokenOk($_SESSION['MurdochUserNumber'],$_SESSION['Token']))
+    if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
     {
-        if(!IsAdmin($_SESSION['MurdochUserNumber']))
-            header("Location: " . $serverAddress . "web/student.php");
+        if(IsTokenOk($_SESSION['MurdochUserNumber'],$_SESSION['Token']))
+        {
+            if(!IsAdmin($_SESSION['MurdochUserNumber']))
+                header("Location: " . $serverAddress . "web/student.php");
+        }
+        else
+            header("Location: " . $serverAddress . "index.php"); 
     }
-    else
-        header("Location: " . $serverAddress . "index.php"); 
-}
  
 ?>
 

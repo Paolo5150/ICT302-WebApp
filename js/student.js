@@ -2,6 +2,7 @@ function buildSessionTable(response)
 {
     var obj = JSON.parse(response);
     var arr = JSON.parse(obj.Data.Content)
+    
     var table = `
     <table class='table table-striped'>
     <thead>
@@ -20,12 +21,15 @@ function buildSessionTable(response)
     {
         table += `
         <tr>
-            <td>${arr[i][0]}</td>
-            <td>${arr[i][3]}</td>
-            <td>${arr[i][4]}</td>
-            <td>${arr[i][5]}</td>
-            <td>${arr[i][6]}</td>
+            <td onClick="Details(${i})">${arr[i][0]}</td>
+            <td onClick="Details(${i})">${arr[i][3]}</td>
+            <td onClick="Details(${i})">${arr[i][4]}</td>
+            <td onClick="Details(${i})">${arr[i][5]}</td>
+            <td onClick="Details(${i})">${arr[i][6]}</td>
+            <td><button type='button' class='btn btn-primary' onClick="Details(${i})">Details</button></td>
             <td><button type='button' class='btn btn-primary'>PDF</button></td>   
+        </tr>
+        <tr id="details-${i}" style="display: none">
         </tr>
         `
     }
@@ -34,6 +38,9 @@ function buildSessionTable(response)
     </table>`
     return table;
 }
+
+var obj;
+
 
 $(document).ready(function () {
 
@@ -45,10 +52,14 @@ $(document).ready(function () {
         MurdochUserNumber: mus
     }    
     
-    DoPost("server/getStudentSessions.php",myData,(response)=>{
 
+
+
+    DoPost("server/getStudentSessions.php",myData,(response)=>{
+        //console.log(response)
         var table = buildSessionTable(response)
-        var obj = JSON.parse(response);
+        obj = JSON.parse(response);
+
         $("#main-content").html(table)
         $("#welcome-title").html("Welcome " + obj.Data.UserName)
 
@@ -72,3 +83,23 @@ $(document).ready(function () {
     )
     })
 })
+
+
+
+function Details(index)
+{
+    var arr = JSON.parse(obj.Data.Content)
+    var logsObj = JSON.parse(arr[index][7])
+
+    var logsStrings = "";
+    for(var i=0; i < arr[index][7].length; i++)
+    {
+        var logInd = "Log_" + i
+        if(logsObj[logInd] != undefined)        
+           logsStrings+= "<p>" + logsObj[logInd] + "</p>";
+    }
+
+    $("#details-" + index).html(logsStrings)  
+    $("#details-" + index).toggle()  
+
+}

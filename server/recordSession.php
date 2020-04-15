@@ -31,7 +31,10 @@
             $startTime = $sessionResults->StartTime;
             $endTime = $sessionResults->EndTime;
             $retries = $sessionResults->Retries;
-         
+
+            $logsDecoded = json_encode($sessionResults->Logs);
+            $logs = $logsDecoded;
+            echo $logs;
             //Check that the session wasn't saved
             $stmt = $con->prepare("select * from session where UnityID = ?");
             $stmt->bind_param("i", $unityID);
@@ -40,8 +43,8 @@
             $result = $stmt->get_result();
             if($result && $result->num_rows == 0)
             {
-                $stmt = $con->prepare("INSERT INTO session (UserID, UnityID, Date, StartTime, EndTime, Retries) VALUES (?,?,?,?,?,?)");
-                $stmt->bind_param("iisssi", $userID, $unityID, $date, $startTime, $endTime, $retries);
+                $stmt = $con->prepare("INSERT INTO session (UserID, UnityID, Date, StartTime, EndTime, Retries, Logs) VALUES (?,?,?,?,?,?,?)");
+                $stmt->bind_param("iisssis", $userID, $unityID, $date, $startTime, $endTime, $retries, $logs);
                 $stmt->execute();
             }  
             

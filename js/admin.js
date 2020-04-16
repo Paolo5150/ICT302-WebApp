@@ -258,15 +258,21 @@ function DeleteStudent(userID)
         MurdochUserNumber: mus
     }
 
-    DoPost("server/deleteAccount.php",myData,(response)=>{
+    if (confirm("Are you sure you want to delete this account?")) {
+        DoPost("server/deleteAccount.php",myData,(response)=>{
 
-        console.log(response)    
-        window.location = "admin.php"
-
-        },
-        (data, status, error)=>
-        {
-            alert("An error occurred")
-        } 
-    )
+            var obj = JSON.parse(response)
+            if(obj.Status == 'ok')
+            {
+                window.location = "admin.php" //Refresh
+            }
+    
+            },
+            (data, status, error)=>
+            {
+                alert("An error occurred")
+            } 
+        )
+      }
+    
 }

@@ -26,7 +26,7 @@
 			// Student requestiont session
             if($data['IsAdmin'] == 0)
             {	
-				$stmt = $con->prepare("select * from session where UserID = ?");	
+				$stmt = $con->prepare("select * from session where UserID = ? Order By SessionID DESC");	
 				$stmt->bind_param("s", $data['UserID']);
                 $stmt->execute();
                 $result = $stmt->get_result();
@@ -40,7 +40,7 @@
 				// Admin requesting student sessions
 				if(isset($_POST['UserID']))
 				{
-					$stmt = $con->prepare("select * from session where UserID = ?");	
+					$stmt = $con->prepare("select * from session where UserID = ? Order By SessionID DESC");	
 					$stmt->bind_param("s", $_POST['UserID']);
 					$stmt->execute();
 					$result = $stmt->get_result();
@@ -52,7 +52,7 @@
 					// Admin requestion their own session
 					if($data['IsAdmin'] == 1 && $data['MurdochUserNumber'] == $id)
 					{
-						$stmt = $con->prepare("select * from session where UserID = ?");	
+						$stmt = $con->prepare("select * from session where UserID = ? Order By SessionID DESC");	
 						$stmt->bind_param("s", $data['UserID']);
 						$stmt->execute();
 						$result = $stmt->get_result();

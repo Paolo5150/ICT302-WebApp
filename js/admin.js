@@ -160,6 +160,7 @@ function onSessionButtonClicked(id,firstname,lastname)
     }
     DoPost("server/getStudentSessions.php",myData,(response)=>{
 
+        //console.log(response)
         sessionObj = JSON.parse(response)
         var table = buildSessionTable(response)
 
@@ -167,6 +168,34 @@ function onSessionButtonClicked(id,firstname,lastname)
         html += '<h3 style="margin: auto">' + firstname + ' ' +  lastname + '</h3>'
         html += table;
         $("#main-content").html(html);   
+
+        },
+        (data, status, error)=>
+        {
+            alert("An error occurred")
+        } 
+    )
+}
+
+function getOwnSession()
+{
+    var token = getToken()
+    var mus = getMUS()
+    $("#search-field").hide();
+    var myData = {
+        Token: token,
+        MurdochUserNumber: mus
+    }
+    DoPost("server/getStudentSessions.php",myData,(response)=>{
+
+        //console.log(response)
+        sessionObj = JSON.parse(response)
+        var table = buildSessionTable(response)
+
+        var html = `<button type='button' class='btn btn-primary' onClick='backToStudentTable()'>Back</button>`
+        html += table;
+        $("#main-content").html(html);   
+   
 
         },
         (data, status, error)=>

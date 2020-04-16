@@ -236,7 +236,7 @@ function Details(index)
               </svg>`
             }
 
-            logsStrings+= "<span>" + logsObj[logInd] + "</span><br/><br/>";
+            logsStrings+= "<span style='font-size: 0.8em'>" + logsObj[logInd] + "</span><br/><br/>";
         }    
     }
 

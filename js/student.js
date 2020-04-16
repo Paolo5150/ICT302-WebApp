@@ -50,10 +50,7 @@ $(document).ready(function () {
     var myData = {
         Token: token,
         MurdochUserNumber: mus
-    }    
-    
-
-
+    }
 
     DoPost("server/getStudentSessions.php",myData,(response)=>{
         //console.log(response)
@@ -117,7 +114,7 @@ function Details(index)
               </svg>`
             }
 
-            logsStrings+= "<span>" + logsObj[logInd] + "</span><br/><br/>";
+            logsStrings+= "<span style='font-size: 0.8em'>" + logsObj[logInd] + "</span><br/><br/>";
         }
     }
 

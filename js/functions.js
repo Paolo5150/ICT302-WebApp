@@ -90,3 +90,13 @@ function getMUS()
      }
      return mus;
 }
+
+function GeneratePDF(sessionID)
+{
+    var token = getToken()
+    var mus = getMUS()
+
+    window.open("../server/generatePDF.php?SessionID=" + sessionID + "&MUS=" + mus + "&Token=" + token);
+
+  
+}

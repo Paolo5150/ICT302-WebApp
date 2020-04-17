@@ -25,7 +25,7 @@ function buildStudentTable(list)
             <td>${list[i][3]}</td>
             <td>${list[i][4]}</td>
             <td><button type='button' class='btn btn-primary' onClick='onSessionButtonClicked(${list[i][0]},"${list[i][2]}","${list[i][3]}" )'>Session</button></td> 
-            <td><button type='button' class='btn btn-primary' onClick="DeleteStudent(${list[i][0]})">Delete</button></td>    
+            <td><button type='button' class='btn btn-danger' onClick="DeleteStudent(${list[i][0]})">Delete</button></td>    
         </tr>
         `
     }
@@ -65,7 +65,7 @@ function buildSessionTable(response)
             <td onClick="Details(${i})">${arr[i][5]}</td>
             <td onClick="Details(${i})">${arr[i][6]}</td>
             <td><button type='button' class='btn btn-primary' onClick="Details(${i})">Details</button></td>
-            <td><button type='button' class='btn btn-primary'>PDF</button></td> 
+            <td><button type='button' class='btn btn-primary' onClick="GeneratePDF(${arr[i][0]})">PDF</button></td> 
         </tr>
         <tr id="details-${i}" style="display: none">
         </tr>

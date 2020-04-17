@@ -88,15 +88,17 @@
             $logsObj = json_decode($sessionData['Logs']);
             $pdf->SetFont('Arial','',7);
             $line = 150;
+            $currentPage = $pdf->PageNo();
             foreach ($logsObj as $key => $value) {
+                if($pdf->PageNo() > $currentPage)
+                {
+                    $line = 20;
+                    $currentPage = $pdf->PageNo();
+                }
                 $pdf->SetY($line);
                 $pdf->WriteHTML($value);
                 $line += 10;
-
-
             }
-
-
 
             $pdf->Output();        
 		}

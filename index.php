@@ -54,11 +54,11 @@ if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
               </div>
               <div class="loginarea">
                 <p style="text-align: center; margin-bottom: 50px;">Log In</p>
-                <form class="loginform" method="post">
-                  <input type="text" id="username" class="textfield" style="margin-bottom: 5px;" placeholder="Username"><br>
-                  <input type="password" id="password" class="textfield" placeholder="Password" style="margin-bottom: 5px;"><br>
+                <form class="loginform">
+                  <input type="text" id="username" class="textfield col-lg-12 col-md-12 col-sm-8 col-8 " style="margin-bottom: 5px;" placeholder="Username"><br>
+                  <input type="password" id="password" class="textfield col-lg-12 col-md-12 col-sm-8 col-8 mt-4" placeholder="Password" style="margin-bottom: 5px;"><br>
                   <!-- <button id="forgotpassword-btn" style="margin-bottom: 20px;">Forgot my password</button> -->
-                  <a href="forgotPasswordClient.php?">Forgot your password?</a>
+                  <a href="forgotPasswordClient.php?" class="col-lg-10 col-md-10 col-sm-10 col-10">Forgot your password?</a>
                   <p id="errortext"></p>
                   <input type="button" class="btn btn-primary" value="Back">
                   <input type="submit" id="submit-btn" class="btn btn-primary" value="Submit">

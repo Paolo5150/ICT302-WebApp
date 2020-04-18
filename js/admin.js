@@ -206,10 +206,43 @@ function onSessionButtonClicked(id,firstname,lastname)
     )
 }
 
+function ChangeDetails()
+{
+    if(confirm("You want to save the changes made?"))
+    {
+        var fName = $("#firstname-field").val();
+        var lName = $("#lastname-field").val();
+        var email = $("#email-field").val();
+        var token = getToken()
+        var mus = getMUS()
+
+        var data = {
+            FirstName: fName,
+            LastName: lName,
+            Email: email,
+            MurdochUserNumber: mus,
+            Token: token
+        }
+
+        DoPost("server/updateAccountDetails.php",data,(response)=>{
+
+            console.log(response)
+            var rObj = JSON.parse(response)
+            alert(rObj.Message)       
+    
+            },
+            (data, status, error)=>
+            {
+                alert("An error occurred")
+            } 
+        )
+
+    }
+}
+
 
 function GenerateAccountTable()
 {
-
 
     var table = `
     <div class="col-lg-12 row m-2">
@@ -233,7 +266,7 @@ function GenerateAccountTable()
     </div>
 
     <div class="col-lg-12 row m-2">
-        <button type='button' class='btn btn-primary m-2' >Save changes</button>
+        <button type='button' class='btn btn-primary m-2' onClick="ChangeDetails()">Save changes</button>
         <button type='button' class='btn btn-primary m-2' id="change-psw-btn" onClick="ChangePassword()">Change password</button>
     </div>
     `

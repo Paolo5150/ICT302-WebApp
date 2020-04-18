@@ -62,7 +62,7 @@
                     <a class="nav-link" href="#" id="account-btn">Account</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" id="logout-btn">Logout</a>
+                    <a class="nav-link" href="#" id="logout-btn" onClick="LogOut()">Logout</a>
                 </li>
             </ul>
         </div>

@@ -67,19 +67,6 @@ $(document).ready(function () {
             alert("An error occurred")
         } 
     )
-
-  $("#logout-btn").click(function(e){
-
-    DoPost("server/logout.php",myData,(response)=>{
-
-        window.location = "../index.php"   
-        },
-        (data, status, error)=>
-        {
-            alert("An error occurred")
-        } 
-    )
-    })
 })
 
 

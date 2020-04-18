@@ -67,8 +67,8 @@
         <div id="main-container">
 
             <section class="inner-section" id="main-form-section">
-                <div class="container"> <!-- Can 'container' or 'container-fluid' -->
-                    <div class ="row" id="main-content"> 
+                <div class="container">
+                    <div class ="row" id="main-content">
                                                 
                     </div>  
                 </div>

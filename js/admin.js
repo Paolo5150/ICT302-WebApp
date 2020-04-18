@@ -242,36 +242,7 @@ function GenerateAccountTable()
     return table;
 }
 
-function ChangePassword()
-{
-    if(confirm("Changing your password will require you to log in again. Do you wish to continue?"))
-    {
-        var token = getToken()
-        var mus = getMUS()
-    
-        var data = {
-            MurdochUserNumber: mus,
-            Token: token
-        }
-        DoPost("server/changePassword.php",data,(response)=>{
-            console.log(response)
-            var responseObj = JSON.parse(response)
-            if(responseObj.Status == 'ok')
-            {
-                window.location = "../index.php"
-    
-            }
-            
-            alert(responseObj.Message)
-            },
-            (data, status, error)=>
-            {
-                alert("An error occurred")
-            } 
-        )
-    }
 
-}
 
 function GetOwnSession()
 {

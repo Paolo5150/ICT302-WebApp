@@ -56,7 +56,7 @@
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Account</a>
+                    <a class="nav-link" href="#" id="account-btn">Account</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" onClick="LogOut()">Logout</a>
@@ -68,7 +68,7 @@
 
             <section class="inner-section" id="main-form-section">
                 <div class="container"> <!-- Can 'container' or 'container-fluid' -->
-                    <div class ="row" id="main-content" style="height: 1600px"> 
+                    <div class ="row" id="main-content"> 
                                                 
                     </div>  
                 </div>

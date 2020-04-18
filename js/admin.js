@@ -108,6 +108,46 @@ $(document).ready(function () {
         } 
     )
 
+    // Click account button
+    $("#account-btn").click(function(e){
+
+        $("#search-field").hide();
+
+        var token = getToken()
+        var mus = getMUS()
+    
+        var data = {
+            MurdochUserNumber: mus,
+            Token: token
+        }
+    
+        DoPost("server/getUserDetails.php",data,(response)=>{
+            
+            var htmlContent = `<button type='button' class='btn btn-primary col-lg-1 col-md-1 col-sm-1' onClick='backToStudentTable()'>Back</button>
+                                <p class='col-lg-11 col-md-11 col-sm-11 m-3 '></p>` //Create empty space for new line
+            var accountTable = GenerateAccountTable()
+            htmlContent += accountTable;
+            $("#main-content").html(htmlContent)
+
+            var responseObj = JSON.parse(response)
+            var data = JSON.parse(responseObj.Data)
+
+            $("#mus-field").val(data.MurdochUserNumber)
+            $("#firstname-field").val(data.FirstName)
+            $("#lastname-field").val(data.LastName)
+            $("#email-field").val(data.Email)
+
+    
+            },
+            (data, status, error)=>
+            {
+                alert("An error occurred")
+            } 
+        )
+
+    })
+
+    // Logout button
   $("#logout-btn").click(function(e){
 
     DoPost("server/logout.php",myData,(response)=>{
@@ -178,7 +218,74 @@ function onSessionButtonClicked(id,firstname,lastname)
     )
 }
 
-function getOwnSession()
+
+function GenerateAccountTable()
+{
+
+
+    var table = `
+    <div class="col-lg-12 row m-2">
+        <label class="col-lg-2">Murdoch ID</label>
+        <input id="mus-field" type="text" class="form-control col-lg-10" readonly/>
+    </div>
+
+    <div class="col-lg-12 row m-2">
+        <label class="col-lg-2">First Name</label>
+        <input id="firstname-field" type="text" class="form-control col-lg-10"/>
+    </div>
+
+    <div class="col-lg-12 row m-2">
+        <label class="col-lg-2">Last Name</label>
+        <input id="lastname-field" type="text" class="form-control col-lg-10"/>
+    </div>
+
+    <div class="col-lg-12 row m-2">
+        <label class="col-lg-2">Email</label>
+        <input id="email-field" type="text" class="form-control col-lg-10"/>
+    </div>
+
+    <div class="col-lg-12 row m-2">
+        <button type='button' class='btn btn-primary m-2' >Save changes</button>
+        <button type='button' class='btn btn-primary m-2' id="change-psw-btn" onClick="ChangePassword()">Change password</button>
+    </div>
+    `
+
+
+    return table;
+}
+
+function ChangePassword()
+{
+    if(confirm("Changing your password will require you to log in again. Do you wish to continue?"))
+    {
+        var token = getToken()
+        var mus = getMUS()
+    
+        var data = {
+            MurdochUserNumber: mus,
+            Token: token
+        }
+        DoPost("server/changePassword.php",data,(response)=>{
+            console.log(response)
+            var responseObj = JSON.parse(response)
+            if(responseObj.Status == 'ok')
+            {
+                window.location = "../index.php"
+    
+            }
+            
+            alert(responseObj.Message)
+            },
+            (data, status, error)=>
+            {
+                alert("An error occurred")
+            } 
+        )
+    }
+
+}
+
+function GetOwnSession()
 {
     var token = getToken()
     var mus = getMUS()

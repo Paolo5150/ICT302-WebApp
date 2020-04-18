@@ -1,19 +1,16 @@
 <?php
 	include("globals.php");
-    include("functions.php");
+	include("functions.php");
 
-    if(isset($_POST['MurdochUserNumber']) || isset($_POST['Email']))
+    if(isset($_POST['MurdochUserNumber']) || isset($_POST['Token']))
 	{
         //Incoming variables
-        if(isset($_POST['MurdochUserNumber']))
-            $id = $_POST['MurdochUserNumber'];
-
-        if(isset($_POST['Email']))
-		    $email = $_POST['Email'];
+         $id = $_POST['MurdochUserNumber'];
+         $token = $_POST['Token'];
 		
 		$con = connectToDb();
-		$stmt = $con->prepare("select * from user where MurdochUserNumber = ? OR Email = ?");
-		$stmt->bind_param("ss", $id, $email);
+		$stmt = $con->prepare("select * from user where MurdochUserNumber = ? AND Token = ?");
+		$stmt->bind_param("ss", $id, $token);
 		$stmt->execute();
 		
 		//Check if we got something	
@@ -40,28 +37,25 @@
             }	
             else
             {
-               //Generate a random string.
+                //Generate a random string.
                 $token = bin2hex(openssl_random_pseudo_bytes(16));
+	 
 
-                $now = date("Y-m-d H:i:s");		 
-                //strtotime will convert time into an integer, so we can easily add seconds to it (expirationSeconds is defined in dbConnection, where other globals are)
                 $TokenExpireTime = strtotime('+0 days', strtotime($now)) + $expirationSeconds; 
-                // However, in the database we save time im format hh:mm:ss, so this convert the time back to that format
-                $TokenExpireTimeFormat = date('Y-m-d H:i:s', $TokenExpireTime);
+                $TokenExpireTimeFormat = date('Y-m-d H:i:s', $TokenExpireTime); 
 
-                $tempPsw = bin2hex(openssl_random_pseudo_bytes(6));
                 //Save to db
-                $stmt = $con->prepare("update user set Password = ?, PasswordResetRequired = 1, Token = ?, TokenExpireTime = ? WHERE  MurdochUserNumber = ?");	
-                $stmt->bind_param("ssss", $tempPsw,$token, $TokenExpireTimeFormat, $data['MurdochUserNumber']);
+                $stmt = $con->prepare("update user set Token = ?, TokenExpireTime = ?, PasswordResetRequired = 1 WHERE  MurdochUserNumber = ?");	
+                $stmt->bind_param("sss", $token, $TokenExpireTimeFormat, $data['MurdochUserNumber']);
                 $stmt->execute();
 
                 $link =  $serverAddress . 'web/resetPassword.html?' . $data['MurdochUserNumber'] . '&' . $token;
-                $emailBody = "<p>Reset your password link: " . $link . "</p><h1>Use <b>" . $tempPsw . "</b> as your old password</h1>";
+                $emailBody = "<p>Reset your password link: " . $link . "</p>";
                 sendEmail($data['Email'], "Password reset requested", $emailBody );
 
                 $reply->Status = 'ok';
                 $reply->Message = "An email was sent to your nominated address.";
-                $reply->Data = $emailBody;
+
             }
         }
         else
@@ -74,9 +68,4 @@
         echo $myJSON;
         mysqli_close($con);			
     }
-    else
-    {
-        echo 'wtf';
-    }
-
 ?>

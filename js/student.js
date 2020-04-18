@@ -40,7 +40,7 @@ function buildSessionTable(response)
 }
 
 var obj;
-
+var cachedTable;
 
 $(document).ready(function () {
 
@@ -55,6 +55,7 @@ $(document).ready(function () {
     DoPost("server/getStudentSessions.php",myData,(response)=>{
         //console.log(response)
         var table = buildSessionTable(response)
+        cachedTable = table; //Save table so content can be reused in the back button
         obj = JSON.parse(response);
 
         $("#main-content").html(table)

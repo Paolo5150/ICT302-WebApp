@@ -68,14 +68,17 @@
 
             <section class="inner-section" id="main-form-section">
                 <div class="container"> <!-- Can 'container' or 'container-fluid' -->
-                    <div class ="row" id="main-content"> 
+                    <div class ="row" id="main-content" style="height: 1600px"> 
                                                 
                     </div>  
                 </div>
             </section>
     </div>
     </body>
-    <footer>
-
+    <footer class="page-footer font-small teal pt-4" style="position: fixed; bottom: 0; width: 100%; background-color: #55555555">
+        <!-- Footer Text -->
+        <div class="container-fluid text-center text-md-left">
+        </div>
+        <div class="footer-copyright text-center py-3">© 2020 Copyright Real Tech</div>
     </footer>
 </html>

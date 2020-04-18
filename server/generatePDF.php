@@ -25,7 +25,7 @@
 
         if($result && $result->num_rows > 0)
 		{
-          //Check if admin
+            //Check if admin
             $data = $result->fetch_assoc();
             if($data['IsAdmin'] == 1)
             {
@@ -33,18 +33,21 @@
             }
             else
             {
+                //Check that the session belongs to the user
+                $stmt = $con->prepare("select * from session where SessionID = ?");	
+                $stmt->bind_param("s", $sessionID);
+                $stmt->execute();
+                $result = $stmt->get_result();		
 
+                if($result && $result->num_rows > 0)
+                {
+                    $sessionData = $result->fetch_assoc();
+                    if($sessionData['UserID'] == $data['UserID'])
+                        GenPDF($sessionID);
+                }
             }
-        }
-        else
-        {
-
-
-        }
-        
-       
-     }  
-     
+        }      
+     }
 
      function GenPDF($sessionID)
      {

@@ -45,9 +45,9 @@
 
     <nav class="navbar navbar-expand-md navbar-light bg-light">
         <div class="mx-auto order-0">
-            <div class="navbar-brand">
+            <div class="navbar-brand" >
                 <img src="../imgs/logo.png" style="width: 50px;"/>
-                <a class="" id="welcome-title">Welcome</a>
+                <span id="welcome-title" >Welcome</span>
             </div>            
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
                 <span class="navbar-toggler-icon"></span>

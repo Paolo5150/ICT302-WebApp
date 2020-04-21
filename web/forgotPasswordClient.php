@@ -1,8 +1,10 @@
 <?php
 
+session_start();
 include("../server/globals.php");
 include("../server/functions.php");
-RedirectIfTokenIsValid($serverAddress . "web/index.php")
+
+
 
 ?>
 
@@ -43,11 +45,11 @@ RedirectIfTokenIsValid($serverAddress . "web/index.php")
               <div class="loginarea">
                 <p style="text-align: center; margin-bottom: 50px;">Forgot password</p>
                 <form class="loginform" method="post">
-                  <input type="text" id="username" class="textfield" style="margin-bottom: 5px;" placeholder="Username"><br>
+                  <input type="text" id="username" class="textfield textfield col-lg-12 col-md-12 col-sm-8 col-8 " style="margin-bottom: 5px;" placeholder="Username"><br>
                   <p style="text-align: center;">OR</p>
-                  <input type="text" id="email" class="textfield" placeholder="Email" style="margin-bottom: 20px;"><br>
+                  <input type="text" id="email" class="textfield textfield col-lg-12 col-md-12 col-sm-8 col-8 " placeholder="Email" style="margin-bottom: 20px;"><br>
                   <p id="errortext"></p>
-                  <a href="loginClient.php?" class="btn btn-primary" value="Back">Back</a>
+                  <a href="../index.php?" class="btn btn-primary" value="Back">Back</a>
                   <input type="submit" id="submit-btn" class="btn btn-primary" value="Submit">
                 </form>
               </div>

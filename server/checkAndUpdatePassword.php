@@ -108,7 +108,7 @@
             $result = false;
 
             // At least one special char
-        if (!preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $psw))        
+        if (!preg_match('/[\'^£$%&*()}{@#~!#?><>,|=_+¬-]/', $psw))        
             $result = false;            
         
         return $result;

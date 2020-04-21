@@ -123,11 +123,10 @@ $(document).ready(function () {
     
         DoPost("server/getUserDetails.php",data,(response)=>{
             
-            var htmlContent = `<button type='button' class='btn btn-primary col-lg-1 col-md-1 col-sm-1' onClick='backToStudentTable()'>Back</button>
-                                <p class='col-lg-11 col-md-11 col-sm-11 m-3 '></p>` //Create empty space for new line
+
             var accountTable = GenerateAccountTable()
-            htmlContent += accountTable;
-            $("#main-content").html(htmlContent)
+
+            $("#main-content").html(accountTable)
 
             var responseObj = JSON.parse(response)
             var data = JSON.parse(responseObj.Data)
@@ -245,6 +244,8 @@ function GenerateAccountTable()
 {
 
     var table = `
+    <button type='button' class='btn btn-primary col-lg-1 col-md-1 col-sm-1' onClick='backToStudentTable()'>Back</button>
+                                <p class='col-lg-11 col-md-11 col-sm-11 m-3 '></p>
     <div class="col-lg-12 row m-2">
         <label class="col-lg-2">Murdoch ID</label>
         <input id="mus-field" type="text" class="form-control col-lg-10" readonly/>
@@ -343,6 +344,42 @@ function Details(index)
     $("#details-" + index).html(logsStrings)  
     $("#details-" + index).toggle()  
 
+}
+
+
+function CreateAdmin()
+{
+    var table = `
+    <button type='button' class='btn btn-primary col-lg-1 col-md-1 col-sm-1' onClick='backToStudentTable()'>Back</button>
+                                <p class='col-lg-11 col-md-11 col-sm-11 m-3 '></p>
+    <div class="col-lg-12 row m-2">
+        <label class="col-lg-2">Murdoch ID</label>
+        <input id="mus-field" type="text" class="form-control col-lg-10" readonly/>
+    </div>
+
+    <div class="col-lg-12 row m-2">
+        <label class="col-lg-2">First Name</label>
+        <input id="firstname-field" type="text" class="form-control col-lg-10"/>
+    </div>
+
+    <div class="col-lg-12 row m-2">
+        <label class="col-lg-2">Last Name</label>
+        <input id="lastname-field" type="text" class="form-control col-lg-10"/>
+    </div>
+
+    <div class="col-lg-12 row m-2">
+        <label class="col-lg-2">Email</label>
+        <input id="email-field" type="text" class="form-control col-lg-10"/>
+    </div>
+
+    <div class="col-lg-12 row m-2">
+        <button type='button' class='btn btn-primary m-2' onClick="ChangeDetails()">Save changes</button>
+        <button type='button' class='btn btn-primary m-2' id="change-psw-btn" onClick="ChangePassword()">Change password</button>
+    </div>
+    `
+
+
+    return table;
 }
 
 

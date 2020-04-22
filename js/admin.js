@@ -347,7 +347,7 @@ function Details(index)
 }
 
 
-function CreateAdmin()
+function CreateAdminTable()
 {
     var table = `
     <button type='button' class='btn btn-primary col-lg-1 col-md-1 col-sm-1' onClick='backToStudentTable()'>Back</button>
@@ -379,6 +379,46 @@ function CreateAdmin()
 
     $("#search-field").hide();
     $("#main-content").html(table);
+}
+
+function CreateAdminAccount()
+{
+    var murdochID = $("#mus-field").val()
+    var fName = $("#firstname-field").val()
+    var lName = $("#lastname-field").val()
+    var email = $("#email-field").val()
+
+    var mus = getMUS()
+    var token = getToken()
+
+    var data = {
+        MurdochUserNumber: mus,
+        Token: token,
+        AdminMUS: murdochID,
+        AdminFName: fName,
+        AdminLName: lName,
+        AdminEmail: email
+    }
+
+
+    if (confirm("Do you want to create a new account for " + fName + " " + lName + "?")) {
+        alert("An email will be sent to the specified address")
+        DoPost("server/createAdmin.php",data,(response)=>{
+
+            var obj = JSON.parse(response)
+            if(obj.Status == 'ok')
+            {
+               // alert(obj.Message)
+            }
+    
+            },
+            (data, status, error)=>
+            {
+               // alert("An error occurred")
+            } 
+        )
+      }
+
 }
 
 

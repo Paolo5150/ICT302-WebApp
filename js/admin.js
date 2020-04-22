@@ -354,7 +354,7 @@ function CreateAdmin()
                                 <p class='col-lg-11 col-md-11 col-sm-11 m-3 '></p>
     <div class="col-lg-12 row m-2">
         <label class="col-lg-2">Murdoch ID</label>
-        <input id="mus-field" type="text" class="form-control col-lg-10" readonly/>
+        <input id="mus-field" type="text" class="form-control col-lg-10" />
     </div>
 
     <div class="col-lg-12 row m-2">
@@ -373,13 +373,12 @@ function CreateAdmin()
     </div>
 
     <div class="col-lg-12 row m-2">
-        <button type='button' class='btn btn-primary m-2' onClick="ChangeDetails()">Save changes</button>
-        <button type='button' class='btn btn-primary m-2' id="change-psw-btn" onClick="ChangePassword()">Change password</button>
+        <button type='button' class='btn btn-primary m-2' onClick="CreateAdminAccount()">Create account</button>
     </div>
     `
 
-
-    return table;
+    $("#search-field").hide();
+    $("#main-content").html(table);
 }
 
 

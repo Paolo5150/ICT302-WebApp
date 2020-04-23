@@ -379,6 +379,39 @@ function CreateAdminTable()
 
     $("#search-field").hide();
     $("#main-content").html(table);
+
+    // Eliminate non numbers characters
+    $("#mus-field").change(function() {
+        
+        var newValue = "";
+        for(var i=0; i< $("#mus-field").val().length; i++)
+        {
+            if(IsNumber($("#mus-field").val()[i]))
+            {  
+                newValue += $("#mus-field").val()[i];
+            }
+        }
+       
+        $("#mus-field").val(newValue)
+        
+      });
+}
+
+function IsNumber(c){
+    return (c >= "0" && c <= "9");
+}
+
+function removeAllNonNumbers(value)
+{
+    var newValue = "";
+    for(var i=0; i< value.length; i++)
+    {
+        if(isNumber(value[i]))
+        {  
+            newValue += value[i];
+        }
+    }
+    return newValue;
 }
 
 function CreateAdminAccount()
@@ -388,6 +421,13 @@ function CreateAdminAccount()
     var lName = $("#lastname-field").val()
     var email = $("#email-field").val()
 
+    if(murdochID == '' || fName == '' || lName == '' || email == '')
+    {
+        alert("Empty fields not allowed")
+        return
+    }
+    
+  
     var mus = getMUS()
     var token = getToken()
 

@@ -23,6 +23,13 @@ $(document).ready(function () {
       
                 var responseObj = JSON.parse(response);
                 alert(responseObj.Message); 
+                if(responseObj.Status == 'ok')
+                {
+
+                    setInterval(()=>{
+                        window.location = "../index.php"
+                    },2)
+                }
             },
             
             (data, status, error)=>

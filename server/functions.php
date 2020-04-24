@@ -24,6 +24,8 @@
             $output = base64_encode($output);
         } else if( $action == 'd' ) {
             $output = openssl_decrypt(base64_decode($string), $encrypt_method, $key, 0, $iv);
+            if($output == false)
+                $output = $string; //If fails to decrypt, return original string
         }
 
         return $output;

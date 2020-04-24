@@ -2,47 +2,46 @@
 	include("globals.php"); 
     include("functions.php");
 
-    if(isset($_POST['MurdochUserNumber']) && isset($_POST['Password']) && isset($_POST['Confirm']) && isset($_POST['OldPassword']) && isset($_POST['Token']))
+    if(isset($_POST['MurdochUserNumber']) && isset($_POST['Password']) && isset($_POST['Confirm']) && isset($_POST['OldPassword']) && isset($_POST['Email']))
 	{
+        
 		//Incoming variables
 		$id = $_POST['MurdochUserNumber'];
         $psw = $_POST['Password'];
         $confirm = $_POST['Confirm'];
         $oldPsw = $_POST['OldPassword'];
-        $token = $_POST['Token'];
+        $email = $_POST['Email'];
+
 		$con = connectToDb();
 
 		// Check token
 
-		$stmt = $con->prepare("select * from user where MurdochUserNumber = ?");
-		$stmt->bind_param("i", $id);
+		$stmt = $con->prepare("select * from user where MurdochUserNumber = ? AND Email = ?");
+		$stmt->bind_param("is", $id, $email);
 		$stmt->execute();
 		$result = $stmt->get_result();
 
-		$reply = new stdClass();
-
-		if($result && $result->num_rows > 0)
+        $reply = new stdClass();
+        
+        if($psw == "" || $confirm == "" || $oldPsw == "" || $id == "" || $email == "")
+        {
+            $reply->Message = 'Empty fields not allowed';
+        }
+		else if($result && $result->num_rows > 0)
 		{
             $data = $result->fetch_assoc(); //Get row
-            // Add additional info about the status of the token
-			$tokenExpiration = $data['TokenExpireTime'];
-			$tokenSaved = $data['Token'];
+        
+            $reply->Status = 'fail';  
+            //Check password
+			$pswSaved = $data['Password'];
+			//Try to decrypt
+            $pswDec = encrypt_decrypt('d',$pswSaved);
 
-            $now = date("Y-m-d H:i:s");
-
-            $reply->Status = 'fail';            
-            if($token != $tokenSaved || $now > $tokenExpiration)
-            {
-                $reply->Message = 'Link has expired';
-            }
-            else if($oldPsw != $data['Password'])
+                      
+            if($oldPsw != $pswDec)
             {
                 $reply->Message = 'Old password incorrect';
-            }
-            else if($psw == "" || $confirm == "" || $oldPsw == "")
-            {
-                $reply->Message = 'Empty fields not allowed';
-            }
+            }           
             else if(!IsPasswordGoodEnough($psw))
             {
                 $reply->Message = 'Password not strong enough';

@@ -26,6 +26,8 @@
         <link rel="icon" href="../imgs/logo.png">
         <!-- Stylesheets -->
         <link href="../css/resetstyle.css" rel="stylesheet" />
+        <link href="../css/toggleswitch.css" rel="stylesheet" />
+
    
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -56,7 +58,7 @@
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#" onClick="CreateAdminTable()">Create admin</a>
+                    <a class="nav-link" href="#" onClick="CreateAdminTable()">Create user</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" onClick="GetOwnSession()">Your sessions</a>
@@ -71,13 +73,14 @@
         </div>
     </nav>
     <div id="main-container">
-
+   
         <section class="inner-section" id="main-form-section">
             <div class="container"> <!-- Can 'container' or 'container-fluid' -->
             <input id='search-field' class='form-control' type='text' placeholder='Search' aria-label='Search' onchange='searchStudent()'>
                 <div class ="row" id="main-content"> 
                                                 
                 </div>  
+                
             </div>
         </section>
     </div>

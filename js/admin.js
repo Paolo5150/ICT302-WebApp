@@ -331,9 +331,16 @@ function CreateAdminTable()
         <label class="col-lg-2">Email</label>
         <input id="email-field" type="text" class="form-control col-lg-10"/>
     </div>
+    <div class="col-lg-12 row m-2">
+        <label class="col-lg-2">Admin</label>
+        <div class="material-switch pull-right">
+            <input id="admin-switch" name="someSwitchOption001" type="checkbox"/>
+            <label for="admin-switch" class="label-primary"></label>
+        </div>
+    </div>    
 
     <div class="col-lg-12 row m-2">
-        <button type='button' class='btn btn-primary m-2' onClick="CreateAdminAccount()">Create account</button>
+        <button type='button' class='btn btn-primary m-2' onClick="CreateAccount()">Create account</button>
     </div>
     `
 
@@ -374,12 +381,15 @@ function removeAllNonNumbers(value)
     return newValue;
 }
 
-function CreateAdminAccount()
+function CreateAccount()
 {
     var murdochID = $("#mus-field").val()
     var fName = $("#firstname-field").val()
     var lName = $("#lastname-field").val()
     var email = $("#email-field").val()
+    var isAdmin = $("#admin-switch").prop("checked")? 1 : 0;
+
+    console.log("Is admin " + isAdmin)
 
     if(murdochID == '' || fName == '' || lName == '' || email == '')
     {
@@ -397,18 +407,19 @@ function CreateAdminAccount()
         AdminMUS: murdochID,
         AdminFName: fName,
         AdminLName: lName,
-        AdminEmail: email
+        AdminEmail: email,
+        AdminPriv: isAdmin
     }
 
 
     if (confirm("Do you want to create a new account for " + fName + " " + lName + "?")) {
-        alert("An email will be sent to the specified address")
-        DoPost("server/createAdmin.php",data,(response)=>{
-
+        alert("Request sent.")
+        DoPost("server/createUser.php",data,(response)=>{
+            
             var obj = JSON.parse(response)
             if(obj.Status == 'ok')
             {
-               // alert(obj.Message)
+                alert(obj.Message)
             }
     
             },

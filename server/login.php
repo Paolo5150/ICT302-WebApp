@@ -62,8 +62,14 @@
 				if($data['PasswordResetRequired'] == 1)
 				{
 					$reply->Status = 'fail';
-					$link = "Click on this link to reset your password: <a target='_blank' href='${serverAddress}web/resetPassword.html'>RESET PASSWORD</a>";
-					$reply->Message = $link;				
+					if(!isset($_POST['IsSim']))
+					{
+						$reply->Message = "Click on this link to reset your password: <a target='_blank' href='${serverAddress}web/resetPassword.php'>RESET PASSWORD</a>";
+					}
+					else
+					{
+						$reply->Message = "Please go on " . $serverAddress . " and login to reset your password.";
+					}
 
 		
 				}

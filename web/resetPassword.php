@@ -1,3 +1,19 @@
+<?php
+    session_start();
+    include("../server/globals.php");
+    include("../server/functions.php");
+
+    // Check user privileges
+    if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
+    {
+        if(IsTokenOk($_SESSION['MurdochUserNumber'],$_SESSION['Token']))
+        {
+            header("Location: " . $serverAddress . "index.php");
+        }            
+    }
+ 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>

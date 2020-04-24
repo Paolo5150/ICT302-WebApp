@@ -37,8 +37,11 @@
 			//Try to decrypt
             $pswDec = encrypt_decrypt('d',$pswSaved);
 
-                      
-            if($oldPsw != $pswDec)
+            if($data['PasswordResetRequired'] == 0)
+            {
+                $reply->Message = 'Password has been set'; 
+            }
+            else if($oldPsw != $pswDec)
             {
                 $reply->Message = 'Old password incorrect';
             }           

@@ -64,6 +64,8 @@ if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
                     if(IsAdmin($_SESSION['MurdochUserNumber']))
                       echo '<a href="web/resetPassword.php" class="col-lg-10 col-md-10 col-sm-10 col-10">Forgot your password?</a>';          
                   }
+                  else 
+                    echo '<a href="web/resetPassword.php" class="col-lg-10 col-md-10 col-sm-10 col-10">Forgot your password?</a>';
                   
                   
                   ?>

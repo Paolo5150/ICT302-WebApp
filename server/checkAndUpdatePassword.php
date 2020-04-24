@@ -37,7 +37,7 @@
 			//Try to decrypt
             $pswDec = encrypt_decrypt('d',$pswSaved);
 
-            if($data['PasswordResetRequired'] == 0)
+            if($data['PasswordResetRequired'] == 0 && $data['IsAdmin'] == 0 )
             {
                 $reply->Message = 'Password has been set'; 
             }

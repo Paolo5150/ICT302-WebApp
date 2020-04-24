@@ -175,7 +175,6 @@ function GenerateAccountTable()
 
     <div class="col-lg-12 row m-2">
         <button type='button' class='btn btn-primary m-2' onClick="ChangeDetails()" >Save changes</button>
-        <button type='button' class='btn btn-primary m-2' id="change-psw-btn" onClick="ChangePassword()">Change password</button>
     </div>
     `
 

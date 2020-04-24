@@ -276,6 +276,21 @@ function GenerateAccountTable()
     return table;
 }
 
+function ChangePassword()
+{
+    if(confirm("Changing your password will require you to log in again. Do you wish to continue?"))
+    {
+        LogOut(); //Defined in 'functions.js'
+        var win = window.open('../web/resetPassword.php', '_blank');
+        if (win) {
+            //Browser has allowed it to be opened
+            win.focus();
+        } else {
+            //Browser has blocked it
+            alert('Please allow popups for this website');
+        }
+    }
+}
 
 
 function GetOwnSession()

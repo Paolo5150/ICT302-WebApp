@@ -322,7 +322,7 @@ function GetOwnSession()
 }
 
 
-function CreateAdminTable()
+function CreateUserTable()
 {
     var table = `
     <button type='button' class='btn btn-primary col-lg-1 col-md-1 col-sm-1' onClick='backToStudentTable()'>Back</button>
@@ -361,6 +361,16 @@ function CreateAdminTable()
 
     $("#search-field").hide();
     $("#main-content").html(table);
+
+    $("#admin-switch").change(function() {
+        
+       if($("#admin-switch").prop("checked"))
+       if(confirm("Are you sure you want to give this account administrator privileges?"))
+        $("#admin-switch").prop("checked",true)
+        else
+        $("#admin-switch").prop("checked",false)
+        
+      });
 
     // Eliminate non numbers characters
     $("#mus-field").change(function() {

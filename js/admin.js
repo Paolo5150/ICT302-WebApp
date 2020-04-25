@@ -595,6 +595,33 @@ function DeleteStudent(userID)
                 alert("An error occurred")
             } 
         )
-      }
-    
+      }    
+}
+
+
+function GetCSV()
+{
+    var token = getToken()
+    var mus = getMUS()
+
+    var data = {
+        Token: token,
+        MurdochUserNumber: mus
+    }
+
+    DoPost("server/generateCSV.php",data,(response)=>{
+
+        console.log(response)
+       /* var obj = JSON.parse(response)
+        if(obj.Status == 'ok')
+        {
+            
+        }
+
+        },
+        (data, status, error)=>
+        {
+            alert("An error occurred")
+        } */
+    })   
 }

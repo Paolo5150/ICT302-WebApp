@@ -11,19 +11,14 @@
 	{
 	
 
-		//Check captcha
-		$recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
-    	$recaptcha_secret = '6Lda7O0UAAAAAL74xsERdf-sNOv2hDx6jbFg2nZA';
-		$recaptcha_response = $_POST['Captcha'];
-		
-		$recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret . '&response=' . $recaptcha_response);
-		$recaptcha = json_decode($recaptcha);
-		
-		if ($recaptcha->score < 0.5) 
-		{
-			$reply->Status = 'fail';
-			$reply->Message = "Unothorized login";
-		}
+		$secret = '6Lek8e0UAAAAAIibDE_PApaTaldM-CyshyMDFHJZ';
+        $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$_POST['Captcha']);
+        $responseData = json_decode($verifyResponse);
+        if(!$responseData->success)
+        {
+            $reply->Status = 'fail';
+			$reply->Message = "Captcha invalid";
+        }
 		else
 		{
 					//Incoming variables
@@ -88,9 +83,7 @@
 						else
 						{
 							$reply->Message = "Please go on " . $serverAddress . " and login to reset your password.";
-						}
-
-			
+						}			
 					}
 					else
 					{

@@ -5,7 +5,7 @@
 
     if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
     {
-        if(IsTokenOk($_SESSION['MurdochUserNumber'],$_SESSION['Token']))
+        if(IsAccountOK($_SESSION['MurdochUserNumber'],$_SESSION['Token']))
         {
             if(IsAdmin($_SESSION['MurdochUserNumber']))
                 header("Location: " . $serverAddress . "web/admin.php");

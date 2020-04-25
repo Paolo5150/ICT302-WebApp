@@ -31,7 +31,8 @@
         return $output;
     }
 
-    function IsTokenOk($id, $token)
+    //This checks that the account is valid, with a valid login token
+    function IsAccountOK($id, $token)
     {
         $con = connectToDb();
         $stmt = $con->prepare("select * from user where MurdochUserNumber = ?");
@@ -41,7 +42,7 @@
         if($result && $result->num_rows > 0)
         {
             $data = $result->fetch_assoc(); //Get first fow
-            if(isset($data['Token']) && $data['Token'] == $token && $data['PasswordResetRequired'] == 0)
+            if($data['AccountActive'] == 1 && isset($data['Token']) && $data['Token'] == $token && $data['PasswordResetRequired'] == 0)
                 return true;
             else
                 return false;

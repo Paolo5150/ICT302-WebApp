@@ -7,18 +7,41 @@
 	$reply = new stdClass();
 	$reply->Data = new stdClass();
 
-    if(isset($_POST['MurdochUserNumber']) && isset($_POST['Password']) && isset($_POST['Captcha']))
+    if(isset($_POST['MurdochUserNumber']) && isset($_POST['Password']))
 	{
 	
+		$canLogin = false;
 
-		$secret = '6Lek8e0UAAAAAIibDE_PApaTaldM-CyshyMDFHJZ';
-        $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$_POST['Captcha']);
-        $responseData = json_decode($verifyResponse);
-        if(!$responseData->success)
-        {
-            $reply->Status = 'fail';
+		// If not simulation, check captcha
+		if(!isset($_POST['IsSim']))
+		{
+			if(isset($_POST['Captcha']))
+			{
+				$secret = '6Lek8e0UAAAAAIibDE_PApaTaldM-CyshyMDFHJZ';
+				$verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$_POST['Captcha']);
+				$responseData = json_decode($verifyResponse);
+				if(!$responseData->success)
+				{
+					$reply->Status = 'fail';
+					$reply->Message = "Captcha invalid";
+				}
+				else
+					$canLogin = true;
+			}
+			else
+			{
+				$reply->Status = 'fail';
+				$reply->Message = "Captcha invalid";
+			}
+		}
+		else
+			$canLogin = true;		
+		
+		if(!$canLogin)
+		{
+			$reply->Status = 'fail';
 			$reply->Message = "Captcha invalid";
-        }
+		}
 		else
 		{
 					//Incoming variables

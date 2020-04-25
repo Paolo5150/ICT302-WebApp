@@ -163,7 +163,7 @@ function buildSessionTable(responseData)
             <td><button type='button' class='btn btn-primary' onClick="GeneratePDF(${arr[i][0]})">PDF</button></td> 
         </tr>
         <tr >
-        <td colspan="7" id="details-${i}" style="display: none"></td>
+        <td colspan="7" id="details-${i}" style="display: none; background-color: #88888822"></td>
         </tr>
         `
     }

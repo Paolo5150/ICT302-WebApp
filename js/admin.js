@@ -24,7 +24,8 @@ function buildStudentTable(list)
             <td>${list[i][2]}</td>
             <td>${list[i][3]}</td>
             <td>${list[i][4]}</td>
-            <td><button type='button' class='btn btn-primary' onClick='onSessionButtonClicked(${list[i][0]},"${list[i][2]}","${list[i][3]}" )'>Session</button></td> 
+            <td><button type='button' class='btn btn-primary' onClick='onSessionButtonClicked(${list[i][0]},"${list[i][2]}","${list[i][3]}" )'>Session</button></td>
+            <td><button type='button' class='btn btn-primary' onClick='GetStudentAccount(${list[i][1]},"${list[i][2]}","${list[i][3]}","${list[i][4]}")'>Edit</button></td>
             <td><button type='button' class='btn btn-danger' onClick="DeleteStudent(${list[i][0]})">Delete</button></td>    
         </tr>
         `
@@ -35,6 +36,9 @@ function buildStudentTable(list)
 
     return table;
 }
+
+
+
 
 function buildSessionTable(response)
 {
@@ -123,18 +127,9 @@ $(document).ready(function () {
     
         DoPost("server/getUserDetails.php",data,(response)=>{
             
-
-            var accountTable = GenerateAccountTable()
-
-            $("#main-content").html(accountTable)
-
             var responseObj = JSON.parse(response)
             var data = JSON.parse(responseObj.Data)
-
-            $("#mus-field").val(data.MurdochUserNumber)
-            $("#firstname-field").val(data.FirstName)
-            $("#lastname-field").val(data.LastName)
-            $("#email-field").val(data.Email)
+            GenerateAccountTable(data)         
 
     
             },
@@ -205,42 +200,14 @@ function onSessionButtonClicked(id,firstname,lastname)
     )
 }
 
-function ChangeDetails()
+function ChangeSelfDetails()
 {
-    if(confirm("You want to save the changes made?"))
-    {
-        var fName = $("#firstname-field").val();
-        var lName = $("#lastname-field").val();
-        var email = $("#email-field").val();
-        var token = getToken()
-        var mus = getMUS()
-
-        var data = {
-            FirstName: fName,
-            LastName: lName,
-            Email: email,
-            MurdochUserNumber: mus,
-            Token: token
-        }
-
-        DoPost("server/updateAccountDetails.php",data,(response)=>{
-
-            console.log(response)
-            var rObj = JSON.parse(response)
-            alert(rObj.Message)       
     
-            },
-            (data, status, error)=>
-            {
-                alert("An error occurred")
-            } 
-        )
-
-    }
 }
 
 
-function GenerateAccountTable()
+
+function GenerateAccountTable(data)
 {
 
     var table = `
@@ -267,13 +234,49 @@ function GenerateAccountTable()
     </div>
 
     <div class="col-lg-12 row m-2">
-        <button type='button' class='btn btn-primary m-2' onClick="ChangeDetails()">Save changes</button>
+        <button id="self-details-btn" type='button' class='btn btn-primary m-2' onClick="ChangeSelfDetails()">Save changes</button>
         <button type='button' class='btn btn-primary m-2' id="change-psw-btn" onClick="ChangePassword()">Change password</button>
     </div>
     `
+    $("#main-content").html(table)    
 
+    $("#mus-field").val(data.MurdochUserNumber)
+    $("#firstname-field").val(data.FirstName)
+    $("#lastname-field").val(data.LastName)
+    $("#email-field").val(data.Email)
 
-    return table;
+    $("#self-details-btn").click(function(e){
+        if(confirm("You want to save the changes made?"))
+        {
+            var fName = $("#firstname-field").val();
+            var lName = $("#lastname-field").val();
+            var email = $("#email-field").val();
+            var token = getToken()
+            var mus = getMUS()
+    
+            var data = {
+                FirstName: fName,
+                LastName: lName,
+                Email: email,
+                MurdochUserNumber: mus,
+                Token: token
+            }
+    
+            DoPost("server/updateAccountDetails.php",data,(response)=>{
+    
+                console.log(response)
+                var rObj = JSON.parse(response)
+                alert(rObj.Message)       
+        
+                },
+                (data, status, error)=>
+                {
+                    alert("An error occurred")
+                } 
+            )    
+        }
+    })
+    
 }
 
 function ChangePassword()
@@ -290,6 +293,115 @@ function ChangePassword()
             alert('Please allow popups for this website');
         }
     }
+}
+
+function ChangeStudentDetails()
+{
+    
+}
+
+function GetStudentAccount(id,firstname,lastname, email)
+{
+    $("#search-field").hide();
+
+    var table = `
+    <button type='button' class='btn btn-primary col-lg-1 col-md-1 col-sm-1' onClick='backToStudentTable()'>Back</button>
+                                <p class='col-lg-11 col-md-11 col-sm-11 m-3 '></p>
+    <div class="col-lg-12 row m-2">
+        <label class="col-lg-2">Murdoch ID</label>
+        <input id="mus-field" type="text" class="form-control col-lg-10" readonly/>
+    </div>
+
+    <div class="col-lg-12 row m-2">
+        <label class="col-lg-2">First Name</label>
+        <input id="firstname-field" type="text" class="form-control col-lg-10"/>
+    </div>
+
+    <div class="col-lg-12 row m-2">
+        <label class="col-lg-2">Last Name</label>
+        <input id="lastname-field" type="text" class="form-control col-lg-10"/>
+    </div>
+
+    <div class="col-lg-12 row m-2">
+        <label class="col-lg-2">Email</label>
+        <input id="email-field" type="text" class="form-control col-lg-10"/>
+    </div>
+
+    <div class="col-lg-12 row m-2">
+        <button type='button' class='btn btn-primary m-2' id="change-student-details-btn">Save changes</button>
+        <button type='button' class='btn btn-primary m-2' id="reset-psw-btn" >Reset password</button>
+    </div>
+    `
+    $("#main-content").html(table);
+
+    $("#mus-field").val(id)
+    $("#firstname-field").val(firstname)
+    $("#lastname-field").val(lastname)
+    $("#email-field").val(email)
+
+    //Change student details button
+    $("#change-student-details-btn").click(function(e){
+        if(confirm("You want to save the changes made to this account?"))
+        {
+            var fName = $("#firstname-field").val();
+            var lName = $("#lastname-field").val();
+            var email = $("#email-field").val();
+            var smus = $("#mus-field").val();
+            var token = getToken()
+            var mus = getMUS()
+    
+            var data = {
+                MurdochUserNumber: mus,
+                Token: token,
+                FirstName: fName,
+                LastName: lName,
+                Email: email,
+                SMUS: smus
+            }
+    
+            DoPost("server/updateAccountDetails.php",data,(response)=>{
+    
+                console.log(response)
+                var rObj = JSON.parse(response)
+                alert(rObj.Message)       
+        
+                },
+                (data, status, error)=>
+                {
+                    alert("An error occurred")
+                } 
+            )
+    
+        }
+
+    })
+
+    //Reset password
+    $("#reset-psw-btn").click(function(e){
+
+        if(confirm("Do you want to reset the password for this account?"))
+        {
+            var token = getToken()
+            var mus = getMUS()
+
+            var data = {
+                Token: token,
+                MurdochUserNumber: mus,
+                AccountID: id
+            }
+            DoPost("server/resetStudentPassword.php",data,(response)=>{
+
+                  var obj = JSON.parse(response)
+                  alert(obj.Message)
+        
+                },
+                (data, status, error)=>
+                {
+                    alert("An error occurred")
+                } 
+            )
+        }
+    })
 }
 
 

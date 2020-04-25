@@ -16,14 +16,18 @@ include("server/functions.php");
       $mus = $_COOKIE['MurdochUserNumber'];
       $token = $_COOKIE['Token']; 
   }
-  // Check user privileges, redirect to appropriate page
-  if(IsAccountOK($mus, $token))
+  if($mus != "" && $token != "")
   {
-      if(IsAdmin($mus))
-          header("Location: " . $serverAddress . "web/admin.php");
-      else
-          header("Location: " . $serverAddress . "web/student.php");
-  }
+      // Check user privileges, redirect to appropriate page
+      if(IsAccountOK($mus, $token))
+      {
+          if(IsAdmin($mus))
+              header("Location: " . $serverAddress . "web/admin.php");
+          else
+              header("Location: " . $serverAddress . "web/student.php");
+      }
+    }
+
 
 ?>
 
@@ -46,7 +50,15 @@ include("server/functions.php");
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
+  <script src="https://www.google.com/recaptcha/api.js?render=6Lda7O0UAAAAAI1gDMOpXhRXajYxKNuxR4XNaeWh"></script>
+    <script>
+        grecaptcha.ready(function () {
+            grecaptcha.execute('6Lda7O0UAAAAAI1gDMOpXhRXajYxKNuxR4XNaeWh', { action: 'contact' }).then(function (token) {
+                var recaptchaResponse = document.getElementById('captcha');     
+                recaptchaResponse.value = token;
+            });
+        });
+    </script>
   <!-- Import generic functions to do http requests -->
   <script src="js/functions.js"></script>
 </head>
@@ -87,6 +99,8 @@ include("server/functions.php");
                   <p id="errortext"></p>
                   <input type="button" class="btn btn-primary" value="Back">
                   <input type="submit" id="submit-btn" class="btn btn-primary" value="Submit">
+                  <input type="hidden" name="recaptcha_response" id="captcha">
+
                 </form>
               </div>
             </div>

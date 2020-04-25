@@ -83,8 +83,9 @@ function Login()
     var myData = {
         MurdochUserNumber: username.value,
         Password: password.value,
+        Captcha: $("#captcha").val()
     }
-
+    
     errortext.innerHTML = "Logging in..."; //Let the user know the server is waiting
 
     DoPost(loginScriptTarget, myData, PostSuccess, PostFail);
@@ -94,7 +95,7 @@ function Login()
 
 function PostSuccess(reply)
 {
-
+    console.log(reply)
     var obj = JSON.parse(reply);
 
     if(obj.Status == "fail")

@@ -1,50 +1,6 @@
-var obj;
+//The 'Data' from the response object is cached so it can be passed in dynamically created functions
+var responseData; 
 var cachedTable;
-
-function buildSessionTable(response)
-{
-    if(response == "")
-    return
-    var obj = JSON.parse(response);
-    var arr = JSON.parse(obj.Data.Content)
-    
-    var table = `
-    <table class='table table-striped'>
-    <thead>
-    <tr>
-        <th>Session ID</th>
-        <th>Date</th>
-        <th>Start Time</th>
-        <th>End Time</th>
-        <th>Errors</th>
-    </tr>
-    </thead>
-    <tbody>
-    `
-
-    for(var i=0; i < arr.length; i++)
-    {
-        table += `
-        <tr>
-            <td onClick="Details('details-${i}', obj.Data.Content, ${i})">${arr[i][0]}</td>
-            <td onClick="Details('details-${i}', obj.Data.Content, ${i})">${arr[i][3]}</td>
-            <td onClick="Details('details-${i}', obj.Data.Content, ${i})">${arr[i][4]}</td>
-            <td onClick="Details('details-${i}', obj.Data.Content, ${i})">${arr[i][5]}</td>
-            <td onClick="Details('details-${i}', obj.Data.Content, ${i})">${arr[i][6]}</td>
-            <td><button type='button' class='btn btn-primary' onClick="Details('details-${i}', obj.Data.Content, ${i})">Details</button></td>
-            <td><button type='button' class='btn btn-primary' onClick="GeneratePDF(${arr[i][0]})">PDF</button></td>   
-        </tr>
-        <tr id="details-${i}" style="display: none">
-        </tr>
-        `
-    }
-
-    table += `</tbody>
-    </table>`
-    return table;
-}
-
-
 
 $(document).ready(function () {
 
@@ -57,9 +13,13 @@ $(document).ready(function () {
     }
 
     DoPost("server/getStudentSessions.php",myData,(response)=>{
-        //console.log(response)
+        console.log(response)
         if(response == "") return
-        var table = buildSessionTable(response)
+
+         var sessionObj = JSON.parse(response)
+        responseData = JSON.parse(sessionObj.Data.Content)
+        var table = buildSessionTable(responseData)
+        
         cachedTable = table; //Save table so content can be reused in the back button
         obj = JSON.parse(response);
 

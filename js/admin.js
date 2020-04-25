@@ -40,46 +40,7 @@ function buildStudentTable(list)
 
 
 
-function buildSessionTable(response)
-{
-    var obj = JSON.parse(response);
-    var arr = JSON.parse(obj.Data)
-    
-    var table = `
-    <table class='table table-striped'>
-    <thead>
-    <tr>
-        <th>Session ID</th>
-        <th>Date</th>
-        <th>Start Time</th>
-        <th>End Time</th>
-        <th>Errors</th>
-    </tr>
-    </thead>
-    <tbody>
-    `
 
-    for(var i=0; i < arr.length; i++)
-    {
-        table += `
-        <tr>
-            <td onClick="Details('details-${i}', sessionObj.Data, ${i})">${arr[i][0]}</td>
-            <td onClick="Details('details-${i}', sessionObj.Data, ${i})">${arr[i][3]}</td>
-            <td onClick="Details('details-${i}', sessionObj.Data, ${i})">${arr[i][4]}</td>
-            <td onClick="Details('details-${i}', sessionObj.Data, ${i})">${arr[i][5]}</td>
-            <td onClick="Details('details-${i}', sessionObj.Data, ${i})">${arr[i][6]}</td>
-            <td><button type='button' class='btn btn-primary' onClick="Details('details-${i}', sessionObj.Data, ${i})">Details</button></td>
-            <td><button type='button' class='btn btn-primary' onClick="GeneratePDF(${arr[i][0]})">PDF</button></td> 
-        </tr>
-        <tr id="details-${i}" style="display: none">
-        </tr>
-        `
-    }
-
-    table += `</tbody>
-    </table>`
-    return table;
-}
 
 var cachedStudentTable;
 var cachedStudentList;
@@ -170,7 +131,8 @@ function searchStudent()
 
 }
 
-var sessionObj;
+//The 'Data' from the response object is cached so it can be passed in dynamically created functions
+var responseData;
 function onSessionButtonClicked(id,firstname,lastname)
 {
     var token = getToken()
@@ -184,8 +146,10 @@ function onSessionButtonClicked(id,firstname,lastname)
     DoPost("server/getStudentSessions.php",myData,(response)=>{
 
         //console.log(response)
-        sessionObj = JSON.parse(response)
-        var table = buildSessionTable(response)
+        var sessionObj = JSON.parse(response)
+        responseData = JSON.parse(sessionObj.Data)
+
+        var table = buildSessionTable(responseData)
 
         var html = `<button type='button' class='btn btn-primary' onClick='backToStudentTable()'>Back</button>`
         html += '<h3 style="margin: auto">' + firstname + ' ' +  lastname + '</h3>'
@@ -417,9 +381,10 @@ function GetOwnSession()
     DoPost("server/getStudentSessions.php",myData,(response)=>{
 
         //console.log(response)
-        sessionObj = JSON.parse(response)
-        var table = buildSessionTable(response)
+        var sessionObj = JSON.parse(response)
+        responseData = JSON.parse(sessionObj.Data)
 
+        var table = buildSessionTable(responseData)
         var html = `<button type='button' class='btn btn-primary' onClick='backToStudentTable()'>Back</button>`
         html += table;
         $("#main-content").html(html);   

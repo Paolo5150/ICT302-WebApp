@@ -123,13 +123,62 @@ function LogOut()
     )
 }
 
-function Details(divId, dataContent, index)
+function buildSessionTable(responseData)
 {
-    var arr = JSON.parse(dataContent)
-    var logsObj = JSON.parse(arr[index][7])
+    var arr = responseData
+    
+    var table = `
+    <table class='table table-striped'>
+    <thead>
+    <tr>
+        <th>Session ID</th>
+        <th>Date</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>Errors</th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    `
+
+    for(var i=0; i < arr.length; i++)
+    {
+        var errorsButton = ""
+
+        if(arr[i][6] > 0)
+            errorsButton = `<button type='button' class='btn btn-danger' onClick="Details('#details-${i}', responseData[${i}], true)">${arr[i][6]}</button>`
+        else
+            errorsButton = `${arr[i][6]}`
+
+        table += `
+        <tr>
+            <td>${arr[i][0]}</td>
+            <td>${arr[i][3]}</td>
+            <td>${arr[i][4]}</td>
+            <td>${arr[i][5]}</td>
+            <td>${errorsButton}</td>
+            <td><button type='button' class='btn btn-primary' onClick="Details('#details-${i}', responseData[${i}])">Details</button></td>
+            <td><button type='button' class='btn btn-primary' onClick="GeneratePDF(${arr[i][0]})">PDF</button></td> 
+        </tr>
+        <tr >
+        <td colspan="7" id="details-${i}" style="display: none"></td>
+        </tr>
+        `
+    }
+
+    table += `</tbody>
+    </table>`
+    return table;
+}
+
+function Details(divId, dataContent, errorsOnly = false)
+{
+    var logsObj = JSON.parse(dataContent[7])
 
     var logsStrings = "";
-    for(var i=0; i < arr[index][7].length; i++)
+    for(var i=0; i < dataContent[7].length; i++)
     {
         var logInd = "Log_" + i
         if(logsObj[logInd] != undefined)    
@@ -142,7 +191,7 @@ function Details(divId, dataContent, index)
             logsStrings+= "<span style='font-size: 0.8em;color: red'>" + logsObj[logInd] + "</span><br/><br/>";
 
             }
-            else if(logsObj[logInd].indexOf("Correctly") > 0)
+            else if(logsObj[logInd].indexOf("Correctly") > 0  && !errorsOnly)
             {
                 logsStrings+= `<svg class="bi bi-check-circle" width="3em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M15.354 2.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3-3a.5.5 0 11.708-.708L8 9.293l6.646-6.647a.5.5 0 01.708 0z" clip-rule="evenodd"/>
@@ -151,7 +200,7 @@ function Details(divId, dataContent, index)
                 logsStrings+= "<span style='font-size: 0.8em;color: green'>" + logsObj[logInd] + "</span><br/><br/>";
 
             }         
-            else
+            else if(!errorsOnly)
             {
                 logsStrings+= `<svg class="bi bi-caret-right" width="2em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M6 12.796L11.481 8 6 3.204v9.592zm.659.753l5.48-4.796a1 1 0 000-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 001.659.753z" clip-rule="evenodd"/>
@@ -163,8 +212,8 @@ function Details(divId, dataContent, index)
         }
     }
 
-    $("#" + divId).html(logsStrings)  
-    $("#" + divId).toggle()  
+    $(divId).html(logsStrings)  
+    $(divId).toggle()  
 
 }
 

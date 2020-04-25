@@ -3,6 +3,8 @@ var cachedTable;
 
 function buildSessionTable(response)
 {
+    if(response == "")
+    return
     var obj = JSON.parse(response);
     var arr = JSON.parse(obj.Data.Content)
     
@@ -56,6 +58,7 @@ $(document).ready(function () {
 
     DoPost("server/getStudentSessions.php",myData,(response)=>{
         //console.log(response)
+        if(response == "") return
         var table = buildSessionTable(response)
         cachedTable = table; //Save table so content can be reused in the back button
         obj = JSON.parse(response);

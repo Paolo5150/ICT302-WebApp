@@ -104,16 +104,16 @@ function GeneratePDF(sessionID)
 
 function LogOut()
 {
-    var token = getToken()
+
     var mus = getMUS()
 
     var data = {
         MurdochUserNumber: mus,
-        Token: token
     }
+      
 
     DoPost("server/logout.php",data,(response)=>{
-
+        console.log(response)
         window.location = "../index.php"   
         },
         (data, status, error)=>

@@ -3,17 +3,27 @@ session_start();
 include("server/globals.php");
 include("server/functions.php");
 
-// Check user privileges, redirect to appropriate page
-if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
-{
-    if(IsAccountOK($_SESSION['MurdochUserNumber'],$_SESSION['Token']))
-    {
-        if(IsAdmin($_SESSION['MurdochUserNumber']))
-            header("Location: " . $serverAddress . "web/admin.php");
-        else
-            header("Location: " . $serverAddress . "web/student.php");
-    }
-}
+  $mus = "";
+  $token = "" ;
+
+  if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
+  {
+      $mus = $_SESSION['MurdochUserNumber'];
+      $token = $_SESSION['Token']; 
+  }
+  else if(isset($_COOKIE['MurdochUserNumber']) && isset($_COOKIE['Token']))
+  {
+      $mus = $_COOKIE['MurdochUserNumber'];
+      $token = $_COOKIE['Token']; 
+  }
+  // Check user privileges, redirect to appropriate page
+  if(IsAccountOK($mus, $token))
+  {
+      if(IsAdmin($mus))
+          header("Location: " . $serverAddress . "web/admin.php");
+      else
+          header("Location: " . $serverAddress . "web/student.php");
+  }
 
 ?>
 
@@ -59,9 +69,14 @@ if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
                   <input type="password" id="password" class="textfield col-lg-12 col-md-12 col-sm-8 col-8 mt-4" placeholder="Password" style="margin-bottom: 5px;"><br>
                   <!-- <button id="forgotpassword-btn" style="margin-bottom: 20px;">Forgot my password</button> -->
                   <?php 
-                  if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
+                  if(isset($_SESSION['MurdochUserNumber']))
                   {
                     if(IsAdmin($_SESSION['MurdochUserNumber']))
+                      echo '<a href="web/resetPassword.php" class="col-lg-10 col-md-10 col-sm-10 col-10">Forgot your password?</a>';          
+                  }
+                  else if(isset($_COOKIE['MurdochUserNumber']))
+                  {
+                    if(IsAdmin($_COOKIE['MurdochUserNumber']))
                       echo '<a href="web/resetPassword.php" class="col-lg-10 col-md-10 col-sm-10 col-10">Forgot your password?</a>';          
                   }
                   else 

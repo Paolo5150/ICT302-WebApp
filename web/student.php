@@ -2,17 +2,24 @@
     session_start();
     include("../server/globals.php");
     include("../server/functions.php");
-
+    $mus = "";
+    $token = "" ;
     if(isset($_SESSION['MurdochUserNumber']) && isset($_SESSION['Token']))
     {
-        if(IsAccountOK($_SESSION['MurdochUserNumber'],$_SESSION['Token']))
-        {
-            if(IsAdmin($_SESSION['MurdochUserNumber']))
-                header("Location: " . $serverAddress . "web/admin.php");
-        }
-        else
-            header("Location: " . $serverAddress . "index.php"); 
+        $mus = $_SESSION['MurdochUserNumber'];
+        $token = $_SESSION['Token']; 
     }
+    else if(isset($_COOKIE['MurdochUserNumber']) && isset($_COOKIE['Token']))
+    {
+        $mus = $_COOKIE['MurdochUserNumber'];
+        $token = $_COOKIE['Token']; 
+
+    }
+    else
+        header("Location: " . $serverAddress . "index.php");
+    
+    if(!IsAccountOK($mus, $token))
+        header("Location: " . $serverAddress . "index.php");
 
 ?>
 

@@ -3,20 +3,19 @@
 	include("globals.php");
 	include("functions.php");
 
-    if(isset($_POST['Token']))
+    if(isset($_POST['MurdochUserNumber']))
 	{
-		//Incoming variables
-		$token = $_POST['Token'];
 
+		$id = $_POST['MurdochUserNumber'];
 		
 		$con = connectToDb();
 
 		//Prepare SQL statement. Place a '?' where you want to pass an argument
 		// Below I'm passing the student ID
-		$stmt = $con->prepare("select * from user where Token = ?");
+		$stmt = $con->prepare("select * from user where MurdochUserNumber = ?");
 		
 		// This is where I'm passing the actual argument
-		$stmt->bind_param("s", $token);
+		$stmt->bind_param("i", $id);
 		
 		// Execute the SQL statement!
 		$stmt->execute();

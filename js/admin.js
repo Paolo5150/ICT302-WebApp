@@ -579,6 +579,7 @@ function GetCSV()
 
     DoPost("server/generateCSV.php",data,(response)=>{
 
+        console.log(response)
         var blob = new Blob([response], { type:'text/csv' }),
         a    = document.createElement('a'),
         url  = URL.createObjectURL(blob);

@@ -117,10 +117,7 @@ $(document).ready(function () {
                 alert("An error occurred")
             } 
         )
-
     })
-
-
 })
 
 function backToStudentTable()
@@ -181,13 +178,6 @@ function onSessionButtonClicked(id,firstname,lastname)
         } 
     )
 }
-
-function ChangeSelfDetails()
-{
-    
-}
-
-
 
 function GenerateAccountTable(data)
 {
@@ -275,11 +265,6 @@ function ChangePassword()
             alert('Please allow popups for this website');
         }
     }
-}
-
-function ChangeStudentDetails()
-{
-    
 }
 
 function GetStudentAccount(id,firstname,lastname, email)
@@ -594,17 +579,11 @@ function GetCSV()
 
     DoPost("server/generateCSV.php",data,(response)=>{
 
-        console.log(response)
-       /* var obj = JSON.parse(response)
-        if(obj.Status == 'ok')
-        {
-            
-        }
-
-        },
-        (data, status, error)=>
-        {
-            alert("An error occurred")
-        } */
+        var blob = new Blob([response], { type:'text/csv' }),
+        a    = document.createElement('a'),
+        url  = URL.createObjectURL(blob);
+        a.href = url;
+        a.download = 'data.csv';
+        a.click()
     })   
 }

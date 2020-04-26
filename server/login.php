@@ -37,12 +37,8 @@
 		else
 			$canLogin = true;		
 		
-		if(!$canLogin)
-		{
-			$reply->Status = 'fail';
-			$reply->Message = "Captcha invalid";
-		}
-		else
+
+		if($canLogin)
 		{
 					//Incoming variables
 			$id = $_POST['MurdochUserNumber'];

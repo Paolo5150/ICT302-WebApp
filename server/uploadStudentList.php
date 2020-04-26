@@ -25,6 +25,7 @@
     {
         $file = fopen($target_path, "r") or die("Unable to open file!");
 
+        // Read students into array of Student objects
         $allStudents = array();
         while(!feof($file))
         {

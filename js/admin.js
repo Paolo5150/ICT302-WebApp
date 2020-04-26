@@ -54,6 +54,25 @@ $(document).ready(function () {
         Token: token,
         MurdochUserNumber: mus
     }    
+
+    $(".custom-file-input").on("change", function() {
+        
+        var fd = new FormData();
+        var files = $('#customFile')[0].files[0];
+        fd.append('file',files);
+
+        $.ajax({
+            url: address + 'server/uploadStudentList.php',
+            type: 'post',
+            data: fd,
+            contentType: false,
+            processData: false,
+            success: function(response){   
+                    console.log(response)
+                
+            },
+        });
+      });
     
     DoPost("server/getStudentList.php",myData,(response)=>{
 

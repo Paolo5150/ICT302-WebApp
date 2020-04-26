@@ -63,6 +63,12 @@
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFile">
+                    <label class="custom-file-label" for="customFile">Upload student list</label>
+                </div>
+                </li>                
+                <li class="nav-item">
                     <a class="nav-link" href="#" onClick="GetCSV()">Get CSV</a>
                 </li>
                 <li class="nav-item">
@@ -77,6 +83,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#" id="logout-btn" onClick="LogOut()">Logout</a>
                 </li>
+                
             </ul>
         </div>
     </nav>
@@ -88,6 +95,7 @@
                 <div class ="row" id="main-content"> 
                                                 
                 </div>  
+                
                 
             </div>
         </section>

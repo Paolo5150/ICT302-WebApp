@@ -37,11 +37,6 @@ function buildStudentTable(list)
     return table;
 }
 
-
-
-
-
-
 var cachedStudentTable;
 var cachedStudentList;
 
@@ -60,6 +55,9 @@ $(document).ready(function () {
         var fd = new FormData();
         var files = $('#customFile')[0].files[0];
         fd.append('file',files);
+        fd.append('MurdochUserNumber',getMUS())
+        fd.append('Token',getToken())
+        
 
         $.ajax({
             url: address + 'server/uploadStudentList.php',
@@ -69,6 +67,7 @@ $(document).ready(function () {
             processData: false,
             success: function(response){   
                     console.log(response)
+                    window.location = 'admin.php';
                 
             },
         });

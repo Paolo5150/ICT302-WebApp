@@ -53,20 +53,54 @@ mysqli_close($con);
   
 }
 
-//I'm not even sure all this is necessary...
-header("Content-type: application/force-download"); 
-header('Content-Disposition: inline; filename="data.csv" '); 
-header("Content-Transfer-Encoding: Binary"); 
-header("Content-length: ". filesize('data.csv')); 
-header('Content-Type: application/excel'); 
+//Prepare reply pbject
+$reply = new stdClass();
+$reply->Data = new stdClass();
 
-$f = fopen("data.csv", 'w');
+if(isset($_POST['MurdochUserNumber']) && isset($_POST['Token']))
+{
+  $id = $_POST['MurdochUserNumber'];
 
-ReadDatabaseTableToCSV($f, 'user');
-ReadDatabaseTableToCSV($f, 'session');
+  $con = connectToDb();
+  $stmt = $con->prepare("select * from user where MurdochUserNumber = ?");
+  $stmt->bind_param("s", $id);
+  $stmt->execute();          
+  $result = $stmt->get_result();					
+          
+  if($result && $result->num_rows > 0)
+  {			
+      $data = $result->fetch_assoc(); //Get first fow
+
+      if($data['IsAdmin'] == 1)
+      {
+          //I'm not even sure all this is necessary...
+          header("Content-type: application/force-download"); 
+          header('Content-Disposition: inline; filename="data.csv" '); 
+          header("Content-Transfer-Encoding: Binary"); 
+         // header("Content-length: ". filesize('data.csv')); 
+          header('Content-Type: application/excel'); 
+
+          $f = fopen("data.csv", 'w');
+
+          ReadDatabaseTableToCSV($f, 'user');
+          ReadDatabaseTableToCSV($f, 'session');
+
+          fclose($f);
+          echo file_get_contents('data.csv');
+      }
+      else
+      {
+        $reply->Status = 'fail';
+        $reply->Message = 'Unauthorized';
+      }
+  }
+  else
+  {
+    $reply->Status = 'fail';
+    $reply->Message = 'User not found';
+  }
+
+}
 
 
-
-fclose($f);
-echo file_get_contents('data.csv');
 ?>

@@ -579,12 +579,20 @@ function GetCSV()
 
     DoPost("server/generateCSV.php",data,(response)=>{
 
-        console.log(response)
-        var blob = new Blob([response], { type:'text/csv' }),
-        a    = document.createElement('a'),
-        url  = URL.createObjectURL(blob);
-        a.href = url;
-        a.download = 'data.csv';
-        a.click()
-    })   
+        //Try parsing. If fails, it actually means that we are receiving the file to download
+            try{
+
+                var obj = JSON.parse(response)
+                alert(obj.Message)
+            }
+            catch(e)
+            {
+                var blob = new Blob([response], { type:'text/csv' }),
+                a    = document.createElement('a'),
+                url  = URL.createObjectURL(blob);
+                a.href = url;
+                a.download = 'data.csv';
+                a.click()
+            }
+        })    
 }

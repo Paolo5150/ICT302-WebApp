@@ -65,9 +65,22 @@ $(document).ready(function () {
             data: fd,
             contentType: false,
             processData: false,
-            success: function(response){   
-                    console.log(response)
-                    window.location = 'admin.php';
+            success: function(response){  
+                console.log(response)
+
+                    var obj = JSON.parse(response)
+                    if(obj.Status == 'ok')
+                    {
+                        window.location = 'admin.php';
+
+                    } 
+                    else
+                    {
+                        alert(obj.Message)
+                        window.location = 'admin.php';
+
+                    }
+                
                 
             },
         });

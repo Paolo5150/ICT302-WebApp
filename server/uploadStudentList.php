@@ -42,11 +42,12 @@
                 }
             }
 
-            array_push($allStudents,$student);
+            //Check that all columns are set
+            if(isset($student['MurdochUserNumber']) && isset($student['FirstName']) && isset($student['LastName']) && isset($student['Email']))
+                array_push($allStudents,$student);
         }        
 
         fclose($file);
-
 
         //Update DB
         $con = connectToDb();
@@ -109,18 +110,30 @@
                 $file_tmp = $_FILES['file']['tmp_name'];
                 $file_type = $_FILES['file']['type'];
 
-                $destination_path = getcwd().DIRECTORY_SEPARATOR;
+                $file_parts = pathinfo($file_name);
 
-                $result = 0;
-                
-                $target_path = $destination_path . "Uploads/".basename( $file_name);
+                switch($file_parts['extension'])
+                {
+                    case "csv":
+                        $destination_path = getcwd().DIRECTORY_SEPARATOR;
 
-                move_uploaded_file($file_tmp,$target_path);
-
-                ReadFileAndUpdateDB($target_path);
-
-                $reply->Status = 'ok';
-                $reply->Message = 'Class list updated successfully!';
+                        $result = 0;
+                        
+                        $target_path = $destination_path . "Uploads/".basename( $file_name);
+        
+                        move_uploaded_file($file_tmp,$target_path);
+        
+                        ReadFileAndUpdateDB($target_path);
+        
+                        $reply->Status = 'ok';
+                        $reply->Message = 'Class list updated successfully!';
+                    break;
+                    default:
+                    $reply->Status = 'fail';
+                     $reply->Message = 'Only CSV file accepted';
+           
+                }
+               
             }
             else
             {

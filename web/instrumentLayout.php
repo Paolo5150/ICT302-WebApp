@@ -99,18 +99,17 @@
 
         <section class="inner-section" id="main-form-section">
             <div class="container">
-                <!-- Can 'container' or 'container-fluid' -->
+                <!-- Can be 'container' or 'container-fluid' -->
                 <form style="text-align: center;">
                     <!--Dropdown for how many slots to fill-->
-                    <select id="selectSizeDropdown">
+                    <select id="select-size-dropdown">
                         <option value="0">0</option>
                     </select>
-
-                    <ul id="slots">
+                    <ul id="slot-dropdown-container">
                     </ul>
-                    <p id="errortext"></p>
-                    <input type="button" class="btn btn-primary" value="Reset">
-                    <input type="submit" id="submit-btn" class="btn btn-primary" value="Submit">
+                    <p id="error-text"></p>
+                    <input type="button" id="reset-btn" class="btn btn-primary" value="Reset">
+                    <input type="submit" id="save-btn" class="btn btn-primary" value="Submit">
                 </form>
                 <img id="refimage" src="../imgs/TableReference.png">
             </div>

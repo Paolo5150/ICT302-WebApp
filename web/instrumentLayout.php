@@ -24,39 +24,46 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset = "UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-        <title>Virtual Instruments</title>
-        <link rel="icon" href="../imgs/logo.png">
-        <!-- Stylesheets -->
-        <link href="../css/resetstyle.css" rel="stylesheet" />
-        <link href="../css/toggleswitch.css" rel="stylesheet" />
-        <link href="../css/instrumentLayout.css" rel="stylesheet" />
 
-   
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        
-        <!-- Load scripts -->
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Virtual Instruments</title>
+    <link rel="icon" href="../imgs/logo.png">
+    <!-- Stylesheets -->
+    <link href="../css/resetstyle.css" rel="stylesheet" />
+    <link href="../css/toggleswitch.css" rel="stylesheet" />
+    <link href="../css/instrumentLayout.css" rel="stylesheet" />
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-        <!-- Import generic functions to do http requests -->
-        <script src="../js/functions.js"></script>
-        <script src="../js/instrumentLayout.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    </head>
-    <body>    
+    <!-- Load scripts -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+    <!-- Import generic functions to do http requests -->
+    <script src="../js/functions.js"></script>
+    <script src="../js/instrumentLayout.js"></script>
+
+</head>
+
+<body>
 
     <nav class="navbar navbar-expand-md navbar-light bg-light">
         <div class="mx-auto order-0">
-            <div class="navbar-brand" >
-                <img src="../imgs/logo.png" style="width: 50px;"/>
-                <span id="welcome-title" >Welcome</span>
-            </div>            
+            <div class="navbar-brand">
+                <img src="../imgs/logo.png" style="width: 50px;" />
+                <span id="welcome-title">Welcome</span>
+            </div>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -64,11 +71,11 @@
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="customFile">
-                    <label class="custom-file-label" for="customFile">Upload student list</label>
-                </div>
-                </li>                
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="customFile">
+                        <label class="custom-file-label" for="customFile">Upload student list</label>
+                    </div>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" onClick="GetCSV()">Get CSV</a>
                 </li>
@@ -84,23 +91,31 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#" id="logout-btn" onClick="LogOut()">Logout</a>
                 </li>
-                
+
             </ul>
         </div>
     </nav>
     <div id="main-container">
-   
+
         <section class="inner-section" id="main-form-section">
-            <div class="container"> <!-- Can 'container' or 'container-fluid' -->
-                <select id="selectSizeDropdown">
-                    <option value="0">0</option>
-                </select> <!--Dropdown for how many slots to fill-->
-                <ul id="slots">
-                    <option value="1">1</option>
-                </ul>
-                <img src="../imgs/TableReference.png">
+            <div class="container">
+                <!-- Can 'container' or 'container-fluid' -->
+                <form style="text-align: center;">
+                    <!--Dropdown for how many slots to fill-->
+                    <select id="selectSizeDropdown">
+                        <option value="0">0</option>
+                    </select>
+
+                    <ul id="slots">
+                    </ul>
+                    <p id="errortext"></p>
+                    <input type="button" class="btn btn-primary" value="Reset">
+                    <input type="submit" id="submit-btn" class="btn btn-primary" value="Submit">
+                </form>
+                <img id="refimage" src="../imgs/TableReference.png">
             </div>
         </section>
     </div>
-    </body>
+</body>
+
 </html>

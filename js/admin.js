@@ -78,7 +78,6 @@ $(document).ready(function () {
                     {
                         alert(obj.Message)
                         window.location = 'admin.php';
-
                     }
                 
                 

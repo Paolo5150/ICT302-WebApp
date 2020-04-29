@@ -11,10 +11,10 @@
                 case 0:
                     return 'MurdochUserNumber';
                 case 1:
-                    return 'FirstName';
-                case 2:
                     return 'LastName';
-                case 4:
+                case 3:
+                    return 'FirstName';
+                case 26:
                     return 'Email';
                 default:
                 return '';

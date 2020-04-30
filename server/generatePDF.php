@@ -99,6 +99,13 @@
                     $currentPage = $pdf->PageNo();
                 }
                 $pdf->SetY($line);
+                if(strpos($value, 'Failed') !== false)
+                    $pdf->SetTextColor(200,0,0);
+                else if(strpos($value, 'Correctly') !== false)
+                    $pdf->SetTextColor(0,200,0);
+                else
+                $pdf->SetTextColor(0,0,0);
+
                 $pdf->WriteHTML($value);
                 $line += 10;
             }

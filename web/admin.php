@@ -62,6 +62,17 @@
         </div>
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
             <ul class="navbar-nav ml-auto">
+
+                <li class="nav-item">
+                    <div style="margin-right: 10px">
+                    <p class="nav-link" href="#" style="display: inline-block">Assessment mode</p>
+                        <div class="material-switch pull-right" style="margin: 10px" >
+                            <input id="asessment-mode-btn" name="someSwitchOption001" type="checkbox" />
+                            <label for="asessment-mode-btn" class="label-primary"></label>
+                        </div>
+                    </div> 
+                </li>
+
                 <li class="nav-item">
                 <div class="custom-file">
                     <input type="file" class="custom-file-input" id="customFile">
@@ -83,6 +94,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#" id="logout-btn" onClick="LogOut()">Logout</a>
                 </li>
+                
                 
             </ul>
         </div>

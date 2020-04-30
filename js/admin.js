@@ -130,6 +130,17 @@ $(document).ready(function () {
             } 
         )
     })
+
+    // Assessment mode button
+    $("#assessment-mode-btn").change(function() {
+        
+        if($("#admin-switch").prop("checked"))
+        if(confirm("Are you sure you want to give this account administrator privileges?"))
+         $("#admin-switch").prop("checked",true)
+         else
+         $("#admin-switch").prop("checked",false)
+         
+       });
 })
 
 function backToStudentTable()

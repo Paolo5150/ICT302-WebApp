@@ -61,15 +61,25 @@
                     
             // If user is found, update details
             if($result && $result->num_rows > 0)
-            {			
+            {	
+                $mus = trim($allStudents[$i]['MurdochUserNumber'], " ");
+                $firstName = trim($allStudents[$i]['FirstName'], " ");
+                $lastName = trim($allStudents[$i]['LastName'], " ");
+                $email = trim($allStudents[$i]['Email'], " ");
+
                 $stmt = $con->prepare("update user set FirstName = ?, LastName = ?, Email = ? WHERE  MurdochUserNumber = ?");
-				$stmt->bind_param("sssi", $allStudents[$i]['FirstName'], $allStudents[$i]['LastName'], $allStudents[$i]['Email'], $allStudents[$i]['MurdochUserNumber']);
+				$stmt->bind_param("sssi", $firstName, $lastName, $email, $mus);
 				$status = $stmt->execute();
             }
             else //If not found, insert
             {
+                $mus = trim($allStudents[$i]['MurdochUserNumber'], " ");
+                $firstName = trim($allStudents[$i]['FirstName'], " ");
+                $lastName = trim($allStudents[$i]['LastName'], " ");
+                $email = trim($allStudents[$i]['Email'], " ");
+
                 $stmt = $con->prepare("insert into user (MurdochUserNumber,FirstName,LastName,Email) VALUES (?,?,?,?)");
-				$stmt->bind_param("isss", $allStudents[$i]['MurdochUserNumber'],  $allStudents[$i]['FirstName'], $allStudents[$i]['LastName'], $allStudents[$i]['Email']);
+				$stmt->bind_param("isss", $mus,  $firstName, $lastName, $email);
 				$status = $stmt->execute();
             }
         }

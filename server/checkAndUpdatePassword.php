@@ -16,8 +16,8 @@
 
 		// Check token
 
-		$stmt = $con->prepare("select * from user where MurdochUserNumber = ? AND Email = ?");
-		$stmt->bind_param("is", $id, $email);
+		$stmt = $con->prepare("select * from user where MurdochUserNumber = ?");
+		$stmt->bind_param("i", $id);
 		$stmt->execute();
 		$result = $stmt->get_result();
 
@@ -37,7 +37,11 @@
 			//Try to decrypt
             $pswDec = encrypt_decrypt('d',$pswSaved);
 
-            if($data['PasswordResetRequired'] == 0 && $data['IsAdmin'] == 0 )
+            if(trim(strtolower($email)," ") != trim(strtolower($data['Email'])," "))
+            {
+                $reply->Message = 'Email incorrect ' . $email . '_' . $data['Email'] .'_'; 
+            }
+            else if($data['PasswordResetRequired'] == 0 && $data['IsAdmin'] == 0 )
             {
                 $reply->Message = 'Password has been set'; 
             }

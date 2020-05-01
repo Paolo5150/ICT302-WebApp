@@ -19,6 +19,11 @@ $(document).ready(function () {
     errortext = document.getElementById("error-text")
     save = document.getElementById("save-btn");
 
+    /* -----Init functions----- */
+    FillSizeDropdown(availableSlots);
+    BuildLayoutList(sizeDropdown.options[sizeDropdown.selectedIndex].value);
+
+    /* -----Button callbacks----- */
     //Load the selected layout from the server
     $("#load-layout-btn").click(function (e) {
         e.preventDefault();
@@ -56,9 +61,7 @@ $(document).ready(function () {
         SetActiveLayout();
     })
 
-    FillSizeDropdown(availableSlots);
-    BuildLayoutList(sizeDropdown.options[sizeDropdown.selectedIndex].value);
-
+    /* -----Dropdown callbacks----- */
     $("#select-size-dropdown").on("change", function () {
         BuildLayoutList(sizeDropdown.options[sizeDropdown.selectedIndex].value);
     })
@@ -86,28 +89,6 @@ function LoadInstrumentLayout(data) {
     for (var i = 0; i < layout.length; i++) {
         var select = list[i].getElementsByTagName("select")[0].value = layout[i];
     }
-}
-
-function LoadLayoutList(layouts)
-{
-    DoPost("server/getInstrumentLayoutList.php", (response) => {
-
-        var obj = JSON.parse(response)
-
-        if (obj.Status == "fail")
-            errortext.innerHTML = obj.Message;
-        else {
-            console.log("Suc");
-            errortext.innerHTML = obj.Message;
-            //for(var i = 0; i < data.LayoutID)
-            console.log(data);
-        }
-
-    },
-        (data, status, error) => {
-            errortext.innerHTML = status + ": " + error + ". Please try again or contact support.";
-        }
-    )
 }
 
 function FillSizeDropdown(size) {
@@ -188,9 +169,28 @@ function CreateLayoutString(ignoreEmpty = true) {
     return layoutString;
 }
 
+function LoadLayoutList(layouts) {
+    DoPost("server/getInstrumentLayoutList.php", (response) => {
+
+        var obj = JSON.parse(response)
+
+        if (obj.Status == "fail")
+            errortext.innerHTML = obj.Message;
+        else {
+            errortext.innerHTML = obj.Message;
+            //for(var i = 0; i < data.LayoutID)
+        }
+
+    },
+        (data, status, error) => {
+            errortext.innerHTML = status + ": " + error + ". Please try again or contact support.";
+        }
+    )
+}
+
 function SaveLayout() {
     var id = prompt("Please enter a new or existing name for the layout: ");
-    
+
     var myData = {
         LayoutID: id,
         Layout: CreateLayoutString(false)
@@ -198,24 +198,23 @@ function SaveLayout() {
 
     errortext.innerHTML = "Saving layout..."; //Let the user know the server is waiting
 
-    DoPost(saveLayoutScriptTarget, myData, SaveLayoutSuccess, SaveLayoutFail);
+    DoPost(saveLayoutScriptTarget, myData, (response) => {
+
+        var obj = JSON.parse(response);
+
+        if (obj.Status == "fail")
+            errortext.innerHTML = obj.Message;
+        else if (obj.Status == "ok") {
+            errortext.innerHTML = obj.Message;
+        }
+
+    },
+        (data, status, error) => {
+            errortext.innerHTML = status + ": " + error + ". Please try again or contact support.";
+        }
+    )
 
     return true;
-}
-
-function SaveLayoutSuccess(reply) {
-    console.log(reply)
-    var obj = JSON.parse(reply);
-
-    if (obj.Status == "fail")
-        errortext.innerHTML = obj.Message;
-    else if (obj.Status == "ok") {
-        errortext.innerHTML = obj.Message;
-    }
-}
-
-function SaveLayoutFail(data, textStatus, errorMessage) {
-    errortext.innerHTML = textStatus + ": " + errorMessage + ". Please try again or contact support.";
 }
 
 function DeleteLayout() {
@@ -238,7 +237,7 @@ function DeleteLayout() {
 
         },
             (data, status, error) => {
-                errortext.innerHTML = textStatus + ": " + errorMessage + ". Please try again or contact support.";
+                errortext.innerHTML = status + ": " + error + ". Please try again or contact support.";
             }
         )
     }
@@ -251,22 +250,22 @@ function LoadServerLayout() {
 
     errortext.innerHTML = "Getting layout from server..."; //Let the user know the server is waiting
 
-    DoPost(getLayoutScriptTarget, myData, GetLayoutSuccess, GetLayoutFail);
-}
+    DoPost(getLayoutScriptTarget, myData, (response) => {
 
-function GetLayoutSuccess(reply) {
-    var obj = JSON.parse(reply);
+        var obj = JSON.parse(response);
 
-    if (obj.Status == "fail")
-        errortext.innerHTML = obj.Message;
-    else {
-        errortext.innerHTML = "";
-        LoadInstrumentLayout(obj.Data.Layout);
-    }
-}
+        if (obj.Status == "fail")
+            errortext.innerHTML = obj.Message;
+        else {
+            errortext.innerHTML = "";
+            LoadInstrumentLayout(obj.Data.Layout);
+        }
 
-function GetLayoutFail(data, textStatus, errorMessage) {
-    errortext.innerHTML = textStatus + ": " + errorMessage + ". Please try again or contact support.";
+    },
+        (data, status, error) => {
+            errortext.innerHTML = status + ": " + error + ". Please try again or contact support.";
+        }
+    )
 }
 
 function GetActiveLayout() {
@@ -290,38 +289,7 @@ function GetActiveLayout() {
 
     },
         (data, status, error) => {
-            errortext.innerHTML = textStatus + ": " + errorMessage + ". Please try again or contact support.";
+            errortext.innerHTML = status + ": " + error + ". Please try again or contact support.";
         }
     )
 }
-
-function SetActiveLayout() {
-    // var myData = {
-    //     LayoutID: layoutDropdown.options[layoutDropdown.selectedIndex].value,
-    //     Layout: CreateLayoutString()
-    // }
-
-    // errortext.innerHTML = "Saving layout..."; //Let the user know the server is waiting
-
-    // DoPost(saveLayoutScriptTarget, myData, SaveLayoutSuccess, SaveLayoutFail);
-
-    // return true;
-}
-
-// function GetLayoutSuccess(reply) {
-//     console.log(reply);
-//     var obj = JSON.parse(reply);
-
-//     if (obj.Status == "fail")
-//         errortext.innerHTML = obj.Message;
-//     else {
-//         errortext.innerHTML = "";
-//         console.log(obj);
-//         console.log(obj.Data.Layout);
-//         LoadInstrumentLayout(obj.Data.Layout);
-//     }
-// }
-
-// function GetLayoutFail(data, textStatus, errorMessage) {
-//     errortext.innerHTML = textStatus + ": " + errorMessage + ". Please try again or contact support.";
-// }

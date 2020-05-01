@@ -105,10 +105,9 @@
                         <!--Dropdown for selecting a saved layout-->
                         Select a layout slot:
                         <select id="select-layout-dropdown" style="margin-bottom: 5px;">
-                            <option value="Layout1">Layout 1</option>
-                            <option value="Layout2">Layout 2</option>
-                            <option value="Layout3">Layout 3</option>
-                            <option value="NewLayout">Save as new layout...</option>
+                            <option value="Layout 1">Layout 1</option>
+                            <option value="Layout 2">Layout 2</option>
+                            <option value="Layout 3">Layout 3</option>
                         </select> <br>
                         <input type="button" id="load-layout-btn" class="btn btn-primary" value="Load Layout" style="background-color: green; border-color: green">
                         <input type="button" id="delete-layout-btn" class="btn btn-primary" value="Delete Layout" style="background-color: red; border-color: red">

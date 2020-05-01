@@ -11,6 +11,59 @@ var saveLayoutScriptTarget = "server/saveInstrumentLayout.php?"; //The layout sc
 var getLayoutScriptTarget = "server/getInstrumentLayout.php?"; //The layout script location for getting the layout from the server
 
 
+$(document).ready(function () {
+    //find elements in document after it is ready
+    layoutDropdown = document.getElementById("select-layout-dropdown");
+    sizeDropdown = document.getElementById("select-size-dropdown");
+    slotDropdownContainer = document.getElementById("slot-dropdown-container");
+    errortext = document.getElementById("error-text")
+    save = document.getElementById("save-btn");
+
+    //Load the selected layout from the server
+    $("#load-layout-btn").click(function (e) {
+        e.preventDefault();
+        if (LoadServerLayout())
+            console.log("Valid layout");
+        else
+            console.log("Invalid form");
+    })
+
+    //Delete the selected layout from the server
+    $("#delete-layout-btn").click(function (e) {
+        e.preventDefault();
+        DeleteLayout();
+    })
+
+    //Pull the currently saved layout from the database
+    $("#reset-btn").click(function (e) {
+        e.preventDefault();
+        //GetActiveLayout();
+        //sizeDropdown.value = 1;
+        LoadLayoutList()
+    })
+
+    //Save the current layout to the server
+    $("#save-btn").click(function (e) {
+        e.preventDefault();
+        if (ValidateForm()) {
+            SaveLayout();
+        }
+    })
+
+    //Make this layout the active layout
+    $("#activate-layout-btn").click(function (e) {
+        e.preventDefault();
+        SetActiveLayout();
+    })
+
+    FillSizeDropdown(availableSlots);
+    BuildLayoutList(sizeDropdown.options[sizeDropdown.selectedIndex].value);
+
+    $("#select-size-dropdown").on("change", function () {
+        BuildLayoutList(sizeDropdown.options[sizeDropdown.selectedIndex].value);
+    })
+})
+
 function BuildLayoutList(size) {
     slotDropdownContainer.innerHTML = "";
 
@@ -25,7 +78,7 @@ function BuildLayoutList(size) {
     }
 }
 
-function LoadLayoutList(data) {
+function LoadInstrumentLayout(data) {
     layout = data.split(",");
     BuildLayoutList(layout.length);
     var list = slotDropdownContainer.getElementsByTagName("li");
@@ -35,7 +88,29 @@ function LoadLayoutList(data) {
     }
 }
 
-function FillSize(size) {
+function LoadLayoutList(layouts)
+{
+    DoPost("server/getInstrumentLayoutList.php", (response) => {
+
+        var obj = JSON.parse(response)
+
+        if (obj.Status == "fail")
+            errortext.innerHTML = obj.Message;
+        else {
+            console.log("Suc");
+            errortext.innerHTML = obj.Message;
+            //for(var i = 0; i < data.LayoutID)
+            console.log(data);
+        }
+
+    },
+        (data, status, error) => {
+            errortext.innerHTML = status + ": " + error + ". Please try again or contact support.";
+        }
+    )
+}
+
+function FillSizeDropdown(size) {
     //sizeDropdown = "<select id=\"size\">";
     sizeDropdown.innerHTML = "";
     for (var i = 1; i <= size; i++) {
@@ -80,57 +155,7 @@ function CheckForDuplicates(list) {
     return invalid;
 }
 
-$(document).ready(function () {
-    //find elements in document after it is ready
-    layoutDropdown = document.getElementById("select-layout-dropdown");
-    sizeDropdown = document.getElementById("select-size-dropdown");
-    slotDropdownContainer = document.getElementById("slot-dropdown-container");
-    errortext = document.getElementById("error-text")
-    save = document.getElementById("save-btn");
 
-    //Load the selected layout from the server
-    $("#load-layout-btn").click(function (e) {
-        e.preventDefault();
-        if (LoadLayout())
-            console.log("Valid layout");
-        else
-            console.log("Invalid form");
-    })
-
-    //Delete the selected layout from the server
-    $("#delete-layout-btn").click(function (e) {
-        e.preventDefault();
-        DeleteLayout();
-    })
-
-    //Pull the currently saved layout from the database
-    $("#reset-btn").click(function (e) {
-        e.preventDefault();
-        //GetActiveLayout();
-        sizeDropdown.value = 1;
-    })
-
-    //Save the current layout to the server
-    $("#save-btn").click(function (e) {
-        e.preventDefault();
-        if (ValidateForm()) {
-            SaveLayout();
-        }
-    })
-
-    //Make this layout the active layout
-    $("#activate-layout-btn").click(function (e) {
-        e.preventDefault();
-        SetActiveLayout();
-    })
-
-    FillSize(availableSlots);
-    BuildLayoutList(sizeDropdown.options[sizeDropdown.selectedIndex].value);
-
-    $("#select-size-dropdown").on("change", function () {
-        BuildLayoutList(sizeDropdown.options[sizeDropdown.selectedIndex].value);
-    })
-})
 
 function ValidateForm() {
 
@@ -164,8 +189,10 @@ function CreateLayoutString(ignoreEmpty = true) {
 }
 
 function SaveLayout() {
+    var id = prompt("Please enter a new or existing name for the layout: ");
+    
     var myData = {
-        LayoutID: layoutDropdown.options[layoutDropdown.selectedIndex].value,
+        LayoutID: id,
         Layout: CreateLayoutString(false)
     }
 
@@ -217,7 +244,7 @@ function DeleteLayout() {
     }
 }
 
-function LoadLayout() {
+function LoadServerLayout() {
     var myData = {
         LayoutID: layoutDropdown.options[layoutDropdown.selectedIndex].value
     }
@@ -234,7 +261,7 @@ function GetLayoutSuccess(reply) {
         errortext.innerHTML = obj.Message;
     else {
         errortext.innerHTML = "";
-        LoadLayoutList(obj.Data.Layout);
+        LoadInstrumentLayout(obj.Data.Layout);
     }
 }
 
@@ -291,7 +318,7 @@ function SetActiveLayout() {
 //         errortext.innerHTML = "";
 //         console.log(obj);
 //         console.log(obj.Data.Layout);
-//         LoadLayoutList(obj.Data.Layout);
+//         LoadInstrumentLayout(obj.Data.Layout);
 //     }
 // }
 

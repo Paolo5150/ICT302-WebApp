@@ -3,14 +3,8 @@
 	include("globals.php");
 	include("functions.php");
 
-    if(isset($_POST['ConfigName']))
-	{
-		//Incoming variables
-		$id = $_POST['ConfigName'];
-		
 		$con = connectToDb();
-		$stmt = $con->prepare("select * from configuration where ConfigName = ?");
-		$stmt->bind_param("s", $id);
+		$stmt = $con->prepare("select Value from configuration where ConfigName = \"ActiveLayout\"");
 		$stmt->execute();
 		
 		//Check if we got something	
@@ -29,13 +23,12 @@
 		else
 		{
 			$reply->Status = 'fail';
-			$reply->Message = "Layout \"".$id."\" not found";
+			$reply->Message = "Active Layout row not found, please contact support";
 		}
 
 		// Send reply in JSON format
 		$myJSON = json_encode($reply);			
         echo $myJSON;
         mysqli_close($con);				
-	}
 
 ?>

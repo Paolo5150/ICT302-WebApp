@@ -3,13 +3,13 @@
 	include("globals.php");
     include("functions.php");    
 
-     if(isset($_POST['LayoutID']))
+     if(isset($_POST['ConfigName']))
 	{
 		//Incoming variables
-        $id = $_POST["LayoutID"];
+        $id = $_POST["ConfigName"];
 		$con = connectToDb();
 
-		$stmt = $con->prepare("select * from instrumentLayout where LayoutID = ?");	
+		$stmt = $con->prepare("select * from configuration where ConfigName = ?");	
 		$stmt->bind_param("s", $id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -22,7 +22,7 @@
 		{
           	//Check if admin
 			$data = $result->fetch_assoc();
-			$stmt = $con->prepare("delete from instrumentLayout where LayoutID = ?");	
+			$stmt = $con->prepare("delete from configuration where ConfigName = ?");	
 			$stmt->bind_param("s", $id);
 			$stmt->execute();
 			$reply->Status = 'ok';    

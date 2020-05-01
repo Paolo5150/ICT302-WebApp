@@ -103,7 +103,7 @@
                 <form style="text-align: center;">
                     <div id="layout-settings" style="margin: 5px 0px 20px 0px">
                         <!--Dropdown for selecting a saved layout-->
-                        Select a layout slot:
+                        Select a layout configuration:
                         <select id="select-layout-dropdown" style="margin-bottom: 5px;">
                             <option value="Layout 1">Layout 1</option>
                             <option value="Layout 2">Layout 2</option>
@@ -121,8 +121,8 @@
                     <ul id="slot-dropdown-container">
                     </ul>
                     <p id="error-text"></p>
-                    <input type="button" id="reset-btn" class="btn btn-primary" value="Reset to active layout">
-                    <input type="submit" id="save-btn" class="btn btn-primary" value="Save layout">
+                    <input type="button" id="load-active-btn" class="btn btn-primary" value="Load active layout">
+                    <input type="submit" id="save-layout-btn" class="btn btn-primary" value="Save layout">
                     <input type="submit" id="activate-layout-btn" class="btn btn-primary" value="Make this layout active">
                 </form>
                 <img id="refimage" src="../imgs/TableReference.png">

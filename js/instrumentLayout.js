@@ -7,30 +7,24 @@ var sizeDropdown; //The dropdown for selecting how many instruments will be in t
 var slotDropdownContainer; //The 'ul' element containing the instrument slots
 var save; //Form save button NOT NEEDED?
 
-var saveLayoutScriptTarget = "server/saveInstrumentLayout.php?"; //The layout script location for saving the layout to the server
-var getLayoutScriptTarget = "server/getInstrumentLayout.php?"; //The layout script location for getting the layout from the server
-
-
 $(document).ready(function () {
     //find elements in document after it is ready
     layoutDropdown = document.getElementById("select-layout-dropdown");
     sizeDropdown = document.getElementById("select-size-dropdown");
     slotDropdownContainer = document.getElementById("slot-dropdown-container");
     errortext = document.getElementById("error-text")
-    save = document.getElementById("save-btn");
+    save = document.getElementById("save-layout-btn");
 
     /* -----Init functions----- */
     FillSizeDropdown(availableSlots);
-    BuildLayoutList(sizeDropdown.options[sizeDropdown.selectedIndex].value);
+    BuildInstrumentSlots(sizeDropdown.options[sizeDropdown.selectedIndex].value);
+    GetAvailableLayouts();
 
     /* -----Button callbacks----- */
     //Load the selected layout from the server
     $("#load-layout-btn").click(function (e) {
         e.preventDefault();
-        if (LoadServerLayout())
-            console.log("Valid layout");
-        else
-            console.log("Invalid form");
+        LoadServerLayout(layoutDropdown.options[layoutDropdown.selectedIndex].value);
     })
 
     //Delete the selected layout from the server
@@ -40,15 +34,13 @@ $(document).ready(function () {
     })
 
     //Pull the currently saved layout from the database
-    $("#reset-btn").click(function (e) {
+    $("#load-active-btn").click(function (e) {
         e.preventDefault();
-        //GetActiveLayout();
-        //sizeDropdown.value = 1;
-        LoadLayoutList()
+        GetActiveLayout();
     })
 
     //Save the current layout to the server
-    $("#save-btn").click(function (e) {
+    $("#save-layout-btn").click(function (e) {
         e.preventDefault();
         if (ValidateForm()) {
             SaveLayout();
@@ -58,16 +50,17 @@ $(document).ready(function () {
     //Make this layout the active layout
     $("#activate-layout-btn").click(function (e) {
         e.preventDefault();
-        SetActiveLayout();
+        SaveActiveLayout(layoutDropdown.options[layoutDropdown.selectedIndex].value);
     })
 
     /* -----Dropdown callbacks----- */
     $("#select-size-dropdown").on("change", function () {
-        BuildLayoutList(sizeDropdown.options[sizeDropdown.selectedIndex].value);
+        BuildInstrumentSlots(sizeDropdown.options[sizeDropdown.selectedIndex].value);
     })
 })
 
-function BuildLayoutList(size) {
+//Creates a list of slots to put instruments in
+function BuildInstrumentSlots(size) {
     slotDropdownContainer.innerHTML = "";
 
     for (var i = 0; i < size; i++) {
@@ -81,9 +74,10 @@ function BuildLayoutList(size) {
     }
 }
 
+//Builds a list of slots and loads layout data into those slots
 function LoadInstrumentLayout(data) {
     layout = data.split(",");
-    BuildLayoutList(layout.length);
+    BuildInstrumentSlots(layout.length);
     var list = slotDropdownContainer.getElementsByTagName("li");
 
     for (var i = 0; i < layout.length; i++) {
@@ -91,13 +85,12 @@ function LoadInstrumentLayout(data) {
     }
 }
 
+//Fills the max instruments selector with 'size' options
 function FillSizeDropdown(size) {
-    //sizeDropdown = "<select id=\"size\">";
     sizeDropdown.innerHTML = "";
     for (var i = 1; i <= size; i++) {
         sizeDropdown.innerHTML += "<option value=\"" + i.toString() + "\">" + i.toString() + "</option>";
     }
-    //sizeDropdown += "</select>";
 }
 
 //Checks whether any dropdown boxes are set to the same value as each other and highlights both red, returns true if there are duplicates
@@ -136,8 +129,7 @@ function CheckForDuplicates(list) {
     return invalid;
 }
 
-
-
+//Validates the instrument form before submission
 function ValidateForm() {
 
     if (CheckForDuplicates(slotDropdownContainer.getElementsByTagName("li"))) {
@@ -150,7 +142,7 @@ function ValidateForm() {
     }
 }
 
-//Returns a list of all the instruments selected
+//Returns a comma seperated list of all the instruments selected
 function CreateLayoutString(ignoreEmpty = true) {
     var layoutString = "";
     var list = slotDropdownContainer.getElementsByTagName("li");
@@ -169,57 +161,91 @@ function CreateLayoutString(ignoreEmpty = true) {
     return layoutString;
 }
 
-function LoadLayoutList(layouts) {
-    DoPost("server/getInstrumentLayoutList.php", (response) => {
+//Loads the list of all available layouts from the server
+function GetAvailableLayouts() {
+    var myData = {}
 
-        var obj = JSON.parse(response)
-
-        if (obj.Status == "fail")
-            errortext.innerHTML = obj.Message;
-        else {
-            errortext.innerHTML = obj.Message;
-            //for(var i = 0; i < data.LayoutID)
-        }
-
-    },
-        (data, status, error) => {
-            errortext.innerHTML = status + ": " + error + ". Please try again or contact support.";
-        }
-    )
-}
-
-function SaveLayout() {
-    var id = prompt("Please enter a new or existing name for the layout: ");
-
-    var myData = {
-        LayoutID: id,
-        Layout: CreateLayoutString(false)
-    }
-
-    errortext.innerHTML = "Saving layout..."; //Let the user know the server is waiting
-
-    DoPost(saveLayoutScriptTarget, myData, (response) => {
+    DoPost("server/getInstrumentLayoutList.php", myData, (response) => {
 
         var obj = JSON.parse(response);
+        var data = JSON.parse(obj.Data);
+
+        console.log(data);
+        LoadAvailableLayouts(data);
 
         if (obj.Status == "fail")
             errortext.innerHTML = obj.Message;
-        else if (obj.Status == "ok") {
-            errortext.innerHTML = obj.Message;
-        }
 
     },
         (data, status, error) => {
             errortext.innerHTML = status + ": " + error + ". Please try again or contact support.";
         }
     )
-
-    return true;
 }
 
+//Fills the layout selector dropdown with the layouts stored on the server
+function LoadAvailableLayouts(layouts) {
+    layoutDropdown.innerHTML = "";
+
+    console.log(layouts);
+
+    //Skip the first two layouts because they are "AssessmentMode and ActiveLayout"
+    var optionString = "";
+
+    for (var i = 2; i < layouts.length; i++) {
+        optionString += "<option id=\"layoutOption" + i + "\" value=\"" + layouts[i] + "\">" + layouts[i] + "</option>";
+    }
+
+    if (optionString == "") {
+        optionString = "<option id=\"no-layouts-option\" value=\"\">No Layouts Available</option>";
+        $("#load-layout-btn").prop("disabled", true);
+        $("#delete-layout-btn").prop("disabled", true);
+    }
+    else {
+        $("#load-layout-btn").prop("disabled", false);
+        $("#delete-layout-btn").prop("disabled", false);
+    }
+
+    console.log(optionString);
+    layoutDropdown.innerHTML = optionString;
+}
+
+//Prompts the user for a layout name and saves the current layout to the server
+function SaveLayout() {
+    var config = prompt("Please enter a new or existing name for the layout: ");
+
+    if (config != null && config != "") {
+        var myData = {
+            ConfigName: config,
+            Value: CreateLayoutString(false)
+        }
+
+        errortext.innerHTML = "Saving layout..."; //Let the user know the server is waiting
+
+        DoPost("server/saveInstrumentLayout.php?", myData, (response) => {
+
+            var obj = JSON.parse(response);
+
+            if (obj.Status == "fail")
+                errortext.innerHTML = obj.Message;
+            else if (obj.Status == "ok") {
+                errortext.innerHTML = obj.Message;
+                GetAvailableLayouts();
+                layoutDropdown.value = config;
+            }
+
+        },
+            (data, status, error) => {
+                errortext.innerHTML = status + ": " + error + ". Please try again or contact support.";
+            }
+        )
+    }
+}
+
+//Deletes the currently selected layout from the server after a confirmation dialog
 function DeleteLayout() {
     var myData = {
-        LayoutID: layoutDropdown.options[layoutDropdown.selectedIndex].value
+        ConfigName: layoutDropdown.options[layoutDropdown.selectedIndex].value
     }
 
     if (confirm("Are you sure you want to delete the layout: " + layoutDropdown.options[layoutDropdown.selectedIndex].innerHTML + "?")) {
@@ -231,8 +257,9 @@ function DeleteLayout() {
                 errortext.innerHTML = obj.Message;
             else {
                 errortext.innerHTML = obj.Message;
+                GetAvailableLayouts();
                 sizeDropdown.value = 1;
-                BuildLayoutList(1);
+                BuildInstrumentSlots(1);
             }
 
         },
@@ -243,14 +270,15 @@ function DeleteLayout() {
     }
 }
 
-function LoadServerLayout() {
+//Loads the dropdown selected layout from the server
+function LoadServerLayout(configName) {
     var myData = {
-        LayoutID: layoutDropdown.options[layoutDropdown.selectedIndex].value
+        ConfigName: configName
     }
 
     errortext.innerHTML = "Getting layout from server..."; //Let the user know the server is waiting
 
-    DoPost(getLayoutScriptTarget, myData, (response) => {
+    DoPost("server/getInstrumentLayout.php?", myData, (response) => {
 
         var obj = JSON.parse(response);
 
@@ -258,7 +286,9 @@ function LoadServerLayout() {
             errortext.innerHTML = obj.Message;
         else {
             errortext.innerHTML = "";
-            LoadInstrumentLayout(obj.Data.Layout);
+            layoutDropdown.value = configName;
+            sizeDropdown.value = obj.Data.Value.split(",").length;
+            LoadInstrumentLayout(obj.Data.Value);
         }
 
     },
@@ -268,23 +298,22 @@ function LoadServerLayout() {
     )
 }
 
+//Loads the active layout from the server
 function GetActiveLayout() {
-    var myData = {
-        LayoutID: "ActiveLayout"
-    }
+    var myData = {}
 
-    errortext.innerHTML = "Getting layout from server..."; //Let the user know the server is waiting
+    errortext.innerHTML = "Getting active layout from server..."; //Let the user know the server is waiting
 
-    DoPost(getLayoutScriptTarget, myData, (response) => {
+    DoPost("server/getActiveInstrumentLayout.php?", myData, (response) => {
 
-        var obj = JSON.parse(response)
+        var obj = JSON.parse(response);
 
         if (obj.Status == "fail")
             errortext.innerHTML = obj.Message;
         else {
-            errortext.innerHTML = obj.Message;
-            sizeDropdown.value = 1;
-            BuildLayoutList(1);
+            errortext.innerHTML = "";
+            console.log(obj.Data.Value);
+            LoadServerLayout(obj.Data.Value);
         }
 
     },
@@ -292,4 +321,35 @@ function GetActiveLayout() {
             errortext.innerHTML = status + ": " + error + ". Please try again or contact support.";
         }
     )
+}
+
+//Makes the currently selected layout as the active one
+function SaveActiveLayout(configName) {
+    if (configName != "") {
+        var myData = {
+            Value: configName
+        }
+
+        errortext.innerHTML = "Saving active layout..."; //Let the user know the server is waiting
+
+        DoPost("server/saveActiveInstrumentLayout.php?", myData, (response) => {
+
+            var obj = JSON.parse(response);
+
+            if (obj.Status == "fail")
+                errortext.innerHTML = obj.Message;
+            else if (obj.Status == "ok") {
+                errortext.innerHTML = obj.Message;
+            }
+
+        },
+            (data, status, error) => {
+                errortext.innerHTML = status + ": " + error + ". Please try again or contact support.";
+            }
+        )
+
+    }
+    else {
+        errortext.innerHTML = "To create an active layout, please select or create a layout";
+    }
 }

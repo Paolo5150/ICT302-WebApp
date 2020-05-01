@@ -4,7 +4,7 @@
 	include("functions.php");
 
 	$con = connectToDb();
-	$stmt = $con->prepare("select LayoutID from instrumentLayout");
+	$stmt = $con->prepare("select ConfigName from configuration");
 	$stmt->execute();
 	
 	//Check if we got something	
@@ -16,11 +16,8 @@
 	
 	if($result && $result->num_rows > 0)
 	{
-		while($data = $result->fetch_assoc())
-		{
-			$encoded = json_encode($data);
-			$reply->Data += $data;
-		}
+		$data = $result->fetch_all();
+		$reply->Data = json_encode($data);
 	}
 	else
 	{

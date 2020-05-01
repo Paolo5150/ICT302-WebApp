@@ -3,14 +3,14 @@
 	include("globals.php");
 	include("functions.php");
 
-    if(isset($_POST['LayoutID']) && isset($_POST['Layout']))
+    if(isset($_POST['ConfigName']) && isset($_POST['Value']))
 	{
 		//Incoming variables
-		$id = $_POST['LayoutID'];
-		$layout = $_POST['Layout'];
+		$id = $_POST['ConfigName'];
+		$layout = $_POST['Value'];
 	
 		$con = connectToDb();
-		$stmt = $con->prepare("select * from instrumentLayout where LayoutID = ?");
+		$stmt = $con->prepare("select * from configuration where ConfigName = ?");
 		$stmt->bind_param("s", $id);
 		$stmt->execute();
 		
@@ -26,30 +26,21 @@
 		{
 			$data = $result->fetch_assoc(); //Get first fow
 			
-			//Ensure it's an admin
-			//if($data['IsAdmin'] == 1)
-			//{
-				$stmt = $con->prepare("update instrumentLayout set Layout = ? WHERE LayoutID = ?");	
-				$stmt->bind_param("ss",  $layout, $id);
-				$stmt->execute();
-			//}
-			//else
-			//{
-				//$reply->Status = 'fail';
-				//$reply->Message = "Not authorized";
-			//}
+			$stmt = $con->prepare("update configuration set Value = ? WHERE ConfigName = ?");	
+			$stmt->bind_param("ss",  $layout, $id);
+			$stmt->execute();
 			
 			$reply->Status = 'ok';
-			$reply->Message = "Layout successfully saved";
+			$reply->Message = "Layout successfully overwritten";
         }
         else
         {
 			//Add new layout here if we don't find one?
-			$stmt = $con->prepare("insert into instrumentLayout (LayoutID, Layout) values (?, ?)");	
+			$stmt = $con->prepare("insert into configuration (ConfigName, Value) values (?, ?)");	
 			$stmt->bind_param("ss",  $id, $layout);
 			$stmt->execute();
             $reply->Status = 'ok';
-			//$reply->Message = "Layout not found";
+			$reply->Message = "Layout successfully created";
 		}
 		
 		// Send reply in JSON format

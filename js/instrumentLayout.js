@@ -2,11 +2,13 @@ var availableSlots = 14; //How many instrument slot-dropdown-container are avail
 var instrumentOptions = ["Empty", "Scissors", "Needle", "SomethingElse"]; //What instruments can be placed in each slot
 
 var errortext; //text area for displaying error messages
+var layoutDropdown; //The dropdown for selecting which layout to save/load
 var sizeDropdown; //The dropdown for selecting how many instruments will be in the scene
-var slotDropdownContainer; //The drop
-var save; //Form save button
+var slotDropdownContainer; //The 'ul' element containing the instrument slots
+var save; //Form save button NOT NEEDED?
 
-//var layoutScriptTarget = "server/SCRIPT.php?"; //The login script location
+var saveLayoutScriptTarget = "server/saveInstrumentLayout.php?"; //The layout script location for saving the layout to the server
+var getLayoutScriptTarget = "server/getInstrumentLayout.php?"; //The layout script location for getting the layout from the server
 
 
 function BuildLayoutList(size) {
@@ -20,6 +22,16 @@ function BuildLayoutList(size) {
         }
 
         slotDropdownContainer.innerHTML += "<li>" + "Instrument in slot " + (i + 1) + ":<br>" + "<select>" + optionString + "</select>" + "</li>";
+    }
+}
+
+function LoadLayoutList(data) {
+    layout = data.split(",");
+    BuildLayoutList(layout.length);
+    var list = slotDropdownContainer.getElementsByTagName("li");
+
+    for (var i = 0; i < layout.length; i++) {
+        var select = list[i].getElementsByTagName("select")[0].value = layout[i];
     }
 }
 
@@ -70,10 +82,30 @@ function CheckForDuplicates(list) {
 
 $(document).ready(function () {
     //find elements in document after it is ready
+    layoutDropdown = document.getElementById("select-layout-dropdown");
     sizeDropdown = document.getElementById("select-size-dropdown");
     slotDropdownContainer = document.getElementById("slot-dropdown-container");
     errortext = document.getElementById("error-text")
     save = document.getElementById("save-btn");
+
+    $("#load-layout-btn").click(function (e) {
+        e.preventDefault();
+        if (LoadLayout())
+            console.log("Valid layout");
+        else
+            console.log("Invalid form");
+    })
+
+    // $("#delete-layout-btn").click(function (e) {
+    //     e.preventDefault();
+    //     if (ValidateForm())
+    //     {
+    //         console.log("Valid form");
+    //         console.log(CreateLayoutString());
+    //     }
+    //     else
+    //         console.log("Invalid form");
+    // })
 
     //Return the form to the currently saved setup
     //Pull the currently saved layout from the database here
@@ -86,10 +118,9 @@ $(document).ready(function () {
     //Save the current setup to the server
     $("#save-btn").click(function (e) {
         e.preventDefault();
-        if (ValidateForm())
-        {
+        if (ValidateForm()) {
             console.log("Valid form");
-            console.log(GetLayoutString());
+            console.log(CreateLayoutString());
         }
         else
             console.log("Invalid form");
@@ -116,7 +147,7 @@ function ValidateForm() {
 }
 
 //Returns a list of all the instruments selected
-function GetLayoutString(list) {
+function CreateLayoutString(list) {
     var layoutString = "";
     var list = slotDropdownContainer.getElementsByTagName("li");
 
@@ -130,47 +161,15 @@ function GetLayoutString(list) {
     return layoutString;
 }
 
-function GetCurrentLayout() {
-    var myData = {
-        MurdochUserNumber: username.value,
-        Password: password.value,
-        Captcha: grecaptcha.getResponse()
-    }
-
-    errortext.innerHTML = "Getting layout from server..."; //Let the user know the server is waiting
-
-    DoPost(layoutScriptTarget, myData, GetLayoutSuccess, GetLayoutFail);
-
-    return true;
-}
-
-function GetLayoutSuccess(reply) {
-    console.log(reply)
-    var obj = JSON.parse(reply);
-
-    if (obj.Status == "fail")
-        errortext.innerHTML = obj.Message;
-    else if (obj.Status == "ok") {
-        errortext.innerHTML = "";
-        localStorage.setItem("Token", obj.Data.Token)
-        localStorage.setItem("MurdochUserNumber", obj.Data.MurdochUserNumber)
-        window.location = "index.php"; // Refresh this page. Redirection is done by server
-
-    }
-}
-
-function GetLayoutFail(data, textStatus, errorMessage) {
-    errortext.innerHTML = textStatus + ": " + errorMessage + ". Please try again or contact support.";
-}
-
 function SaveLayout() {
     var myData = {
-        Layout: GetLayoutString()
+        LayoutID: layoutDropdown.options[layoutDropdown.selectedIndex].value,
+        Layout: CreateLayoutString()
     }
 
     errortext.innerHTML = "Saving layout..."; //Let the user know the server is waiting
 
-    DoPost(layoutScriptTarget, myData, SaveLayoutSuccess, SaveLayoutFail);
+    DoPost(saveLayoutScriptTarget, myData, SaveLayoutSuccess, SaveLayoutFail);
 
     return true;
 }
@@ -191,5 +190,47 @@ function SaveLayoutSuccess(reply) {
 }
 
 function SaveLayoutFail(data, textStatus, errorMessage) {
+    errortext.innerHTML = textStatus + ": " + errorMessage + ". Please try again or contact support.";
+}
+
+function GetCurrentLayout() {
+    var myData = {
+        LayoutID: "ActiveLayout"
+    }
+
+    errortext.innerHTML = "Getting layout from server..."; //Let the user know the server is waiting
+
+    DoPost(getLayoutScriptTarget, myData, GetLayoutSuccess, GetLayoutFail);
+
+    return true;
+}
+
+function LoadLayout() {
+    var myData = {
+        LayoutID: layoutDropdown.options[layoutDropdown.selectedIndex].value
+    }
+
+    errortext.innerHTML = "Getting layout from server..."; //Let the user know the server is waiting
+
+    DoPost(getLayoutScriptTarget, myData, GetLayoutSuccess, GetLayoutFail);
+
+    return true;
+}
+
+function GetLayoutSuccess(reply) {
+    console.log(reply);
+    var obj = JSON.parse(reply);
+
+    if (obj.Status == "fail")
+        errortext.innerHTML = obj.Message;
+    else {
+        errortext.innerHTML = "";
+        console.log(obj);
+        console.log(obj.Data.Layout);
+        LoadLayoutList(obj.Data.Layout);
+    }
+}
+
+function GetLayoutFail(data, textStatus, errorMessage) {
     errortext.innerHTML = textStatus + ": " + errorMessage + ". Please try again or contact support.";
 }

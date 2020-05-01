@@ -101,10 +101,24 @@
             <div class="container">
                 <!-- Can be 'container' or 'container-fluid' -->
                 <form style="text-align: center;">
-                    <!--Dropdown for how many slots to fill-->
-                    <select id="select-size-dropdown">
-                        <option value="0">0</option>
-                    </select>
+                    <div id="layout-settings" style="margin: 5px 0px 20px 0px">
+                        <!--Dropdown for selecting a saved layout-->
+                        Select a layout slot:
+                        <select id="select-layout-dropdown" style="margin-bottom: 5px;">
+                            <option value="Layout1">Layout 1</option>
+                            <option value="Layout2">Layout 2</option>
+                            <option value="Layout3">Layout 3</option>
+                            <option value="NewLayout">Save as new layout...</option>
+                        </select> <br>
+                        <input type="button" id="load-layout-btn" class="btn btn-primary" value="Load Layout" style="background-color: green; border-color: green">
+                        <input type="button" id="delete-layout-btn" class="btn btn-primary" value="Delete Layout" style="background-color: red; border-color: red">
+                        <br>
+                        <!--Dropdown for how many slots to fill-->
+                        Max Instruments:
+                        <select id="select-size-dropdown" style="margin-top: 10px;">
+                            <option value="0">0</option>
+                        </select>
+                    </div>
                     <ul id="slot-dropdown-container">
                     </ul>
                     <p id="error-text"></p>

@@ -132,15 +132,45 @@ $(document).ready(function () {
     })
 
     // Assessment mode button
-    $("#assessment-mode-btn").change(function() {
+    $("#assessment-mode-btn").click(function() {
         
-        if($("#admin-switch").prop("checked"))
-        if(confirm("Are you sure you want to give this account administrator privileges?"))
-         $("#admin-switch").prop("checked",true)
-         else
-         $("#admin-switch").prop("checked",false)
-         
-       });
+        if($("#assessment-mode-btn").prop("checked"))
+        {
+
+            if(confirm("Are you sure you want activate Assessment mode?"))
+            {
+                $("#assessment-mode-btn").prop("checked",true)           
+            }
+            else
+            {
+                
+                $("#assessment-mode-btn").prop("checked",false)
+            }
+            
+        }
+
+        var token = getToken()
+        var mus = getMUS()
+        var checked = $("#assessment-mode-btn").prop("checked");
+        var data = {
+            MurdochUserNumber: mus,
+            Token: token,
+            Checked: checked
+
+        }
+        
+        DoPost("server/updateAssessmentMode.php",data,(response)=>{
+            
+          //  console.log(response)       
+                                
+        
+        },
+        (data, status, error)=>
+        {
+   
+        } 
+        )   
+    });
 })
 
 function backToStudentTable()

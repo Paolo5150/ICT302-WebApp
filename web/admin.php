@@ -67,8 +67,8 @@
                     <div style="margin-right: 10px">
                     <p class="nav-link" href="#" style="display: inline-block">Assessment mode</p>
                         <div class="material-switch pull-right" style="margin: 10px" >
-                            <input id="asessment-mode-btn" name="someSwitchOption001" type="checkbox" />
-                            <label for="asessment-mode-btn" class="label-primary"></label>
+                            <input id="assessment-mode-btn" name="someSwitchOption001" type="checkbox" />
+                            <label for="assessment-mode-btn" class="label-primary"></label>
                         </div>
                     </div> 
                 </li>

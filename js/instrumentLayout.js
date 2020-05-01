@@ -88,6 +88,7 @@ $(document).ready(function () {
     errortext = document.getElementById("error-text")
     save = document.getElementById("save-btn");
 
+    //Load the selected layout from the server
     $("#load-layout-btn").click(function (e) {
         e.preventDefault();
         if (LoadLayout())
@@ -96,34 +97,31 @@ $(document).ready(function () {
             console.log("Invalid form");
     })
 
-    // $("#delete-layout-btn").click(function (e) {
-    //     e.preventDefault();
-    //     if (ValidateForm())
-    //     {
-    //         console.log("Valid form");
-    //         console.log(CreateLayoutString());
-    //     }
-    //     else
-    //         console.log("Invalid form");
-    // })
+    //Delete the selected layout from the server
+    $("#delete-layout-btn").click(function (e) {
+        e.preventDefault();
+        DeleteLayout();
+    })
 
-    //Return the form to the currently saved setup
-    //Pull the currently saved layout from the database here
-    // $("#reset-btn").click(function (e) {
-    //     e.preventDefault();
-    //     if (ResetForm())
-    //         console.log("Reset form");
-    // })
+    //Pull the currently saved layout from the database
+    $("#reset-btn").click(function (e) {
+        e.preventDefault();
+        //GetActiveLayout();
+        sizeDropdown.value = 1;
+    })
 
-    //Save the current setup to the server
+    //Save the current layout to the server
     $("#save-btn").click(function (e) {
         e.preventDefault();
         if (ValidateForm()) {
-            console.log("Valid form");
-            console.log(CreateLayoutString());
+            SaveLayout();
         }
-        else
-            console.log("Invalid form");
+    })
+
+    //Make this layout the active layout
+    $("#activate-layout-btn").click(function (e) {
+        e.preventDefault();
+        SetActiveLayout();
     })
 
     FillSize(availableSlots);
@@ -147,13 +145,17 @@ function ValidateForm() {
 }
 
 //Returns a list of all the instruments selected
-function CreateLayoutString(list) {
+function CreateLayoutString(ignoreEmpty = true) {
     var layoutString = "";
     var list = slotDropdownContainer.getElementsByTagName("li");
 
     for (var i = 0; i < list.length; i++) {
         var select = list[i].getElementsByTagName("select")[0];
-        layoutString += select.options[select.selectedIndex].value + ",";
+        var value = select.options[select.selectedIndex].value;
+
+        //Don't save empties unless we specifically want them
+        if (value != "Empty" || ignoreEmpty == false)
+            layoutString += select.options[select.selectedIndex].value + ",";
     }
 
     layoutString = layoutString.substring(0, layoutString.length - 1); //Remove the last comma
@@ -164,7 +166,7 @@ function CreateLayoutString(list) {
 function SaveLayout() {
     var myData = {
         LayoutID: layoutDropdown.options[layoutDropdown.selectedIndex].value,
-        Layout: CreateLayoutString()
+        Layout: CreateLayoutString(false)
     }
 
     errortext.innerHTML = "Saving layout..."; //Let the user know the server is waiting
@@ -181,11 +183,7 @@ function SaveLayoutSuccess(reply) {
     if (obj.Status == "fail")
         errortext.innerHTML = obj.Message;
     else if (obj.Status == "ok") {
-        errortext.innerHTML = "";
-        localStorage.setItem("Token", obj.Data.Token)
-        localStorage.setItem("MurdochUserNumber", obj.Data.MurdochUserNumber)
-        window.location = "index.php"; // Refresh this page. Redirection is done by server
-
+        errortext.innerHTML = obj.Message;
     }
 }
 
@@ -193,16 +191,30 @@ function SaveLayoutFail(data, textStatus, errorMessage) {
     errortext.innerHTML = textStatus + ": " + errorMessage + ". Please try again or contact support.";
 }
 
-function GetCurrentLayout() {
+function DeleteLayout() {
     var myData = {
-        LayoutID: "ActiveLayout"
+        LayoutID: layoutDropdown.options[layoutDropdown.selectedIndex].value
     }
 
-    errortext.innerHTML = "Getting layout from server..."; //Let the user know the server is waiting
+    if (confirm("Are you sure you want to delete the layout: " + layoutDropdown.options[layoutDropdown.selectedIndex].innerHTML + "?")) {
+        DoPost("server/deleteInstrumentLayout.php", myData, (response) => {
 
-    DoPost(getLayoutScriptTarget, myData, GetLayoutSuccess, GetLayoutFail);
+            var obj = JSON.parse(response)
 
-    return true;
+            if (obj.Status == "fail")
+                errortext.innerHTML = obj.Message;
+            else {
+                errortext.innerHTML = obj.Message;
+                sizeDropdown.value = 1;
+                BuildLayoutList(1);
+            }
+
+        },
+            (data, status, error) => {
+                errortext.innerHTML = textStatus + ": " + errorMessage + ". Please try again or contact support.";
+            }
+        )
+    }
 }
 
 function LoadLayout() {
@@ -213,20 +225,15 @@ function LoadLayout() {
     errortext.innerHTML = "Getting layout from server..."; //Let the user know the server is waiting
 
     DoPost(getLayoutScriptTarget, myData, GetLayoutSuccess, GetLayoutFail);
-
-    return true;
 }
 
 function GetLayoutSuccess(reply) {
-    console.log(reply);
     var obj = JSON.parse(reply);
 
     if (obj.Status == "fail")
         errortext.innerHTML = obj.Message;
     else {
         errortext.innerHTML = "";
-        console.log(obj);
-        console.log(obj.Data.Layout);
         LoadLayoutList(obj.Data.Layout);
     }
 }
@@ -234,3 +241,60 @@ function GetLayoutSuccess(reply) {
 function GetLayoutFail(data, textStatus, errorMessage) {
     errortext.innerHTML = textStatus + ": " + errorMessage + ". Please try again or contact support.";
 }
+
+function GetActiveLayout() {
+    var myData = {
+        LayoutID: "ActiveLayout"
+    }
+
+    errortext.innerHTML = "Getting layout from server..."; //Let the user know the server is waiting
+
+    DoPost(getLayoutScriptTarget, myData, (response) => {
+
+        var obj = JSON.parse(response)
+
+        if (obj.Status == "fail")
+            errortext.innerHTML = obj.Message;
+        else {
+            errortext.innerHTML = obj.Message;
+            sizeDropdown.value = 1;
+            BuildLayoutList(1);
+        }
+
+    },
+        (data, status, error) => {
+            errortext.innerHTML = textStatus + ": " + errorMessage + ". Please try again or contact support.";
+        }
+    )
+}
+
+function SetActiveLayout() {
+    // var myData = {
+    //     LayoutID: layoutDropdown.options[layoutDropdown.selectedIndex].value,
+    //     Layout: CreateLayoutString()
+    // }
+
+    // errortext.innerHTML = "Saving layout..."; //Let the user know the server is waiting
+
+    // DoPost(saveLayoutScriptTarget, myData, SaveLayoutSuccess, SaveLayoutFail);
+
+    // return true;
+}
+
+// function GetLayoutSuccess(reply) {
+//     console.log(reply);
+//     var obj = JSON.parse(reply);
+
+//     if (obj.Status == "fail")
+//         errortext.innerHTML = obj.Message;
+//     else {
+//         errortext.innerHTML = "";
+//         console.log(obj);
+//         console.log(obj.Data.Layout);
+//         LoadLayoutList(obj.Data.Layout);
+//     }
+// }
+
+// function GetLayoutFail(data, textStatus, errorMessage) {
+//     errortext.innerHTML = textStatus + ": " + errorMessage + ". Please try again or contact support.";
+// }

@@ -122,8 +122,9 @@
                     <ul id="slot-dropdown-container">
                     </ul>
                     <p id="error-text"></p>
-                    <input type="button" id="reset-btn" class="btn btn-primary" value="Reset">
-                    <input type="submit" id="save-btn" class="btn btn-primary" value="Submit">
+                    <input type="button" id="reset-btn" class="btn btn-primary" value="Reset to active layout">
+                    <input type="submit" id="save-btn" class="btn btn-primary" value="Save layout">
+                    <input type="submit" id="activate-layout-btn" class="btn btn-primary" value="Make this layout active">
                 </form>
                 <img id="refimage" src="../imgs/TableReference.png">
             </div>

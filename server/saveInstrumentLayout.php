@@ -5,16 +5,13 @@
 
     if(isset($_POST['LayoutID']) && isset($_POST['Layout']))
 	{
-		 //Incoming variables
-         $id = $_POST['MurdochUserNumber'];
-		 $token = $_POST['Token'];
-		 $fName = $_POST['FirstName'];
-		 $lName = $_POST['LastName'];
-		 $email = $_POST['Email'];
-		
+		//Incoming variables
+		$id = $_POST['LayoutID'];
+		$layout = $_POST['Layout'];
+	
 		$con = connectToDb();
-		$stmt = $con->prepare("select * from user where MurdochUserNumber = ? AND Token = ?");
-		$stmt->bind_param("ss", $id, $token);
+		$stmt = $con->prepare("select * from instrumentLayout where LayoutID = ?");
+		$stmt->bind_param("s", $id);
 		$stmt->execute();
 		
 		//Check if we got something	
@@ -29,39 +26,32 @@
 		{
 			$data = $result->fetch_assoc(); //Get first fow
 			
-			//Check if SMUS was set. If so, it meas that the request is an admin chaning details of a student account
-			if(isset($_POST['SMUS']))
-			{
-				//Ensure it's an admin
-				if($data['IsAdmin'] == 1)
-				{
-					$stmt = $con->prepare("update user set Layout = ?, LastName = ?, Email = ? WHERE  MurdochUserNumber = ?");	
-           			$stmt->bind_param("ssss",  $fName, $lName, $email, $_POST['SMUS']);
-            		$stmt->execute();
-				}
-				else
-				{
-					$reply->Status = 'fail';
-					$reply->Message = "Not authorized";
-				}
-				
-			}
-			else //Otherwise, it means that a user is changing their own account
-			{
-				$stmt = $con->prepare("update user set FirstName = ?, LastName = ?, Email = ? WHERE  MurdochUserNumber = ?");	
-				$stmt->bind_param("ssss",  $fName, $lName, $email, $id);
+			//Ensure it's an admin
+			//if($data['IsAdmin'] == 1)
+			//{
+				$stmt = $con->prepare("update instrumentLayout set Layout = ? WHERE LayoutID = ?");	
+				$stmt->bind_param("ss",  $layout, $id);
 				$stmt->execute();
-			}
-
+			//}
+			//else
+			//{
+				//$reply->Status = 'fail';
+				//$reply->Message = "Not authorized";
+			//}
 			
 			$reply->Status = 'ok';
-			$reply->Message = "Details successfully changed";
+			$reply->Message = "Layout successfully saved";
         }
         else
         {
-            $reply->Status = 'fail';
-			$reply->Message = "User not found";
-        }
+			//Add new layout here if we don't find one?
+			$stmt = $con->prepare("insert into instrumentLayout (LayoutID, Layout) values (?, ?)");	
+			$stmt->bind_param("ss",  $id, $layout);
+			$stmt->execute();
+            $reply->Status = 'ok';
+			//$reply->Message = "Layout not found";
+		}
+		
 		// Send reply in JSON format
 		$myJSON = json_encode($reply);			
         echo $myJSON;

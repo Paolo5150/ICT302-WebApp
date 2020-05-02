@@ -3,13 +3,13 @@
 	include("globals.php");
 	include("functions.php");
 
-    if(isset($_POST['ConfigName']))
+    if(isset($_POST['LayoutName']))
 	{
 		//Incoming variables
-		$id = $_POST['ConfigName'];
+		$id = $_POST['LayoutName'];
 		
 		$con = connectToDb();
-		$stmt = $con->prepare("select * from layout where ConfigName = ?");
+		$stmt = $con->prepare("select * from layout where LayoutName = ?");
 		$stmt->bind_param("s", $id);
 		$stmt->execute();
 		

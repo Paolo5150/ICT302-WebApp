@@ -90,7 +90,6 @@
                             <option value="Layout 2">Layout 2</option>
                             <option value="Layout 3">Layout 3</option>
                         </select> <br>
-                        <input type="button" id="load-layout-btn" class="btn btn-primary" value="Load Layout" style="background-color: green; border-color: green">
                         <input type="button" id="delete-layout-btn" class="btn btn-primary" value="Delete Layout" style="background-color: red; border-color: red">
                         <br>
                         <!--Dropdown for how many slots to fill-->

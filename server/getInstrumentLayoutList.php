@@ -4,7 +4,7 @@
 	include("functions.php");
 
 	$con = connectToDb();
-	$stmt = $con->prepare("select ConfigName from layout");
+	$stmt = $con->prepare("select LayoutName from layout");
 	$stmt->execute();
 	
 	//Check if we got something	

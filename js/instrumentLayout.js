@@ -1,11 +1,11 @@
-var availableSlots = 14; //How many instrument slot-dropdown-container are available
-var instrumentOptions = ["Empty", "Suture Scissors", "Mayo Hegar Needle Driver", "Towel Clamps", "Scalpel", "Addson-Brown Forceps", "Metzembaum Scissors", "Rochester Carmalt Forceps", "Mayo Scissor"]; //What instruments can be placed in each slot
+var availableSlots = 14; //How many instrument containers are available
+var instrumentOptions = ["Empty", "Suture Scissors", "Mayo Hegar Needle Driver", "Mayo Scissors", "Towel Clamps", "Scalpel", "Addson-Brown Forceps", "Metzembaum Scissors", "Rochester Carmalt Forceps", "Mayo Scissor"]; //What instruments can be placed in each slot
 
 var errortext; //text area for displaying error messages
 var layoutDropdown; //The dropdown for selecting which layout to save/load
 var sizeDropdown; //The dropdown for selecting how many instruments will be in the scene
 var slotDropdownContainer; //The 'ul' element containing the instrument slots
-var save; //Form save button NOT NEEDED?
+var save; //Form save button
 
 $(document).ready(function () {
     //find elements in document after it is ready
@@ -21,12 +21,6 @@ $(document).ready(function () {
     GetAvailableLayouts();
 
     /* -----Button callbacks----- */
-    //Load the selected layout from the server
-    $("#load-layout-btn").click(function (e) {
-        e.preventDefault();
-        LoadServerLayout(layoutDropdown.options[layoutDropdown.selectedIndex].value);
-    })
-
     //Delete the selected layout from the server
     $("#delete-layout-btn").click(function (e) {
         e.preventDefault();
@@ -54,10 +48,21 @@ $(document).ready(function () {
     })
 
     /* -----Dropdown callbacks----- */
+    $("#select-layout-dropdown").on("change", function () {
+        if (confirm("Are you sure you want to load the layout \"" + layoutDropdown.options[layoutDropdown.selectedIndex].value + "\"? Any unsaved changes will be lost."))
+            LoadServerLayout(layoutDropdown.options[layoutDropdown.selectedIndex].value);
+    })
+
     $("#select-size-dropdown").on("change", function () {
         BuildInstrumentSlots(sizeDropdown.options[sizeDropdown.selectedIndex].value);
     })
 })
+
+//Displays an alert to the user
+function DisplayMessage(message) {
+    //errortext = message;
+    alert(message);
+}
 
 //Creates a list of slots to put instruments in
 function BuildInstrumentSlots(size) {
@@ -133,11 +138,10 @@ function CheckForDuplicates(list) {
 function ValidateForm() {
 
     if (CheckForDuplicates(slotDropdownContainer.getElementsByTagName("li"))) {
-        errortext.innerHTML = "All instruments slots must have unique values";
+        DisplayMessage("All instruments slots must have unique values");
         return false;
     }
     else {
-        errortext.innerHTML = "";
         return true;
     }
 }
@@ -178,11 +182,11 @@ function GetAvailableLayouts() {
 
         LoadAvailableLayouts(data);
         if (obj.Status == "fail")
-            errortext.innerHTML = obj.Message;
+            DisplayMessage(obj.Message);
 
     },
         (data, status, error) => {
-            errortext.innerHTML = status + ": " + error + ". Please try again or contact support.";
+            DisplayMessage(status + ": " + error + ". Please try again or contact support.");
         }
     )
 }
@@ -191,7 +195,7 @@ function GetAvailableLayouts() {
 function LoadAvailableLayouts(layouts) {
     layoutDropdown.innerHTML = "";
 
-    var optionString = "";
+    var optionString = "<option disabled selected value> -- Load a layout -- </option>";
 
     for (var i = 0; i < layouts.length; i++) {
         optionString += "<option id=\"layoutOption" + i + "\" value=\"" + layouts[i] + "\">" + layouts[i] + "</option>";
@@ -199,11 +203,9 @@ function LoadAvailableLayouts(layouts) {
 
     if (optionString == "") {
         optionString = "<option id=\"no-layouts-option\" value=\"\">No Layouts Available</option>";
-        $("#load-layout-btn").prop("disabled", true);
         $("#delete-layout-btn").prop("disabled", true);
     }
     else {
-        $("#load-layout-btn").prop("disabled", false);
         $("#delete-layout-btn").prop("disabled", false);
     }
 
@@ -216,27 +218,27 @@ function SaveLayout() {
 
     if (config != null && config != "") {
         var myData = {
-            ConfigName: config,
+            LayoutName: config,
             Value: CreateLayoutString(false)
         }
 
-        errortext.innerHTML = "Saving layout..."; //Let the user know the server is waiting
+        //DisplayMessage("Saving layout..."); //Let the user know the server is waiting
 
         DoPost("server/saveInstrumentLayout.php?", myData, (response) => {
 
             var obj = JSON.parse(response);
 
             if (obj.Status == "fail")
-                errortext.innerHTML = obj.Message;
+                DisplayMessage(obj.Message);
             else if (obj.Status == "ok") {
-                errortext.innerHTML = obj.Message;
+                DisplayMessage(obj.Message);
                 GetAvailableLayouts();
                 layoutDropdown.value = config;
             }
 
         },
             (data, status, error) => {
-                errortext.innerHTML = status + ": " + error + ". Please try again or contact support.";
+                DisplayMessage(status + ": " + error + ". Please try again or contact support.");
             }
         )
     }
@@ -245,7 +247,7 @@ function SaveLayout() {
 //Deletes the currently selected layout from the server after a confirmation dialog
 function DeleteLayout() {
     var myData = {
-        ConfigName: layoutDropdown.options[layoutDropdown.selectedIndex].value
+        LayoutName: layoutDropdown.options[layoutDropdown.selectedIndex].value
     }
 
     if (confirm("Are you sure you want to delete the layout: " + layoutDropdown.options[layoutDropdown.selectedIndex].innerHTML + "?")) {
@@ -254,9 +256,9 @@ function DeleteLayout() {
             var obj = JSON.parse(response)
 
             if (obj.Status == "fail")
-                errortext.innerHTML = obj.Message;
+                DisplayMessage(obj.Message);
             else {
-                errortext.innerHTML = obj.Message;
+                DisplayMessage(obj.Message);
                 GetAvailableLayouts();
                 sizeDropdown.value = 1;
                 BuildInstrumentSlots(1);
@@ -264,7 +266,7 @@ function DeleteLayout() {
 
         },
             (data, status, error) => {
-                errortext.innerHTML = status + ": " + error + ". Please try again or contact support.";
+                DisplayMessage(status + ": " + error + ". Please try again or contact support.");
             }
         )
     }
@@ -273,19 +275,18 @@ function DeleteLayout() {
 //Loads the dropdown selected layout from the server
 function LoadServerLayout(configName) {
     var myData = {
-        ConfigName: configName
+        LayoutName: configName
     }
 
-    errortext.innerHTML = "Getting layout from server..."; //Let the user know the server is waiting
+    //DisplayMessage("Getting layout from server..."); //Let the user know the server is waiting
 
     DoPost("server/getInstrumentLayout.php?", myData, (response) => {
 
         var obj = JSON.parse(response);
 
         if (obj.Status == "fail")
-            errortext.innerHTML = obj.Message;
+            DisplayMessage(obj.Message);
         else {
-            errortext.innerHTML = "";
             layoutDropdown.value = configName;
             sizeDropdown.value = obj.Data.Value.split(",").length;
             LoadInstrumentLayout(obj.Data.Value);
@@ -293,7 +294,7 @@ function LoadServerLayout(configName) {
 
     },
         (data, status, error) => {
-            errortext.innerHTML = status + ": " + error + ". Please try again or contact support.";
+            DisplayMessage(status + ": " + error + ". Please try again or contact support.");
         }
     )
 }
@@ -302,22 +303,19 @@ function LoadServerLayout(configName) {
 function GetActiveLayout() {
     var myData = {}
 
-    errortext.innerHTML = "Getting active layout from server..."; //Let the user know the server is waiting
-
     DoPost("server/getActiveInstrumentLayout.php?", myData, (response) => {
 
         var obj = JSON.parse(response);
 
         if (obj.Status == "fail")
-            errortext.innerHTML = obj.Message;
+            DisplayMessage(obj.Message);
         else {
-            errortext.innerHTML = "";
             LoadServerLayout(obj.Data.Value);
         }
 
     },
         (data, status, error) => {
-            errortext.innerHTML = status + ": " + error + ". Please try again or contact support.";
+            DisplayMessage(status + ": " + error + ". Please try again or contact support.");
         }
     )
 }
@@ -329,26 +327,26 @@ function SaveActiveLayout(configName) {
             Value: configName
         }
 
-        errortext.innerHTML = "Saving active layout..."; //Let the user know the server is waiting
+        //DisplayMessage("Saving active layout..."); //Let the user know the server is waiting
 
         DoPost("server/saveActiveInstrumentLayout.php?", myData, (response) => {
 
             var obj = JSON.parse(response);
 
             if (obj.Status == "fail")
-                errortext.innerHTML = obj.Message;
+                DisplayMessage(obj.Message);
             else if (obj.Status == "ok") {
-                errortext.innerHTML = obj.Message;
+                DisplayMessage(obj.Message);
             }
 
         },
             (data, status, error) => {
-                errortext.innerHTML = status + ": " + error + ". Please try again or contact support.";
+                DisplayMessage(status + ": " + error + ". Please try again or contact support.");
             }
         )
 
     }
     else {
-        errortext.innerHTML = "To create an active layout, please select or create a layout";
+        DisplayMessage("To create an active layout, please select or create a layout");
     }
 }

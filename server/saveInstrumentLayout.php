@@ -3,14 +3,14 @@
 	include("globals.php");
 	include("functions.php");
 
-    if(isset($_POST['ConfigName']) && isset($_POST['Value']))
+    if(isset($_POST['LayoutName']) && isset($_POST['Value']))
 	{
 		//Incoming variables
-		$id = $_POST['ConfigName'];
+		$id = $_POST['LayoutName'];
 		$layout = $_POST['Value'];
 	
 		$con = connectToDb();
-		$stmt = $con->prepare("select * from layout where ConfigName = ?");
+		$stmt = $con->prepare("select * from layout where LayoutName = ?");
 		$stmt->bind_param("s", $id);
 		$stmt->execute();
 		
@@ -26,7 +26,7 @@
 		{
 			$data = $result->fetch_assoc(); //Get first fow
 			
-			$stmt = $con->prepare("update layout set Value = ? WHERE ConfigName = ?");	
+			$stmt = $con->prepare("update layout set Value = ? WHERE LayoutName = ?");	
 			$stmt->bind_param("ss",  $layout, $id);
 			$stmt->execute();
 			
@@ -36,7 +36,7 @@
         else
         {
 			//Add new layout here if we don't find one?
-			$stmt = $con->prepare("insert into layout (ConfigName, Value) values (?, ?)");	
+			$stmt = $con->prepare("insert into layout (LayoutName, Value) values (?, ?)");	
 			$stmt->bind_param("ss",  $id, $layout);
 			$stmt->execute();
             $reply->Status = 'ok';

@@ -30,7 +30,8 @@ $(document).ready(function () {
     //Pull the currently saved layout from the database
     $("#load-active-btn").click(function (e) {
         e.preventDefault();
-        GetActiveLayout();
+        if (confirm("Are you sure you want to load the active layout? Any unsaved changes will be lost."))
+            GetActiveLayout();
     })
 
     //Save the current layout to the server
@@ -175,7 +176,7 @@ function GetAvailableLayouts() {
         var data = ""; //We'll send a blank string to the available layout loader if the json parse fails
 
         try {
-            data = JSON.parse(obj.Data);
+            data = JSON.parse(obj.Data); //If the json parse fails because there is no data we can ignore it
         } catch (error) {
             console.log(error);
         }
@@ -233,7 +234,7 @@ function SaveLayout() {
             else if (obj.Status == "ok") {
                 DisplayMessage(obj.Message);
                 GetAvailableLayouts();
-                layoutDropdown.value = config;
+                //layoutDropdown.value = config;
             }
 
         },

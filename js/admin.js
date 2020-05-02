@@ -159,8 +159,8 @@ $(document).ready(function () {
 
         }
         
-        DoPost("server/updateAssessmentMode.php",data,(response)=>{            
-          //  console.log(response)
+        DoPost("server/getConfiguration.php",data,(response)=>{            
+            console.log(response)
         },
         (data, status, error)=>
         {

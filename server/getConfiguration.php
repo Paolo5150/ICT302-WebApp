@@ -29,11 +29,11 @@
                 {
                     if($data[$i][0] == 'ActiveLayout')
                     {
-                        $stmt = $con->prepare("select Value from layout where ConfigName = '{$data[$i][1]}'");
+                        $stmt = $con->prepare("select Value from layout where LayoutName = '{$data[$i][1]}'");
                         $stmt->execute();
                         $res = $stmt->get_result();
                         $instruments = $res->fetch_assoc();
-                        $reply->Data->Layout = json_encode($instruments);
+                        $reply->Data->Layout = json_encode($instruments['Value']);
                     }
                     else if($data[$i][0] == 'AssessmentMode')
                     {

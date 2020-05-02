@@ -9,7 +9,7 @@
 		$layout = $_POST['Value'];
 	
 		$con = connectToDb();
-		$stmt = $con->prepare("select * from configuration where ConfigName = \"ActiveLayout\"");
+		$stmt = $con->prepare("select * from Configuration where ConfigName = \"ActiveLayout\"");
 		$stmt->execute();
 		
 		//Check if we got something	
@@ -32,8 +32,12 @@
         }
         else
         {
-            $reply->Status = 'fail';
-			$reply->Message = "Active layout failed to update";
+            $stmt = $con->prepare("insert into Configuration (ConfigName,Value) VALUES ('ActiveLayout',?)");
+				$stmt->bind_param("s", $layout);
+				$status = $stmt->execute();
+			
+			$reply->Status = 'ok';
+			$reply->Message = "Layout successfully set to active";
 		}
 		
 		// Send reply in JSON format

@@ -78,7 +78,10 @@
                     <input type="file" class="custom-file-input" id="customFile">
                     <label class="custom-file-label" for="customFile">Upload student list</label>
                 </div>
-                </li>                
+                </li>       
+                <li class="nav-item">
+                    <a class="nav-link" href="instrumentLayoutClient.php">Instrument Layout</a>
+                </li>         
                 <li class="nav-item">
                     <a class="nav-link" href="#" onClick="GetCSV()">Get CSV</a>
                 </li>

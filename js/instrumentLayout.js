@@ -168,7 +168,7 @@ function GetAvailableLayouts() {
     DoPost("server/getInstrumentLayoutList.php", myData, (response) => {
 
         var obj = JSON.parse(response);
-        var data = "";
+        var data = ""; //We'll send a blank string to the available layout loader if the json parse fails
 
         try {
             data = JSON.parse(obj.Data);
@@ -191,7 +191,6 @@ function GetAvailableLayouts() {
 function LoadAvailableLayouts(layouts) {
     layoutDropdown.innerHTML = "";
 
-    //Skip the first two layouts because they are "AssessmentMode and ActiveLayout"
     var optionString = "";
 
     for (var i = 0; i < layouts.length; i++) {

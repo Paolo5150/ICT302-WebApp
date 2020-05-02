@@ -41,6 +41,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- Load scripts -->
+    <script src="../js/instrumentLayout.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
@@ -52,8 +53,6 @@
 
     <!-- Import generic functions to do http requests -->
     <script src="../js/functions.js"></script>
-    <script src="../js/admin.js"></script>
-    <script src="../js/instrumentLayout.js"></script>
 
 </head>
 
@@ -72,13 +71,7 @@
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="customFile">
-                        <label class="custom-file-label" for="customFile">Upload student list</label>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onClick="GetCSV()">Return to home</a>
+                    <a class="nav-link" href="admin.php">Return to home</a>
                 </li>
             </ul>
         </div>

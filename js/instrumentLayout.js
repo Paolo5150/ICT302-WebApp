@@ -1,5 +1,5 @@
 var availableSlots = 14; //How many instrument slot-dropdown-container are available
-var instrumentOptions = ["Empty", "Scissors", "Needle", "SomethingElse"]; //What instruments can be placed in each slot
+var instrumentOptions = ["Empty", "Suture Scissors", "Mayo Hegar Needle Driver", "Towel Clamps", "Scalpel", "Addson-Brown Forceps", "Metzembaum Scissors", "Rochester Carmalt Forceps", "Mayo Scissor"]; //What instruments can be placed in each slot
 
 var errortext; //text area for displaying error messages
 var layoutDropdown; //The dropdown for selecting which layout to save/load

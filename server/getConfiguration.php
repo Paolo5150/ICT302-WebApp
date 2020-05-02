@@ -16,7 +16,7 @@
 
             //Prepare SQL statement. Place a '?' where you want to pass an argument
             // Below I'm passing the student ID
-            $stmt = $con->prepare("select * from Configuration");
+            $stmt = $con->prepare("select * from configuration");
             $stmt->execute();
             $result = $stmt->get_result();					
                     

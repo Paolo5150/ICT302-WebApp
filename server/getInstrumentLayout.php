@@ -9,7 +9,7 @@
 		$id = $_POST['ConfigName'];
 		
 		$con = connectToDb();
-		$stmt = $con->prepare("select * from configuration where ConfigName = ?");
+		$stmt = $con->prepare("select * from layout where ConfigName = ?");
 		$stmt->bind_param("s", $id);
 		$stmt->execute();
 		

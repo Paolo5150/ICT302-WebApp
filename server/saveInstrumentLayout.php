@@ -10,7 +10,7 @@
 		$layout = $_POST['Value'];
 	
 		$con = connectToDb();
-		$stmt = $con->prepare("select * from configuration where ConfigName = ?");
+		$stmt = $con->prepare("select * from layout where ConfigName = ?");
 		$stmt->bind_param("s", $id);
 		$stmt->execute();
 		
@@ -26,7 +26,7 @@
 		{
 			$data = $result->fetch_assoc(); //Get first fow
 			
-			$stmt = $con->prepare("update configuration set Value = ? WHERE ConfigName = ?");	
+			$stmt = $con->prepare("update layout set Value = ? WHERE ConfigName = ?");	
 			$stmt->bind_param("ss",  $layout, $id);
 			$stmt->execute();
 			
@@ -36,7 +36,7 @@
         else
         {
 			//Add new layout here if we don't find one?
-			$stmt = $con->prepare("insert into configuration (ConfigName, Value) values (?, ?)");	
+			$stmt = $con->prepare("insert into layout (ConfigName, Value) values (?, ?)");	
 			$stmt->bind_param("ss",  $id, $layout);
 			$stmt->execute();
             $reply->Status = 'ok';

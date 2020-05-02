@@ -9,7 +9,7 @@
         $id = $_POST["ConfigName"];
 		$con = connectToDb();
 
-		$stmt = $con->prepare("select * from configuration where ConfigName = ?");	
+		$stmt = $con->prepare("select * from layout where ConfigName = ?");	
 		$stmt->bind_param("s", $id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -22,7 +22,7 @@
 		{
           	//Check if admin
 			$data = $result->fetch_assoc();
-			$stmt = $con->prepare("delete from configuration where ConfigName = ?");	
+			$stmt = $con->prepare("delete from layout where ConfigName = ?");	
 			$stmt->bind_param("s", $id);
 			$stmt->execute();
 			$reply->Status = 'ok';    

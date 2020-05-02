@@ -52,6 +52,7 @@
 
     <!-- Import generic functions to do http requests -->
     <script src="../js/functions.js"></script>
+    <script src="../js/admin.js"></script>
     <script src="../js/instrumentLayout.js"></script>
 
 </head>
@@ -77,21 +78,8 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" onClick="GetCSV()">Get CSV</a>
+                    <a class="nav-link" href="#" onClick="GetCSV()">Return to home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onClick="CreateUserTable()">Create user</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" onClick="GetOwnSession()">Your sessions</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" id="account-btn">Account</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" id="logout-btn" onClick="LogOut()">Logout</a>
-                </li>
-
             </ul>
         </div>
     </nav>

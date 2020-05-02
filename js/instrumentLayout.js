@@ -168,11 +168,15 @@ function GetAvailableLayouts() {
     DoPost("server/getInstrumentLayoutList.php", myData, (response) => {
 
         var obj = JSON.parse(response);
-        var data = JSON.parse(obj.Data);
+        var data = "";
 
-        console.log(data);
+        try {
+            data = JSON.parse(obj.Data);
+        } catch (error) {
+            console.log(error);
+        }
+
         LoadAvailableLayouts(data);
-
         if (obj.Status == "fail")
             errortext.innerHTML = obj.Message;
 
@@ -187,12 +191,10 @@ function GetAvailableLayouts() {
 function LoadAvailableLayouts(layouts) {
     layoutDropdown.innerHTML = "";
 
-    console.log(layouts);
-
     //Skip the first two layouts because they are "AssessmentMode and ActiveLayout"
     var optionString = "";
 
-    for (var i = 2; i < layouts.length; i++) {
+    for (var i = 0; i < layouts.length; i++) {
         optionString += "<option id=\"layoutOption" + i + "\" value=\"" + layouts[i] + "\">" + layouts[i] + "</option>";
     }
 
@@ -206,7 +208,6 @@ function LoadAvailableLayouts(layouts) {
         $("#delete-layout-btn").prop("disabled", false);
     }
 
-    console.log(optionString);
     layoutDropdown.innerHTML = optionString;
 }
 
@@ -312,7 +313,6 @@ function GetActiveLayout() {
             errortext.innerHTML = obj.Message;
         else {
             errortext.innerHTML = "";
-            console.log(obj.Data.Value);
             LoadServerLayout(obj.Data.Value);
         }
 

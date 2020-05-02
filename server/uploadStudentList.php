@@ -11,10 +11,10 @@
                 case 0:
                     return 'MurdochUserNumber';
                 case 1:
-                    return 'FirstName';
-                case 2:
                     return 'LastName';
-                case 4:
+                case 3:
+                    return 'FirstName';
+                case 26:
                     return 'Email';
                 default:
                 return '';
@@ -25,6 +25,7 @@
     {
         $file = fopen($target_path, "r") or die("Unable to open file!");
 
+        // Read students into array of Student objects
         $allStudents = array();
         while(!feof($file))
         {
@@ -41,11 +42,12 @@
                 }
             }
 
-            array_push($allStudents,$student);
+            //Check that all columns are set
+            if(isset($student['MurdochUserNumber']) && isset($student['FirstName']) && isset($student['LastName']) && isset($student['Email']))
+                array_push($allStudents,$student);
         }        
 
         fclose($file);
-
 
         //Update DB
         $con = connectToDb();
@@ -59,15 +61,25 @@
                     
             // If user is found, update details
             if($result && $result->num_rows > 0)
-            {			
+            {	
+                $mus = trim($allStudents[$i]['MurdochUserNumber'], " ");
+                $firstName = trim($allStudents[$i]['FirstName'], " ");
+                $lastName = trim($allStudents[$i]['LastName'], " ");
+                $email = trim($allStudents[$i]['Email'], " ");
+
                 $stmt = $con->prepare("update user set FirstName = ?, LastName = ?, Email = ? WHERE  MurdochUserNumber = ?");
-				$stmt->bind_param("sssi", $allStudents[$i]['FirstName'], $allStudents[$i]['LastName'], $allStudents[$i]['Email'], $allStudents[$i]['MurdochUserNumber']);
+				$stmt->bind_param("sssi", $firstName, $lastName, $email, $mus);
 				$status = $stmt->execute();
             }
             else //If not found, insert
             {
+                $mus = trim($allStudents[$i]['MurdochUserNumber'], " ");
+                $firstName = trim($allStudents[$i]['FirstName'], " ");
+                $lastName = trim($allStudents[$i]['LastName'], " ");
+                $email = trim($allStudents[$i]['Email'], " ");
+
                 $stmt = $con->prepare("insert into user (MurdochUserNumber,FirstName,LastName,Email) VALUES (?,?,?,?)");
-				$stmt->bind_param("isss", $allStudents[$i]['MurdochUserNumber'],  $allStudents[$i]['FirstName'], $allStudents[$i]['LastName'], $allStudents[$i]['Email']);
+				$stmt->bind_param("isss", $mus,  $firstName, $lastName, $email);
 				$status = $stmt->execute();
             }
         }
@@ -108,18 +120,30 @@
                 $file_tmp = $_FILES['file']['tmp_name'];
                 $file_type = $_FILES['file']['type'];
 
-                $destination_path = getcwd().DIRECTORY_SEPARATOR;
+                $file_parts = pathinfo($file_name);
 
-                $result = 0;
-                
-                $target_path = $destination_path . "Uploads/".basename( $file_name);
+                switch($file_parts['extension'])
+                {
+                    case "csv":
+                        $destination_path = getcwd().DIRECTORY_SEPARATOR;
 
-                move_uploaded_file($file_tmp,$target_path);
-
-                ReadFileAndUpdateDB($target_path);
-
-                $reply->Status = 'ok';
-                $reply->Message = 'Class list updated successfully!';
+                        $result = 0;
+                        
+                        $target_path = $destination_path . "Uploads/".basename( $file_name);
+        
+                        move_uploaded_file($file_tmp,$target_path);
+        
+                        ReadFileAndUpdateDB($target_path);
+        
+                        $reply->Status = 'ok';
+                        $reply->Message = 'Class list updated successfully!';
+                    break;
+                    default:
+                    $reply->Status = 'fail';
+                     $reply->Message = 'Only CSV file accepted';
+           
+                }
+               
             }
             else
             {

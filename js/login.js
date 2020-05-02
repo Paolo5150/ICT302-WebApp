@@ -86,6 +86,7 @@ function Login()
         Captcha: grecaptcha.getResponse()
     }
 
+   
     errortext.innerHTML = "Logging in..."; //Let the user know the server is waiting
 
     DoPost(loginScriptTarget, myData, PostSuccess, PostFail);
@@ -107,9 +108,13 @@ function PostSuccess(reply)
         window.location = "index.php"; // Refresh this page. Redirection is done by server
 
     }
+
+    grecaptcha.reset()
+
 }
 
 function PostFail(data, textStatus, errorMessage)
 {
     errortext.innerHTML = textStatus + ": " + errorMessage + ". Please try again or contact support.";
+    
 }

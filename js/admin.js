@@ -65,9 +65,21 @@ $(document).ready(function () {
             data: fd,
             contentType: false,
             processData: false,
-            success: function(response){   
-                    console.log(response)
-                    window.location = 'admin.php';
+            success: function(response){  
+                console.log(response)
+
+                    var obj = JSON.parse(response)
+                    if(obj.Status == 'ok')
+                    {
+                        window.location = 'admin.php';
+
+                    } 
+                    else
+                    {
+                        alert(obj.Message)
+                        window.location = 'admin.php';
+                    }
+                
                 
             },
         });
@@ -117,10 +129,45 @@ $(document).ready(function () {
                 alert("An error occurred")
             } 
         )
-
     })
 
+    // Assessment mode button
+    $("#assessment-mode-btn").click(function() {
+        
+        if($("#assessment-mode-btn").prop("checked"))
+        {
 
+            if(confirm("Are you sure you want activate Assessment mode?"))
+            {
+                $("#assessment-mode-btn").prop("checked",true)           
+            }
+            else
+            {
+                
+                $("#assessment-mode-btn").prop("checked",false)
+            }
+            
+        }
+
+        var token = getToken()
+        var mus = getMUS()
+        var checked = $("#assessment-mode-btn").prop("checked");
+        var data = {
+            MurdochUserNumber: mus,
+            Token: token,
+            Checked: checked
+
+        }
+        
+        DoPost("server/updateAssessmentMode.php",data,(response)=>{            
+          //  console.log(response)
+        },
+        (data, status, error)=>
+        {
+   
+        } 
+        )   
+    });
 })
 
 function backToStudentTable()
@@ -181,13 +228,6 @@ function onSessionButtonClicked(id,firstname,lastname)
         } 
     )
 }
-
-function ChangeSelfDetails()
-{
-    
-}
-
-
 
 function GenerateAccountTable(data)
 {
@@ -275,11 +315,6 @@ function ChangePassword()
             alert('Please allow popups for this website');
         }
     }
-}
-
-function ChangeStudentDetails()
-{
-    
 }
 
 function GetStudentAccount(id,firstname,lastname, email)
@@ -594,17 +629,20 @@ function GetCSV()
 
     DoPost("server/generateCSV.php",data,(response)=>{
 
-        console.log(response)
-       /* var obj = JSON.parse(response)
-        if(obj.Status == 'ok')
-        {
-            
-        }
+        //Try parsing. If fails, it actually means that we are receiving the file to download
+            try{
 
-        },
-        (data, status, error)=>
-        {
-            alert("An error occurred")
-        } */
-    })   
+                var obj = JSON.parse(response)
+                alert(obj.Message)
+            }
+            catch(e)
+            {
+                var blob = new Blob([response], { type:'text/csv' }),
+                a    = document.createElement('a'),
+                url  = URL.createObjectURL(blob);
+                a.href = url;
+                a.download = 'data.csv';
+                a.click()
+            }
+        })    
 }

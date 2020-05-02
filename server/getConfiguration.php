@@ -23,7 +23,23 @@
             if($result && $result->num_rows > 0)
             {			
                 $data = $result->fetch_all();
-                $reply->Data = json_encode($data);              
+
+                // Look for active layout
+                for($i=0 ; $i < count($data) ; $i++)
+                {
+                    if($data[$i][0] == 'ActiveLayout')
+                    {
+                        $stmt = $con->prepare("select Value from layout where ConfigName = '{$data[$i][1]}'");
+                        $stmt->execute();
+                        $res = $stmt->get_result();
+                        $instruments = $res->fetch_assoc();
+                        $reply->Data->Layout = json_encode($instruments);
+                    }
+                    else if($data[$i][0] == 'AssessmentMode')
+                    {
+                        $reply->Data->AssessmentMode = $data[$i][1];
+                    }
+                }
             }
         }
         else

@@ -215,7 +215,7 @@ function LoadAvailableLayouts(layouts) {
 
 //Prompts the user for a layout name and saves the current layout to the server
 function SaveLayout() {
-    var config = prompt("Please enter a new or existing name for the layout: ");
+    var config = prompt("Please enter a new or existing name for the layout: ", layoutDropdown.options[layoutDropdown.selectedIndex].value);
 
     if (config != null && config != "") {
         var myData = {
@@ -234,7 +234,10 @@ function SaveLayout() {
             else if (obj.Status == "ok") {
                 DisplayMessage(obj.Message);
                 GetAvailableLayouts();
-                //layoutDropdown.value = config;
+                console.log(config);
+                console.log(layoutDropdown.value);
+                layoutDropdown.value = config;
+                console.log(layoutDropdown.value);
             }
 
         },
@@ -288,7 +291,10 @@ function LoadServerLayout(configName) {
         if (obj.Status == "fail")
             DisplayMessage(obj.Message);
         else {
+            console.log(configName);
+            console.log(layoutDropdown.value);
             layoutDropdown.value = configName;
+            console.log(layoutDropdown.value);
             sizeDropdown.value = obj.Data.Value.split(",").length;
             LoadInstrumentLayout(obj.Data.Value);
         }

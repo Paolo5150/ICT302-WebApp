@@ -62,7 +62,9 @@
         </div>
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
             <ul class="navbar-nav ml-auto">
-
+                <li class="nav-item">
+                    <button type='button' class='btn btn-info' onClick="RefreshPage()" >Refresh</button>
+                </li>
                 <li class="nav-item">
                     <div style="margin-right: 10px">
                     <p class="nav-link" href="#" style="display: inline-block">Assessment mode</p>

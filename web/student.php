@@ -63,6 +63,9 @@
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
+                    <button type='button' class='btn btn-info' onClick="RefreshPage()" >Refresh</button>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="#" id="account-btn">Account</a>
                 </li>
                 <li class="nav-item">

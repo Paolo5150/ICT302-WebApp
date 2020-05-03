@@ -42,6 +42,20 @@ var cachedStudentList;
 
 $(document).ready(function () {
 
+    //Update assessment mode button
+    DoPost("server/getConfiguration.php",{},(response)=>{
+        console.log(response)
+        var obj = JSON.parse(response);
+        var checked = obj.Data.AssessmentMode === 'true';
+        $("#assessment-mode-btn").prop("checked",checked)
+
+        },
+        (data, status, error)=>
+        {
+            
+        } 
+    )
+
     var token = getToken()
     var mus = getMUS()
 

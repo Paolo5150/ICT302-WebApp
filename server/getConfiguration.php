@@ -36,7 +36,7 @@
                 }
             }
             
-
+        }
         // Send reply in JSON format
         $myJSON = json_encode($reply);			
         echo $myJSON;

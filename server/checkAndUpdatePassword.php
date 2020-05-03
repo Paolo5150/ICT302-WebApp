@@ -39,7 +39,7 @@
 
             if(trim(strtolower($email)," ") != trim(strtolower($data['Email'])," "))
             {
-                $reply->Message = 'Email incorrect ' . $email . '_' . $data['Email'] .'_'; 
+                $reply->Message = 'Email incorrect'; 
             }
             else if($data['PasswordResetRequired'] == 0 && $data['IsAdmin'] == 0 )
             {

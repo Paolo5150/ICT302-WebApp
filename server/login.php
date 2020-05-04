@@ -136,6 +136,35 @@
 								$reply->Data->Token = $token;
 
 							}
+							else
+							{
+								// Get configuration and send to unity app
+								$stmt = $con->prepare("select * from configuration");
+								$stmt->execute();
+								$result = $stmt->get_result();					
+											
+								if($result && $result->num_rows > 0)
+								{			
+									$data = $result->fetch_all();
+									// Look for active layout
+									for($i=0 ; $i < count($data) ; $i++)
+									{
+										if($data[$i][0] == 'ActiveLayout')
+										{
+											$stmt = $con->prepare("select Value from layout where LayoutName = '{$data[$i][1]}'");
+											$stmt->execute();
+											$res = $stmt->get_result();
+											$instruments = $res->fetch_assoc();
+											$reply->Data->Layout = json_encode($instruments['Value']);
+										}
+										else if($data[$i][0] == 'AssessmentMode')
+										{
+												$reply->Data->AssessmentMode = $data[$i][1];
+										}
+									}
+									
+								}
+							}
 							
 						}
 					}

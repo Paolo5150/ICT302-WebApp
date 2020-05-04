@@ -154,8 +154,11 @@
 											$stmt = $con->prepare("select Value from layout where LayoutName = '{$data[$i][1]}'");
 											$stmt->execute();
 											$res = $stmt->get_result();
-											$instruments = $res->fetch_assoc();
-											$reply->Data->Layout = json_encode($instruments['Value']);
+											if($res && $res->num_rows > 0)
+											{
+												$instruments = $res->fetch_assoc();
+												$reply->Data->Layout = json_encode($instruments['Value']);
+											}
 										}
 										else if($data[$i][0] == 'AssessmentMode')
 										{

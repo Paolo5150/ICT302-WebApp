@@ -31,6 +31,7 @@
             $startTime = $sessionResults->StartTime;
             $endTime = $sessionResults->EndTime;
             $retries = $sessionResults->Retries;
+            $isAssessed = $sessionResults->IsAssessed;
 
             $logsDecoded = json_encode($sessionResults->Logs);
             $logs = $logsDecoded;
@@ -43,8 +44,8 @@
             $result = $stmt->get_result();
             if($result && $result->num_rows == 0)
             {
-                $stmt = $con->prepare("INSERT INTO session (UserID, UnityID, Date, StartTime, EndTime, Retries, Logs) VALUES (?,?,?,?,?,?,?)");
-                $stmt->bind_param("iisssis", $userID, $unityID, $date, $startTime, $endTime, $retries, $logs);
+                $stmt = $con->prepare("INSERT INTO session (UserID, UnityID, Date, StartTime, EndTime, Retries, IsAssessed,Logs) VALUES (?,?,?,?,?,?,?,?)");
+                $stmt->bind_param("iisssiis", $userID, $unityID, $date, $startTime, $endTime, $retries, $isAssessed, $logs);
                 $stmt->execute();
             }  
             

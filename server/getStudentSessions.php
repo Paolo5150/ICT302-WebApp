@@ -40,7 +40,7 @@
 				// Admin requesting student sessions
 				if(isset($_POST['UserID']))
 				{
-					$stmt = $con->prepare("select * from session where UserID = ? Order By SessionID DESC");	
+					$stmt = $con->prepare("select * from session where UserID = ? AND IsAssessed = 1 Order By SessionID DESC");	
 					$stmt->bind_param("s", $_POST['UserID']);
 					$stmt->execute();
 					$result = $stmt->get_result();

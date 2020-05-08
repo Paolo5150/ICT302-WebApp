@@ -37,14 +37,13 @@ $(document).ready(function () {
     //Save the current layout to the server
     $("#save-layout-btn").click(function (e) {
         e.preventDefault();
-        if (ValidateForm()) {
             SaveLayout();
-        }
     })
 
     //Make this layout the active layout
     $("#activate-layout-btn").click(function (e) {
         e.preventDefault();
+        SaveLayout();
         SaveActiveLayout(layoutDropdown.options[layoutDropdown.selectedIndex].value);
     })
 

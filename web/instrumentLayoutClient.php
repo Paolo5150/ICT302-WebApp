@@ -81,31 +81,44 @@
         <section class="inner-section" id="main-form-section">
             <div class="container">
                 <!-- Can be 'container' or 'container-fluid' -->
-                <form style="text-align: center;">
-                    <div id="layout-settings" style="margin: 5px 0px 20px 0px">
-                        <!--Dropdown for selecting a saved layout-->
-                        Select a layout configuration:
-                        <select id="select-layout-dropdown" style="margin-bottom: 5px;">
-                            <option value="Layout 1">Layout 1</option>
-                            <option value="Layout 2">Layout 2</option>
-                            <option value="Layout 3">Layout 3</option>
-                        </select> <br>
-                        <input type="button" id="delete-layout-btn" class="btn btn-primary" value="Delete Layout" style="background-color: red; border-color: red">
-                        <br>
-                        <!--Dropdown for how many slots to fill-->
-                        Max Instruments:
-                        <select id="select-size-dropdown" style="margin-top: 10px;">
-                            <option value="0">0</option>
-                        </select>
+                <div style="width: 100%;">
+                    <!-- <div style="display: table-row;"> -->
+                    <div style="width: 20%;">
+                        <p>Currently Active Layout: Layout 1</p>
+                        <input type="button" id="load-active-btn" class="btn btn-primary" value="Load active layout" data-toggle="tooltip" title="Load the current layout being used in the application">
+                        <input type="submit" id="activate-layout-btn" class="btn btn-primary"
+                            value="Make this layout active" data-toggle="tooltip" title="Saves the current layout and makes it the layout to be used in the application">
                     </div>
-                    <ul id="slot-dropdown-container">
-                    </ul>
-                    <p id="error-text"></p>
-                    <input type="button" id="load-active-btn" class="btn btn-primary" value="Load active layout">
-                    <input type="submit" id="save-layout-btn" class="btn btn-primary" value="Save layout">
-                    <input type="submit" id="activate-layout-btn" class="btn btn-primary" value="Make this layout active">
-                </form>
-                <img id="refimage" src="../imgs/TableReference.png">
+                    <!-- <div style="display: table-cell; width: auto;"> -->
+                    <div style="text-align: center;">
+                        <div id="layout-settings" style="margin: 5px 0px 20px 0px">
+                            <!--Dropdown for selecting a saved layout-->
+                            Select a layout configuration:
+                            <select id="select-layout-dropdown" style="margin-bottom: 5px;" data-toggle="tooltip" title="Select a layout to load from this dropdown">
+                                <option value="Layout 1">Layout 1</option>
+                                <option value="Layout 2">Layout 2</option>
+                                <option value="Layout 3">Layout 3</option>
+                            </select> <br>
+                            <input type="button" id="delete-layout-btn" class="btn btn-primary" value="Delete Layout"
+                                style="background-color: red; border-color: red" data-toggle="tooltip" title="Delete the currently selected layout from the database">
+                            <br>
+                            <!--Dropdown for how many slots to fill-->
+                            Max Instruments:
+                            <select id="select-size-dropdown" style="margin-top: 10px;" data-toggle="tooltip" title="How many instrument slots to display below">
+                                <option value="0">0</option>
+                            </select>
+                        </div>
+                        <p id="error-text"></p>
+                        <input type="submit" id="save-layout-btn" class="btn btn-primary" value="Save layout" data-toggle="tooltip" title="Saves the current layout to the database">
+                    </div>
+                    <!-- </div> -->
+                    <!-- </div> -->
+                    <div style="width: 100%; height: 100%; text-align: center;">
+                        <ul id="slot-dropdown-container">
+                        </ul>
+                        <img id="refimage" src="../imgs/TableReferenceRotated.png">
+                    </div>
+                </div>
             </div>
         </section>
     </div>

@@ -27,6 +27,8 @@
             //Decode json
             $sessionResults = json_decode($sessionJSON);
             $unityID = $sessionResults->UnityID;
+            $sessionName = $sessionResults->SessionName;
+
             $date = $sessionResults->Date;
             $startTime = $sessionResults->StartTime;
             $endTime = $sessionResults->EndTime;
@@ -44,8 +46,8 @@
             $result = $stmt->get_result();
             if($result && $result->num_rows == 0)
             {
-                $stmt = $con->prepare("INSERT INTO session (UserID, UnityID, Date, StartTime, EndTime, Retries, IsAssessed,Logs) VALUES (?,?,?,?,?,?,?,?)");
-                $stmt->bind_param("iisssiis", $userID, $unityID, $date, $startTime, $endTime, $retries, $isAssessed, $logs);
+                $stmt = $con->prepare("INSERT INTO session (UserID, SessionName, UnityID, Date, StartTime, EndTime, Retries, IsAssessed,Logs) VALUES (?,?,?,?,?,?,?,?,?)");
+                $stmt->bind_param("isisssiis", $userID, $sessionName, $unityID, $date, $startTime, $endTime, $retries, $isAssessed, $logs);
                 $stmt->execute();
             }  
             

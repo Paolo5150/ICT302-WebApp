@@ -163,7 +163,7 @@ function buildSessionTable(responseData)
         var errorsButton = ""
 
         if(arr[i][SESSION_COLUMN.Errors] > 0)
-            errorsButton = `<button type='button' class='btn btn-danger' onClick="Details('#details-${i}', responseData[${i}], true)">${arr[i][6]}</button>`
+            errorsButton = `<button type='button' class='btn btn-danger' onClick="Details('#details-${i}', responseData[${i}], true)">${arr[i][SESSION_COLUMN.Errors]}</button>`
         else
             errorsButton = `${arr[i][SESSION_COLUMN.Errors]}`
 
@@ -190,7 +190,7 @@ function buildSessionTable(responseData)
             <td>${arr[i][SESSION_COLUMN.EndTime]}</td>
             <td>${errorsButton}</td>
             <td><button type='button' class='btn btn-primary' onClick="Details('#details-${i}', responseData[${i}])">Details</button></td>
-            <td><button type='button' class='btn btn-primary' onClick="GeneratePDF(${arr[i][0]})">PDF</button></td> 
+            <td><button type='button' class='btn btn-primary' onClick="GeneratePDF(${arr[i][SESSION_COLUMN.SessionID]})">PDF</button></td> 
         </tr>
         <tr >
         <td colspan="7" id="details-${i}" style="display: none; background-color: #88888822"></td>

@@ -40,3 +40,10 @@ li {
 .tooltip:hover .tooltiptext {
     visibility: visible;
 }
+
+.cell {
+    display: table-cell;
+    width: 50%;
+    padding: 5px;
+    text-align: center;
+}

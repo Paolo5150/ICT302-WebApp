@@ -26,7 +26,7 @@
 			$stmt->bind_param("s", $id);
 			$stmt->execute();
 
-			// Check if it's active one
+			// Check if it's active one, if so, set the Value to ''
 			$stmt = $con->prepare("select * from configuration WHERE ConfigName = 'ActiveLayout'");
         	$stmt->execute();
         	$result = $stmt->get_result();					
@@ -36,7 +36,7 @@
 				$data = $result->fetch_assoc();
 				if($data['Value'] == $id)
 				{
-					$stmt = $con->prepare("update configuration SET Value = '' WHERE ConfigName ConfigName = 'ActiveLayout'");
+					$stmt = $con->prepare("update configuration SET Value = '' WHERE ConfigName = 'ActiveLayout'");
         			$stmt->execute();
 				}
 			}

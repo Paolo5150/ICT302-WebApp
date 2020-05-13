@@ -59,8 +59,8 @@ $(document).ready(function () {
     //Make this layout the active layout
     $("#activate-layout-btn").click(function (e) {
         e.preventDefault();
-        if(SaveLayout())
-            SetActiveLayout(layoutDropdown.options[layoutDropdown.selectedIndex].value);
+        SaveLayout()
+        SetActiveLayout(layoutDropdown.options[layoutDropdown.selectedIndex].value);
     })
 
     /* -----Dropdown callbacks----- */
@@ -309,7 +309,7 @@ function DeleteLayout() {
 
     if (confirm("Are you sure you want to delete the layout: " + layoutDropdown.options[layoutDropdown.selectedIndex].innerHTML + "?")) {
         DoPost("server/deleteInstrumentLayout.php", myData, (response) => {
-
+            console.log(response)
             var obj = JSON.parse(response)
 
             if (obj.Status == "fail")
@@ -429,7 +429,7 @@ function SetActiveLayout(configName) {
             if (obj.Status == "fail")
             {
                 DisplayMessage(obj.Message);
-console.log("FASDASD")
+
             }
             else if (obj.Status == "ok") {
                 DisplayActiveLayout();

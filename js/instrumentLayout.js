@@ -427,7 +427,10 @@ function SetActiveLayout(configName) {
             var obj = JSON.parse(response);
 
             if (obj.Status == "fail")
+            {
                 DisplayMessage(obj.Message);
+console.log("FASDASD")
+            }
             else if (obj.Status == "ok") {
                 DisplayActiveLayout();
                 DisplayMessage(obj.Message);

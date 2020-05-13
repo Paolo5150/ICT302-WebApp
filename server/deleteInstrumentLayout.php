@@ -25,6 +25,23 @@
 			$stmt = $con->prepare("delete from layout where LayoutName = ?");	
 			$stmt->bind_param("s", $id);
 			$stmt->execute();
+
+			// Check if it's active one
+			$stmt = $con->prepare("select * from configuration WHERE ConfigName = 'ActiveLayout'");
+        	$stmt->execute();
+        	$result = $stmt->get_result();					
+                    
+        	if($result && $result->num_rows > 0)
+        	{
+				$data = $result->fetch_assoc();
+				if($data['Value'] == $id)
+				{
+					$stmt = $con->prepare("update configuration SET Value = '' WHERE ConfigName ConfigName = 'ActiveLayout'");
+        			$stmt->execute();
+				}
+			}
+
+
 			$reply->Status = 'ok';    
 			$reply->Message = "Layout successfully deleted";
 		}

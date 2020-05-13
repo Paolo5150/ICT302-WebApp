@@ -1,4 +1,4 @@
-var availableSlots = 14; //How many instrument containers are available
+var availableSlots = 8; //How many instrument containers are available
 var instrumentOptions = ["Empty", "Suture Scissors", "Mayo Hegar Needle Driver", "Mayo Scissors", "Towel Clamps", "Scalpel", "Addson-Brown Forceps", "Metzembaum Scissors", "Rochester Carmalt Forceps"]; //What instruments can be placed in each slot
 
 var errortext; //text area for displaying error messages
@@ -7,6 +7,7 @@ var sizeDropdown; //The dropdown for selecting how many instruments will be in t
 var slotDropdownContainer; //The 'ul' element containing the instrument slots
 var save; //Form save button
 var activeLayoutLabel; //Displays the currently active layout
+var loadedLayoutLabel; //Displays the currently loaded layout
 var lastLoadedLayout = "";
 
 $(document).ready(function () {
@@ -17,6 +18,8 @@ $(document).ready(function () {
     errortext = document.getElementById("error-text");
     save = document.getElementById("save-layout-btn");
     activeLayoutLabel = document.getElementById("active-layout-label");
+    loadedLayoutLabel = document.getElementById("loaded-layout-label");
+
 
     /* -----Init functions----- */
     FillSizeDropdown(availableSlots);
@@ -24,6 +27,8 @@ $(document).ready(function () {
     GetAvailableLayouts();
 
     DisplayActiveLayout();
+
+    /* -----Init Labels---- */
 
     /* -----Button callbacks----- */
     //Delete the selected layout from the server
@@ -228,16 +233,16 @@ function LoadAvailableLayouts(layouts) {
 //Prompts the user for a layout name and saves the current layout to the server
 function SaveLayout() {
     var currentLayout = layoutDropdown.options[layoutDropdown.selectedIndex].value;
-    var config = "";
+    var configName = "";
 
     if (currentLayout != "")
-        config = prompt("Please enter a new or existing name for the layout: ", layoutDropdown.options[layoutDropdown.selectedIndex].value);
+    configName = prompt("Please enter a new or existing name for the layout: ", layoutDropdown.options[layoutDropdown.selectedIndex].value);
     else
-        config = prompt("Please enter a name for the layout: ", layoutDropdown.options[layoutDropdown.selectedIndex].value);
+    configName = prompt("Please enter a name for the layout: ", layoutDropdown.options[layoutDropdown.selectedIndex].value);
 
-    if (config != null && config != "") {
+    if (configName != null && configName != "") {
         var myData = {
-            LayoutName: config,
+            LayoutName: configName,
             Value: CreateLayoutString(false)
         }
 
@@ -252,10 +257,11 @@ function SaveLayout() {
             else if (obj.Status == "ok") {
                 DisplayMessage(obj.Message);
                 GetAvailableLayouts();
+                loadedLayoutLabel.innerHTML = "Loaded layout: " + configName;
                 //console.log(config);
                 //console.log(layoutDropdown.value);
-                layoutDropdown.value = config;
-                lastLoadedLayout = config;
+                layoutDropdown.value = configName;
+                lastLoadedLayout = configName;
                 //console.log(layoutDropdown.value);
                 return true;
             }
@@ -285,6 +291,7 @@ function NewLayout() {
     if (confirm("Are you sure you want to create a new layout? Any unsaved changes will be lost")) {
         sizeDropdown.value = 1;
         lastLoadedLayout = "";
+        loadedLayoutLabel.innerHTML = "No layout loaded";
 
         BuildInstrumentSlots(1);
         $('#select-layout-dropdown').prop('selectedIndex', 0);
@@ -313,6 +320,7 @@ function DeleteLayout() {
                 GetAvailableLayouts();
                 sizeDropdown.value = 1;
                 lastLoadedLayout = "";
+                loadedLayoutLabel.innerHTML = "No layout loaded";
 
                 BuildInstrumentSlots(1);
                 $('#select-layout-dropdown').prop('selectedIndex', 0);
@@ -346,6 +354,7 @@ function LoadServerLayout(configName) {
         else {
             layoutDropdown.value = configName;
             lastLoadedLayout = configName;
+            loadedLayoutLabel.innerHTML = "Loaded layout: " + configName;
             sizeDropdown.value = obj.Data.Value.split(",").length;
 
             LoadInstrumentLayout(obj.Data.Value);
@@ -393,7 +402,7 @@ function DisplayActiveLayout() {
             //DisplayMessage(obj.Message);
         }
         else {
-            activeLayoutLabel.innerHTML = "Current Program Layout: " + obj.Data.Value;
+            activeLayoutLabel.innerHTML = "Current Program Layout: <strong>" + obj.Data.Value + "</strong>";
         }
 
     },

@@ -71,6 +71,14 @@
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
+                    <input type="button" id="new-layout-btn" class="btn btn-primary" value="New Layout"
+                        style="background-color: darkgreen; border-color: darkgreen; margin-bottom: 5px;"
+                        data-toggle="tooltip" title="Delete the currently selected layout from the database">
+                </li>
+                <li class="nav-item">
+                    <p id="loaded-layout-label">No layout loaded</p>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="admin.php">Return to home</a>
                 </li>
             </ul>
@@ -104,23 +112,8 @@
                                             <option value="Layout 3">Layout 3</option>
                                         </select>
                                     </p>
-                                    <input type="button" id="new-layout-btn" class="btn btn-primary"
-                                        value="New Layout"
-                                        style="background-color: darkgreen; border-color: darkgreen; margin-bottom: 5px;"
-                                        data-toggle="tooltip"
-                                        title="Delete the currently selected layout from the database">
-                                    <input type="button" id="delete-layout-btn" class="btn btn-primary"
-                                        value="Delete Layout"
-                                        style="background-color: red; border-color: red; margin-bottom: 5px;"
-                                        data-toggle="tooltip"
-                                        title="Delete the currently selected layout from the database"><br>
-                                    <input type="submit" id="save-layout-btn" class="btn btn-primary"
-                                        value="Save layout" data-toggle="tooltip"
-                                        title="Saves the current layout to the database">
-                                    <input type="submit" id="activate-layout-btn" class="btn btn-primary"
-                                        value="Make this layout active" data-toggle="tooltip"
-                                        title="Saves the current layout and makes it the layout to be used in the application">
-                                    <br>
+
+
                                     <!--Dropdown for how many slots to fill-->
                                     <p style="margin-top: 10px;">
                                         Max Instruments:
@@ -130,6 +123,17 @@
                                         </select>
                                     <ul id="slot-dropdown-container">
                                     </ul>
+                                    <input type="submit" id="save-layout-btn" class="btn btn-primary"
+                                        value="Save layout" data-toggle="tooltip"
+                                        title="Saves the current layout to the database">
+                                    <input type="button" id="delete-layout-btn" class="btn btn-primary"
+                                        value="Delete Layout" style="background-color: red; border-color: red"
+                                        data-toggle="tooltip"
+                                        title="Delete the currently selected layout from the database">
+                                    <input type="submit" id="activate-layout-btn" class="btn btn-primary"
+                                        value="Make this layout active" data-toggle="tooltip"
+                                        title="Saves the current layout and makes it the layout to be used in the application">
+                                    <br>
                                     </p>
                                 </div>
                                 <p id="error-text"></p>
@@ -137,7 +141,6 @@
                         </div>
                     </div>
                     <div style="width: 100%; height: 100%; text-align: center;">
-
                         <img id="refimage" src="../imgs/TableReference.png">
                     </div>
                 </div>

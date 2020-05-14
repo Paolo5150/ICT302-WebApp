@@ -34,13 +34,19 @@ $(document).ready(function () {
     //Delete the selected layout from the server
     $("#new-layout-btn").click(function (e) {
         e.preventDefault();
-        NewLayout();
+        if (confirm("Are you sure you want to create a new layout? Any unsaved changes will be lost"))
+            NewLayout();
     })
 
     //Delete the selected layout from the server
     $("#delete-layout-btn").click(function (e) {
         e.preventDefault();
-        DeleteLayout();
+        if (confirm("Are you sure you want to delete the layout: " + lastLoadedLayout + "?"))
+            DeleteLayout();
+    })
+
+    $("#yasyas-btn").click(function (e) {
+        alert(lastLoadedLayout);
     })
 
     //Pull the currently saved layout from the database
@@ -60,7 +66,7 @@ $(document).ready(function () {
     $("#activate-layout-btn").click(function (e) {
         e.preventDefault();
         SaveLayout()
-        SetActiveLayout(layoutDropdown.options[layoutDropdown.selectedIndex].value);
+        SetActiveLayout(lastLoadedLayout);
     })
 
     /* -----Dropdown callbacks----- */
@@ -232,13 +238,12 @@ function LoadAvailableLayouts(layouts) {
 
 //Prompts the user for a layout name and saves the current layout to the server
 function SaveLayout() {
-    var currentLayout = layoutDropdown.options[layoutDropdown.selectedIndex].value;
     var configName = "";
 
-    if (currentLayout != "")
-    configName = prompt("Please enter a new or existing name for the layout: ", layoutDropdown.options[layoutDropdown.selectedIndex].value);
+    if (lastLoadedLayout != "")
+        configName = prompt("Please enter a new or existing name for the layout: ", lastLoadedLayout);
     else
-    configName = prompt("Please enter a name for the layout: ", layoutDropdown.options[layoutDropdown.selectedIndex].value);
+        configName = prompt("Please enter a name for the layout: ", lastLoadedLayout);
 
     if (configName != null && configName != "") {
         var myData = {
@@ -263,6 +268,8 @@ function SaveLayout() {
                 layoutDropdown.value = configName;
                 lastLoadedLayout = configName;
                 //console.log(layoutDropdown.value);
+                $("#delete-layout-btn").prop("disabled", false);
+                $("#activate-layout-btn").prop("disabled", false);
                 return true;
             }
 
@@ -275,12 +282,11 @@ function SaveLayout() {
             }
         )
     }
-    else
-    {
-        if(currentLayout == "")
+    else {
+        if (lastLoadedLayout == "")
             $('#select-layout-dropdown').prop('selectedIndex', 0);
         else
-            layoutDropdown.value = currentLayout;
+            layoutDropdown.value = lastLoadedLayout;
 
         return false;
     }
@@ -288,53 +294,49 @@ function SaveLayout() {
 
 //Creates a new layout after a confirmation dialog
 function NewLayout() {
-    if (confirm("Are you sure you want to create a new layout? Any unsaved changes will be lost")) {
-        sizeDropdown.value = 1;
-        lastLoadedLayout = "";
-        loadedLayoutLabel.innerHTML = "No layout loaded";
+    sizeDropdown.value = 1;
+    lastLoadedLayout = "";
+    loadedLayoutLabel.innerHTML = "No layout loaded";
 
-        BuildInstrumentSlots(1);
-        $('#select-layout-dropdown').prop('selectedIndex', 0);
+    BuildInstrumentSlots(1);
+    $('#select-layout-dropdown').prop('selectedIndex', 0);
 
-        $("#delete-layout-btn").prop("disabled", true);
-        $("#activate-layout-btn").prop("disabled", true);
-    }
+    $("#delete-layout-btn").prop("disabled", true);
+    $("#activate-layout-btn").prop("disabled", true);
 }
 
 //Deletes the currently selected layout from the server after a confirmation dialog
 function DeleteLayout() {
     var myData = {
-        LayoutName: layoutDropdown.options[layoutDropdown.selectedIndex].value
+        LayoutName: lastLoadedLayout
     }
 
-    if (confirm("Are you sure you want to delete the layout: " + layoutDropdown.options[layoutDropdown.selectedIndex].innerHTML + "?")) {
-        DoPost("server/deleteInstrumentLayout.php", myData, (response) => {
-            console.log(response)
-            var obj = JSON.parse(response)
+    DoPost("server/deleteInstrumentLayout.php", myData, (response) => {
+        console.log(response)
+        var obj = JSON.parse(response)
 
-            if (obj.Status == "fail")
-                DisplayMessage(obj.Message);
-            else {
-                DisplayMessage(obj.Message);
+        if (obj.Status == "fail")
+            DisplayMessage(obj.Message);
+        else {
+            DisplayMessage(obj.Message);
 
-                GetAvailableLayouts();
-                sizeDropdown.value = 1;
-                lastLoadedLayout = "";
-                loadedLayoutLabel.innerHTML = "No layout loaded";
+            GetAvailableLayouts();
+            sizeDropdown.value = 1;
+            lastLoadedLayout = "";
+            loadedLayoutLabel.innerHTML = "No layout loaded";
 
-                BuildInstrumentSlots(1);
-                $('#select-layout-dropdown').prop('selectedIndex', 0);
+            BuildInstrumentSlots(1);
+            $('#select-layout-dropdown').prop('selectedIndex', 0);
 
-                $("#delete-layout-btn").prop("disabled", false);
-                $("#activate-layout-btn").prop("disabled", false);
-            }
+            $("#delete-layout-btn").prop("disabled", true);
+            $("#activate-layout-btn").prop("disabled", true);
+        }
 
-        },
-            (data, status, error) => {
-                DisplayMessage(status + ": " + error + ". Please try again or contact support.");
-            }
-        )
-    }
+    },
+        (data, status, error) => {
+            DisplayMessage(status + ": " + error + ". Please try again or contact support.");
+        }
+    )
 }
 
 //Loads the dropdown selected layout from the server
@@ -426,8 +428,7 @@ function SetActiveLayout(configName) {
 
             var obj = JSON.parse(response);
 
-            if (obj.Status == "fail")
-            {
+            if (obj.Status == "fail") {
                 DisplayMessage(obj.Message);
 
             }

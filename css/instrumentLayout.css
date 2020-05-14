@@ -47,3 +47,12 @@ li {
     padding: 5px;
     text-align: center;
 }
+
+.active-layout {
+    position: absolute;
+    min-width: 150px;
+    max-width: 150px;
+    top: 100px;
+    left: 15px;
+
+}

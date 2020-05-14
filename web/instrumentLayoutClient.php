@@ -120,8 +120,6 @@
 
                                 <input type="submit" id="save-layout-btn" class="btn btn-primary" value="Save layout"
                                     data-toggle="tooltip" title="Saves the current layout to the database">
-                                    <input type="submit" id="yasyas-btn" class="btn btn-primary" value="Yas"
-                                    data-toggle="tooltip" title="Saves the current layout to the database">
                                 <input type="submit" id="activate-layout-btn" class="btn btn-primary"
                                     value="Make this layout active" data-toggle="tooltip"
                                     title="Saves the current layout and makes it the layout to be used in the application">

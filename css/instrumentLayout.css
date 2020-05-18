@@ -56,3 +56,11 @@ li {
     left: 15px;
 
 }
+
+.image-container {
+    position: relative;
+}
+
+.instrument-marker {
+    position: absolute; display:inline; font-size: 50px; top: 50%;
+}

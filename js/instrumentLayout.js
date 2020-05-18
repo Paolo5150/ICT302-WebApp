@@ -9,6 +9,7 @@ var save; //Form save button
 var activeLayoutLabel; //Displays the currently active layout
 var loadedLayoutLabel; //Displays the currently loaded layout
 var lastLoadedLayout = "";
+var instumentMarkers; //Markers of whether the instrument slot is filled
 
 $(document).ready(function () {
     //find elements in document after it is ready
@@ -28,7 +29,7 @@ $(document).ready(function () {
 
     DisplayActiveLayout();
 
-    /* -----Init Labels---- */
+    //UpdateInstrumentMarkers();
 
     /* -----Button callbacks----- */
     //Delete the selected layout from the server
@@ -43,10 +44,6 @@ $(document).ready(function () {
         e.preventDefault();
         if (confirm("Are you sure you want to delete the layout: " + lastLoadedLayout + "?"))
             DeleteLayout();
-    })
-
-    $("#yasyas-btn").click(function (e) {
-        alert(lastLoadedLayout);
     })
 
     //Pull the currently saved layout from the database
@@ -79,6 +76,11 @@ $(document).ready(function () {
 
     $("#select-size-dropdown").on("change", function () {
         BuildInstrumentSlots(sizeDropdown.options[sizeDropdown.selectedIndex].value);
+        UpdateInstrumentMarkers();
+    })
+
+    $(".layout-select").on("change", function () {
+        UpdateInstrumentMarkers();
     })
 
     /* -----Button setup----- */
@@ -92,6 +94,27 @@ function DisplayMessage(message) {
     alert(message);
 }
 
+//Updates the markers that indicate if an instrument is in a slot
+function UpdateInstrumentMarkers() {
+    var list = slotDropdownContainer.getElementsByTagName("li");
+    var count = 0;
+
+    for (var i = 0; i < list.length; i++) {
+        var id = "#instrument-marker-" + (i + 1);
+
+        $(id).removeAttr("hidden");
+        if (list[i].getElementsByTagName("select")[0].value == "Empty")
+            $(id).css("color", "red");
+        else
+            $(id).css("color", "green");
+    }
+
+    for (var i = 7; i >= list.length; i--) {
+        var id = "#instrument-marker-" + (i + 1);
+        $(id).prop("hidden", "true");
+    }
+}
+
 //Creates a list of slots to put instruments in
 function BuildInstrumentSlots(size) {
     slotDropdownContainer.innerHTML = "";
@@ -103,8 +126,12 @@ function BuildInstrumentSlots(size) {
             optionString += "<option id=\"option" + j + "\" value=\"" + instrumentOptions[j] + "\">" + instrumentOptions[j] + "</option>";
         }
 
-        slotDropdownContainer.innerHTML += "<li>" + "Instrument in slot " + (i + 1) + ":<br>" + "<select>" + optionString + "</select>" + "</li>";
+        slotDropdownContainer.innerHTML += "<li>" + "Instrument in slot " + (i + 1) + ":<br>" + "<select class=\"layout-select\">" + optionString + "</select>" + "</li>";
     }
+
+    $(".layout-select").on("change", function () {
+        UpdateInstrumentMarkers();
+    })
 }
 
 //Builds a list of slots and loads layout data into those slots
@@ -114,8 +141,10 @@ function LoadInstrumentLayout(data) {
     var list = slotDropdownContainer.getElementsByTagName("li");
 
     for (var i = 0; i < layout.length; i++) {
-        var select = list[i].getElementsByTagName("select")[0].value = layout[i];
+        list[i].getElementsByTagName("select")[0].value = layout[i];
     }
+
+    UpdateInstrumentMarkers();
 }
 
 //Fills the max instruments selector with 'size' options
@@ -303,6 +332,8 @@ function NewLayout() {
 
     $("#delete-layout-btn").prop("disabled", true);
     $("#activate-layout-btn").prop("disabled", true);
+
+    UpdateInstrumentMarkers();
 }
 
 //Deletes the currently selected layout from the server after a confirmation dialog
@@ -330,6 +361,7 @@ function DeleteLayout() {
 
             $("#delete-layout-btn").prop("disabled", true);
             $("#activate-layout-btn").prop("disabled", true);
+            UpdateInstrumentMarkers();
         }
 
     },

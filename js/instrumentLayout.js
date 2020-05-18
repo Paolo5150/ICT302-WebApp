@@ -29,7 +29,7 @@ $(document).ready(function () {
 
     DisplayActiveLayout();
 
-    //UpdateInstrumentMarkers();
+    // UpdateInstrumentMarkers();
 
     /* -----Button callbacks----- */
     //Delete the selected layout from the server
@@ -66,20 +66,18 @@ $(document).ready(function () {
         SetActiveLayout(lastLoadedLayout);
     })
 
-    /* -----Dropdown callbacks----- */
-    $("#select-layout-dropdown").on("change", function () {
+    $("#load-layout-btn").click(function (e) {
+        e.preventDefault();
         if (confirm("Are you sure you want to load the layout \"" + layoutDropdown.options[layoutDropdown.selectedIndex].value + "\"? Any unsaved changes will be lost."))
+        {
             LoadServerLayout(layoutDropdown.options[layoutDropdown.selectedIndex].value);
-        else
-            $('#select-layout-dropdown').prop('selectedIndex', 0);
+            $('#modal').modal('toggle');
+        }
     })
 
+    /* -----Dropdown callbacks----- */
     $("#select-size-dropdown").on("change", function () {
         BuildInstrumentSlots(sizeDropdown.options[sizeDropdown.selectedIndex].value);
-        UpdateInstrumentMarkers();
-    })
-
-    $(".layout-select").on("change", function () {
         UpdateInstrumentMarkers();
     })
 

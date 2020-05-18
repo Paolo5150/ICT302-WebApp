@@ -96,6 +96,28 @@
         <section class="inner-section" id="main-form-section">
             <div class="container">
                 <!-- Can be 'container' or 'container-fluid' -->
+                <div class="modal fade" id="loadLayoutModal" tabindex="-1" role="dialog"
+                    aria-labelledby="loadLayoutModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="loadLayoutModalLabel">Load a layout</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <select id="select-layout-dropdown">
+                                    <option value="dummy-layout">--</option>
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button id="load-layout-btn" type="button" class="btn btn-primary">Load layout</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="active-layout">
                     <div style="text-align: center;">
                         <p id="active-layout-label">Current Program Layout:</p>
@@ -108,14 +130,9 @@
                     <div style="text-align: center;">
                         <div id="layout-settings" style="margin: 5px 0px 20px 0px">
                             <!--Dropdown for selecting a saved layout-->
-                            <p>
-                                Select a layout configuration:
-                                <select id="select-layout-dropdown" data-toggle="tooltip"
-                                    title="Select a layout to load from this dropdown">
-                                    <option value="Layout 1">--</option>
-                                </select>
-                            </p>
-
+                            <input type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#loadLayoutModal" data-toggle="tooltip"
+                                title="Select a previously saved layout to load" value="Load a layout">
                             <input type="submit" id="save-layout-btn" class="btn btn-primary" value="Save layout"
                                 data-toggle="tooltip" title="Saves the current layout to the database">
                             <input type="submit" id="activate-layout-btn" class="btn btn-primary"
@@ -140,14 +157,14 @@
                 <!-- <div style="width: 480px; height: 270px; text-align: center; background-image: url('../imgs/TableReference.png'); background-size: ; background-size: 100% 100%;"> -->
                 <div class="image-container">
                     <img id="refimage" src="../imgs/TableReference.png">
-                    <p id="instrument-marker-1" class="instrument-marker" style="left: 28.9%;">*</p>
-                    <p id="instrument-marker-2" class="instrument-marker" style="left: 34.8%;">*</p>
-                    <p id="instrument-marker-3" class="instrument-marker" style="left: 40%;">*</p>
-                    <p id="instrument-marker-4" class="instrument-marker" style="left: 45.9%;">*</p>
-                    <p id="instrument-marker-5" class="instrument-marker" style="left: 51.5%;">*</p>
-                    <p id="instrument-marker-6" class="instrument-marker" style="left: 57.5%;">*</p>
-                    <p id="instrument-marker-7" class="instrument-marker" style="left: 63%;">*</p>
-                    <p id="instrument-marker-8" class="instrument-marker" style="left: 68.5%;">*</p>
+                    <p id="instrument-marker-1" class="instrument-marker" style="left: 28.5%;">1</p>
+                    <p id="instrument-marker-2" class="instrument-marker" style="left: 34%;">2</p>
+                    <p id="instrument-marker-3" class="instrument-marker" style="left: 39.8%;">3</p>
+                    <p id="instrument-marker-4" class="instrument-marker" style="left: 45.5%;">4</p>
+                    <p id="instrument-marker-5" class="instrument-marker" style="left: 51.1%;">5</p>
+                    <p id="instrument-marker-6" class="instrument-marker" style="left: 56.7%;">6</p>
+                    <p id="instrument-marker-7" class="instrument-marker" style="left: 62.5%;">7</p>
+                    <p id="instrument-marker-8" class="instrument-marker" style="left: 68.3%;">8</p>
 
                     </img>
                     <!-- </div> -->

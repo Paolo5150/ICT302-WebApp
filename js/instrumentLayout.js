@@ -26,10 +26,8 @@ $(document).ready(function () {
     FillSizeDropdown(availableSlots);
     BuildInstrumentSlots(sizeDropdown.options[sizeDropdown.selectedIndex].value);
     GetAvailableLayouts();
-
     DisplayActiveLayout();
-
-    // UpdateInstrumentMarkers();
+    UpdateInstrumentMarkers();
 
     /* -----Button callbacks----- */
     //Delete the selected layout from the server
@@ -69,10 +67,7 @@ $(document).ready(function () {
     $("#load-layout-btn").click(function (e) {
         e.preventDefault();
         if (confirm("Are you sure you want to load the layout \"" + layoutDropdown.options[layoutDropdown.selectedIndex].value + "\"? Any unsaved changes will be lost."))
-        {
             LoadServerLayout(layoutDropdown.options[layoutDropdown.selectedIndex].value);
-            $('#modal').modal('toggle');
-        }
     })
 
     /* -----Dropdown callbacks----- */
@@ -95,7 +90,6 @@ function DisplayMessage(message) {
 //Updates the markers that indicate if an instrument is in a slot
 function UpdateInstrumentMarkers() {
     var list = slotDropdownContainer.getElementsByTagName("li");
-    var count = 0;
 
     for (var i = 0; i < list.length; i++) {
         var id = "#instrument-marker-" + (i + 1);

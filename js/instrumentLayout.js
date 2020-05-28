@@ -60,7 +60,6 @@ $(document).ready(function () {
     //Make this layout the active layout
     $("#activate-layout-btn").click(function (e) {
         e.preventDefault();
-        SaveLayout()
         SetActiveLayout(lastLoadedLayout);
     })
 
@@ -278,8 +277,10 @@ function SaveLayout() {
 
             var obj = JSON.parse(response);
 
-            if (obj.Status == "fail")
+            if (obj.Status == "fail") {
                 DisplayMessage(obj.Message);
+                return false;
+            }
             else if (obj.Status == "ok") {
                 DisplayMessage(obj.Message);
                 GetAvailableLayouts();
@@ -311,6 +312,8 @@ function SaveLayout() {
 
         return false;
     }
+
+    return false;
 }
 
 //Creates a new layout after a confirmation dialog
@@ -441,6 +444,58 @@ function DisplayActiveLayout() {
 
 //Makes the currently selected layout as the active one
 function SetActiveLayout(configName) {
+    var configName = "";
+
+    if (lastLoadedLayout != "")
+        configName = prompt("Please enter a new or existing name for the layout: ", lastLoadedLayout);
+    else
+        configName = prompt("Please enter a name for the layout: ", lastLoadedLayout);
+
+    if (configName != null && configName != "") {
+        var myData = {
+            LayoutName: configName,
+            Value: CreateLayoutString(false)
+        }
+
+        //DisplayMessage("Saving layout..."); //Let the user know the server is waiting
+
+        DoPost("server/saveInstrumentLayout.php?", myData, (response) => {
+
+            var obj = JSON.parse(response);
+
+            if (obj.Status == "fail") {
+                DisplayMessage(obj.Message);
+            }
+            else if (obj.Status == "ok") {
+                DisplayMessage(obj.Message);
+                GetAvailableLayouts();
+                loadedLayoutLabel.innerHTML = "Loaded layout: " + configName;
+                //console.log(config);
+                //console.log(layoutDropdown.value);
+                layoutDropdown.value = configName;
+                lastLoadedLayout = configName;
+                //console.log(layoutDropdown.value);
+                $("#delete-layout-btn").prop("disabled", false);
+                $("#activate-layout-btn").prop("disabled", false);
+                SaveActiveLayout(configName);
+            }
+
+        },
+            (data, status, error) => {
+                DisplayMessage(status + ": " + error + ". Please try again or contact support.");
+            }
+        )
+
+    }
+    else {
+        if (lastLoadedLayout == "")
+            $('#select-layout-dropdown').prop('selectedIndex', 0);
+        else
+            layoutDropdown.value = lastLoadedLayout;
+    }
+}
+
+function SaveActiveLayout(configName) {
     if (configName != "") {
         var myData = {
             Value: configName

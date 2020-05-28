@@ -76,9 +76,9 @@
                         data-toggle="tooltip" title="Create a new layout">
                 </li>
                 <li class="nav-item">
-                    <input type="button" id="delete-layout-btn" class="btn btn-primary" value="Delete Layout"
-                        style="background-color: red; border-color: red; margin-bottom: 5px;" data-toggle="tooltip"
-                        title="Delete the currently selected layout from the database"><br>
+                    <input type="button" class="btn btn-primary" data-toggle="modal" data-target="#loadLayoutModal"
+                        data-toggle="tooltip" title="Select a previously saved layout to load" value="Load a layout">
+
                 </li>
                 <li class="nav-item">
                     <p id="loaded-layout-label">No layout loaded</p>
@@ -130,9 +130,10 @@
                     <div style="text-align: center;">
                         <div id="layout-settings" style="margin: 5px 0px 20px 0px">
                             <!--Dropdown for selecting a saved layout-->
-                            <input type="button" class="btn btn-primary" data-toggle="modal"
-                                data-target="#loadLayoutModal" data-toggle="tooltip"
-                                title="Select a previously saved layout to load" value="Load a layout">
+                            <input type="button" id="delete-layout-btn" class="btn btn-primary" value="Delete Layout"
+                                style="background-color: red; border-color: red;"
+                                data-toggle="tooltip"
+                                title="Delete the currently selected layout from the database">
                             <input type="submit" id="save-layout-btn" class="btn btn-primary" value="Save layout"
                                 data-toggle="tooltip" title="Saves the current layout to the database">
                             <input type="submit" id="activate-layout-btn" class="btn btn-primary"

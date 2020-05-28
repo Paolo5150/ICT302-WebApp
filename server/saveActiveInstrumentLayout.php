@@ -19,26 +19,35 @@
 		$reply = new stdClass();
 		$reply->Data = new stdClass();	
 		
-		if($result && $result->num_rows > 0)
+		if($result)
 		{
-			$data = $result->fetch_assoc(); //Get first fow
-			
-			$stmt = $con->prepare("update configuration set Value = ? WHERE ConfigName = 'ActiveLayout'");	
-			$stmt->bind_param("s", $layout);
-			$stmt->execute();
-			
-			$reply->Status = 'ok';
-			$reply->Message = "Layout successfully set to active";
-        }
-        else
-        {
-            $stmt = $con->prepare("insert into configuration (ConfigName,Value) VALUES ('ActiveLayout',?)");
+			if($result->num_rows > 0)
+			{
+				$data = $result->fetch_assoc(); //Get first fow
+				
+				$stmt = $con->prepare("update configuration set Value = ? WHERE ConfigName = 'ActiveLayout'");	
 				$stmt->bind_param("s", $layout);
-				$status = $stmt->execute();
-			
-			$reply->Status = 'ok';
-			$reply->Message = "Layout successfully set to active";
+				$stmt->execute();
+				
+				$reply->Status = 'ok';
+				$reply->Message = "Layout successfully set to active";
+			}
+			else
+			{
+				$stmt = $con->prepare("insert into configuration (ConfigName,Value) VALUES ('ActiveLayout',?)");
+					$stmt->bind_param("s", $layout);
+					$status = $stmt->execute();
+				
+				$reply->Status = 'ok';
+				$reply->Message = "Layout successfully set to active";
+			}
 		}
+		else
+		{
+			$reply->Status = 'fail';
+			$reply->Message = "An error occurred";
+		}
+		
 		
 		// Send reply in JSON format
 		$myJSON = json_encode($reply);			

@@ -69,7 +69,22 @@
             </button>
         </div>
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav mr-auto p-2">
+                <li class="nav-item">
+                    <input type="button" id="new-layout-btn" class="btn btn-primary" value="New Layout"
+                        style="background-color: darkgreen; border-color: darkgreen; margin-bottom: 5px;"
+                        data-toggle="tooltip" title="Create a new layout">
+                </li>
+                <li class="nav-item">
+                    <input type="button" class="btn btn-primary" data-toggle="modal" data-target="#loadLayoutModal"
+                        data-toggle="tooltip" title="Select a previously saved layout to load" value="Load a layout">
+
+                </li>
+                <li class="nav-item">
+                    <p id="loaded-layout-label">No layout loaded</p>
+                </li>
+            </ul>
+            <ul class="navbar-nav p-2">
                 <li class="nav-item">
                     <a class="nav-link" href="admin.php">Return to home</a>
                 </li>
@@ -81,31 +96,80 @@
         <section class="inner-section" id="main-form-section">
             <div class="container">
                 <!-- Can be 'container' or 'container-fluid' -->
-                <form style="text-align: center;">
-                    <div id="layout-settings" style="margin: 5px 0px 20px 0px">
-                        <!--Dropdown for selecting a saved layout-->
-                        Select a layout configuration:
-                        <select id="select-layout-dropdown" style="margin-bottom: 5px;">
-                            <option value="Layout 1">Layout 1</option>
-                            <option value="Layout 2">Layout 2</option>
-                            <option value="Layout 3">Layout 3</option>
-                        </select> <br>
-                        <input type="button" id="delete-layout-btn" class="btn btn-primary" value="Delete Layout" style="background-color: red; border-color: red">
-                        <br>
-                        <!--Dropdown for how many slots to fill-->
-                        Max Instruments:
-                        <select id="select-size-dropdown" style="margin-top: 10px;">
-                            <option value="0">0</option>
-                        </select>
+                <div class="modal fade" id="loadLayoutModal" tabindex="-1" role="dialog"
+                    aria-labelledby="loadLayoutModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="loadLayoutModalLabel">Load a layout</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <select id="select-layout-dropdown">
+                                    <option value="dummy-layout">--</option>
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button id="load-layout-btn" type="button" class="btn btn-primary">Load layout</button>
+                            </div>
+                        </div>
                     </div>
-                    <ul id="slot-dropdown-container">
-                    </ul>
-                    <p id="error-text"></p>
-                    <input type="button" id="load-active-btn" class="btn btn-primary" value="Load active layout">
-                    <input type="submit" id="save-layout-btn" class="btn btn-primary" value="Save layout">
-                    <input type="submit" id="activate-layout-btn" class="btn btn-primary" value="Make this layout active">
-                </form>
-                <img id="refimage" src="../imgs/TableReference.png">
+                </div>
+                <div class="active-layout">
+                    <div style="text-align: center;">
+                        <p id="active-layout-label">Current Program Layout:</p>
+                        <input type="button" id="load-active-btn" class="btn btn-primary btn-active"
+                            value="Load active layout" data-toggle="tooltip"
+                            title="Load the current layout being used in the application">
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div style="text-align: center;">
+                        <div id="layout-settings" style="margin: 5px 0px 20px 0px">
+                            <!--Dropdown for selecting a saved layout-->
+                            <input type="button" id="delete-layout-btn" class="btn btn-primary" value="Delete Layout"
+                                style="background-color: red; border-color: red;"
+                                data-toggle="tooltip"
+                                title="Delete the currently selected layout from the database">
+                            <input type="submit" id="save-layout-btn" class="btn btn-primary" value="Save layout"
+                                data-toggle="tooltip" title="Saves the current layout to the database">
+                            <input type="submit" id="activate-layout-btn" class="btn btn-primary"
+                                value="Make this layout active" data-toggle="tooltip"
+                                title="Saves the current layout and makes it the layout to be used in the application">
+                            <br>
+                            <!--Dropdown for how many slots to fill-->
+                            <p style="margin-top: 10px;">
+                                Max Instruments:
+                                <select id="select-size-dropdown" style="margin-top: 10px;" data-toggle="tooltip"
+                                    title="How many instrument slots to display below">
+                                    <option value="0">0</option>
+                                </select>
+                            <ul id="slot-dropdown-container">
+                            </ul>
+                            </p>
+                        </div>
+                        <p id="error-text"></p>
+                    </div>
+                </div>
+
+                <!-- <div style="width: 480px; height: 270px; text-align: center; background-image: url('../imgs/TableReference.png'); background-size: ; background-size: 100% 100%;"> -->
+                <div class="image-container">
+                    <img id="refimage" src="../imgs/TableReference.png">
+                    <p id="instrument-marker-1" class="instrument-marker" style="left: 28.5%;">1</p>
+                    <p id="instrument-marker-2" class="instrument-marker" style="left: 34%;">2</p>
+                    <p id="instrument-marker-3" class="instrument-marker" style="left: 39.8%;">3</p>
+                    <p id="instrument-marker-4" class="instrument-marker" style="left: 45.5%;">4</p>
+                    <p id="instrument-marker-5" class="instrument-marker" style="left: 51.1%;">5</p>
+                    <p id="instrument-marker-6" class="instrument-marker" style="left: 56.7%;">6</p>
+                    <p id="instrument-marker-7" class="instrument-marker" style="left: 62.5%;">7</p>
+                    <p id="instrument-marker-8" class="instrument-marker" style="left: 68.3%;">8</p>
+
+                    </img>
+                    <!-- </div> -->
+                </div>
             </div>
         </section>
     </div>

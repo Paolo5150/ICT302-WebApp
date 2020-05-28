@@ -123,20 +123,22 @@ function LogOut()
     )
 }
 
+const SESSION_COLUMN = {
+    SessionID: 0,
+    SessionName: 1,
+    UserID: 2,
+    UnityID: 3,
+    Date: 4,
+    StartTime: 5,
+    EndTime: 6,
+    Errors: 7,
+    IsAssessed: 8,
+    Logs: 9
+}
+
 function buildSessionTable(responseData)
 {
-    const SESSION_COLUMN = {
-        SessionID: 0,
-        Date: 3,
-        StartTime: 4,
-        EndTime: 5,
-        Errors: 6,
-        IsAssessed: 7,
-        Logs: 8
 
-
-
-    }
 
     var arr = responseData
     
@@ -144,7 +146,7 @@ function buildSessionTable(responseData)
     <table class='table table-striped'>
     <thead>
     <tr>
-        <th>Session ID</th>
+        <th>Session Name</th>
         <th>Date</th>
         <th>Start Time</th>
         <th>End Time</th>
@@ -161,24 +163,24 @@ function buildSessionTable(responseData)
         var errorsButton = ""
 
         if(arr[i][SESSION_COLUMN.Errors] > 0)
-            errorsButton = `<button type='button' class='btn btn-danger' onClick="Details('#details-${i}', responseData[${i}], true)">${arr[i][6]}</button>`
+            errorsButton = `<button type='button' class='btn btn-danger' onClick="Details('#details-${i}', responseData[${i}], true)">${arr[i][SESSION_COLUMN.Errors]}</button>`
         else
             errorsButton = `${arr[i][SESSION_COLUMN.Errors]}`
 
         table += `
         <tr>
             `
-            if(arr[i][7] != 0)
+            if(arr[i][SESSION_COLUMN.IsAssessed] != 0)
             {
                 table += `<td style="text-align:center; position: relative" ><svg style="position: absolute; left: 10" class="bi bi-award-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path d="M8 0l1.669.864 1.858.282.842 1.68 1.337 1.32L13.4 6l.306 1.854-1.337 1.32-.842 1.68-1.858.282L8 12l-1.669-.864-1.858-.282-.842-1.68-1.337-1.32L2.6 6l-.306-1.854 1.337-1.32.842-1.68L6.331.864 8 0z"/>
                 <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1 4 11.794z"/>
-                </svg>${arr[i][SESSION_COLUMN.SessionID]}</td>`
+                </svg>${arr[i][SESSION_COLUMN.SessionName]}</td>`
 
             }
             else
             {
-                table += `<td style="text-align:center">${arr[i][SESSION_COLUMN.SessionID]}</td>`
+                table += `<td style="text-align:center">${arr[i][SESSION_COLUMN.SessionName]}</td>`
             }
             
         table +=`
@@ -188,7 +190,7 @@ function buildSessionTable(responseData)
             <td>${arr[i][SESSION_COLUMN.EndTime]}</td>
             <td>${errorsButton}</td>
             <td><button type='button' class='btn btn-primary' onClick="Details('#details-${i}', responseData[${i}])">Details</button></td>
-            <td><button type='button' class='btn btn-primary' onClick="GeneratePDF(${arr[i][0]})">PDF</button></td> 
+            <td><button type='button' class='btn btn-primary' onClick="GeneratePDF(${arr[i][SESSION_COLUMN.SessionID]})">PDF</button></td> 
         </tr>
         <tr >
         <td colspan="7" id="details-${i}" style="display: none; background-color: #88888822"></td>
@@ -203,10 +205,10 @@ function buildSessionTable(responseData)
 
 function Details(divId, dataContent, errorsOnly = false)
 {
-    var logsObj = JSON.parse(dataContent[8])
+    var logsObj = JSON.parse(dataContent[SESSION_COLUMN.Logs])
 
     var logsStrings = "";
-    for(var i=0; i < dataContent[8].length; i++)
+    for(var i=0; i < dataContent[SESSION_COLUMN.Logs].length; i++)
     {
         var logInd = "Log_" + i
         if(logsObj[logInd] != undefined)    

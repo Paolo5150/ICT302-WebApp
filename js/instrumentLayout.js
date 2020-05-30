@@ -284,7 +284,7 @@ function SaveLayout() {
             else if (obj.Status == "ok") {
                 DisplayMessage(obj.Message);
                 GetAvailableLayouts();
-                loadedLayoutLabel.innerHTML = "Loaded layout: " + configName;
+                loadedLayoutLabel.innerHTML = "Loaded layout: <b>" + configName + "</b>";
                 //console.log(config);
                 //console.log(layoutDropdown.value);
                 layoutDropdown.value = configName;
@@ -383,7 +383,7 @@ function LoadServerLayout(configName) {
         else {
             layoutDropdown.value = configName;
             lastLoadedLayout = configName;
-            loadedLayoutLabel.innerHTML = "Loaded layout: " + configName;
+            loadedLayoutLabel.innerHTML = "Loaded layout: <b>" + configName + "</b>";
             sizeDropdown.value = obj.Data.Value.split(",").length;
 
             LoadInstrumentLayout(obj.Data.Value);
@@ -469,7 +469,7 @@ function SetActiveLayout(configName) {
             else if (obj.Status == "ok") {
                 DisplayMessage(obj.Message);
                 GetAvailableLayouts();
-                loadedLayoutLabel.innerHTML = "Loaded layout: " + configName;
+                loadedLayoutLabel.innerHTML = "Loaded layout: <b>" + configName + "</b>";
                 //console.log(config);
                 //console.log(layoutDropdown.value);
                 layoutDropdown.value = configName;

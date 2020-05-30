@@ -69,26 +69,26 @@
             </button>
         </div>
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-            <ul class="navbar-nav mr-auto p-2">
-                <li class="nav-item">
-                    <input type="button" id="new-layout-btn" class="btn btn-primary" value="New Layout"
-                        style="background-color: darkgreen; border-color: darkgreen; margin-bottom: 5px;"
-                        data-toggle="tooltip" title="Create a new layout">
-                </li>
-                <li class="nav-item">
-                    <input type="button" class="btn btn-primary" data-toggle="modal" data-target="#loadLayoutModal"
-                        data-toggle="tooltip" title="Select a previously saved layout to load" value="Load a layout">
+            <div class="container-fluid">
+                <ul class="navbar-nav mr-auto p-2">
+                    <li class="nav-item">
+                        <input type="button" id="new-layout-btn" class="btn btn-primary" value="New Layout"
+                            style="background-color: darkgreen; border-color: darkgreen; margin-bottom: 5px;"
+                            data-toggle="tooltip" title="Create a new layout">
+                    </li>
+                    <li class="nav-item">
+                        <input type="button" class="btn btn-primary" data-toggle="modal" data-target="#loadLayoutModal"
+                            data-toggle="tooltip" title="Select a previously saved layout to load" value="Load a layout">
 
-                </li>
-                <li class="nav-item">
-                    <p id="loaded-layout-label">No layout loaded</p>
-                </li>
-            </ul>
-            <ul class="navbar-nav p-2">
-                <li class="nav-item">
-                    <a class="nav-link" href="admin.php">Return to home</a>
-                </li>
-            </ul>
+                    </li>
+                    <li class="nav-item mr-auto " style="margin-left: 25%">
+                        <p id="loaded-layout-label" style="font-size: 1.2em">No layout loaded</p>
+                    </li>
+                    <li class="nav-item" >
+                        <a class="nav-link" href="admin.php">Return to home</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
     <div id="main-container">

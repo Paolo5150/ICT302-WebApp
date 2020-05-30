@@ -225,7 +225,7 @@ function GetAvailableLayouts() {
         try {
             data = JSON.parse(obj.Data); //If the json parse fails because there is no data we can ignore it
         } catch (error) {
-            console.log(error);
+            //console.log(error);
         }
 
         LoadAvailableLayouts(data);
@@ -338,7 +338,7 @@ function DeleteLayout() {
     }
 
     DoPost("server/deleteInstrumentLayout.php", myData, (response) => {
-        console.log(response)
+        //console.log(response)
         var obj = JSON.parse(response)
 
         if (obj.Status == "fail")
@@ -346,6 +346,11 @@ function DeleteLayout() {
         else {
             DisplayMessage(obj.Message);
 
+            if(obj.Data.IsActive == 'true')
+            {
+                
+                $("#active-layout-label").html("Current Program Layout:")
+            }
             GetAvailableLayouts();
             sizeDropdown.value = 1;
             lastLoadedLayout = "";

@@ -37,8 +37,10 @@
 				if($data['Value'] == $id)
 				{
 					$stmt = $con->prepare("update configuration SET Value = '' WHERE ConfigName = 'ActiveLayout'");
-        			$stmt->execute();
+					$stmt->execute();					
 				}
+			$reply->Data->IsActive = 'true';    
+
 			}
 
 

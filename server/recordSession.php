@@ -37,21 +37,26 @@
 
             $logsDecoded = json_encode($sessionResults->Logs);
             $logs = $logsDecoded;
-            echo $logs;
+
             //Check that the session wasn't saved
             $stmt = $con->prepare("select * from session where UnityID = ?");
             $stmt->bind_param("i", $unityID);
             $stmt->execute();
-
+            $reply->Status = 'ok';
+            
             $result = $stmt->get_result();
             if($result && $result->num_rows == 0)
             {
                 $stmt = $con->prepare("INSERT INTO session (UserID, SessionName, UnityID, Date, StartTime, EndTime, Retries, IsAssessed,Logs) VALUES (?,?,?,?,?,?,?,?,?)");
                 $stmt->bind_param("isisssiis", $userID, $sessionName, $unityID, $date, $startTime, $endTime, $retries, $isAssessed, $logs);
                 $stmt->execute();
+                $reply->Message = 'New session recorded ' . $unityID ;
             }  
+            else
+            {
+                $reply->Message = 'Session ' . $unityID . ' already in database.'; 
+            }
             
-            $reply->Status = 'ok';
         }
         else
         {

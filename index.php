@@ -89,11 +89,8 @@ include("server/functions.php");
                   
                   ?>
                   <p id="errortext"></p>
-                  <input type="button" class="btn btn-primary" value="Back">
-                  <input type="submit" id="submit-btn" class="btn btn-primary" value="Submit">
                   <div id="captcha" class="g-recaptcha col-lg-12 col-md-12 col-sm-12 col-12 m-4" data-sitekey="6Lek8e0UAAAAAOHpTcQl390lyNlMjNGc7g_E96or"></div>
-                  
-
+                  <input type="submit" id="submit-btn" class="btn btn-primary" value="Submit">
                 </form>
               </div>
             </div>

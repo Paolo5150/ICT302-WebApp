@@ -97,12 +97,17 @@ function ForgotPassword()
 
 function PostSuccess(reply)
 {
+    console.log(reply)
     var obj = JSON.parse(reply);
 
     if(obj.Status == "fail")
         errortext.innerHTML = obj.Message;
     else if(obj.Status == "ok")
+    {
         errortext.innerHTML = obj.Message;
+        $("#submit-btn").hide();
+    }
+
 }
 
 function PostFail(data, textStatus, errorMessage)

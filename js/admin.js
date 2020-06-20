@@ -44,7 +44,7 @@ $(document).ready(function () {
 
     //Update assessment mode button
     DoPost("server/getConfiguration.php",{},(response)=>{
-        console.log(response)
+        //console.log(response)
         var obj = JSON.parse(response);
         var checked = obj.Data.AssessmentMode === 'true';
         $("#assessment-mode-btn").prop("checked",checked)
@@ -197,7 +197,7 @@ function searchStudent()
     var list = []
     for(var i=0; i< cachedStudentList.length; i++)
     {
-        console.log(cachedStudentList[i][1])
+        //console.log(cachedStudentList[i][1])
         // If student no, name or email mcontain the search bar value
         if(String(cachedStudentList[i][1]).indexOf(search) != -1 || String(cachedStudentList[i][2]).toLowerCase().indexOf(search.toLowerCase()) != -1 
             || String(cachedStudentList[i][3]).toLowerCase().indexOf(search.toLowerCase()) != -1 || String(cachedStudentList[i][4]).toLowerCase().indexOf(search.toLowerCase()) != -1)
@@ -230,7 +230,6 @@ function onSessionButtonClicked(id,firstname,lastname)
 
         var table = buildSessionTable(responseData)
 
-        var html = `<button type='button' class='btn btn-primary' onClick='backToStudentTable()'>Back</button>`
         html += '<h3 style="margin: auto">' + firstname + ' ' +  lastname + '</h3>'
         html += table;
         $("#main-content").html(html);   
@@ -247,8 +246,6 @@ function GenerateAccountTable(data)
 {
 
     var table = `
-    <button type='button' class='btn btn-primary col-lg-1 col-md-1 col-sm-1' onClick='backToStudentTable()'>Back</button>
-                                <p class='col-lg-11 col-md-11 col-sm-11 m-3 '></p>
     <div class="col-lg-12 row m-2">
         <label class="col-lg-2">Murdoch ID</label>
         <input id="mus-field" type="text" class="form-control col-lg-10" readonly/>
@@ -336,8 +333,6 @@ function GetStudentAccount(id,firstname,lastname, email)
     $("#search-field").hide();
 
     var table = `
-    <button type='button' class='btn btn-primary col-lg-1 col-md-1 col-sm-1' onClick='backToStudentTable()'>Back</button>
-                                <p class='col-lg-11 col-md-11 col-sm-11 m-3 '></p>
     <div class="col-lg-12 row m-2">
         <label class="col-lg-2">Murdoch ID</label>
         <input id="mus-field" type="text" class="form-control col-lg-10" readonly/>
@@ -452,9 +447,7 @@ function GetOwnSession()
         responseData = JSON.parse(sessionObj.Data)
 
         var table = buildSessionTable(responseData)
-        var html = `<button type='button' class='btn btn-primary' onClick='backToStudentTable()'>Back</button>`
-        html += table;
-        $("#main-content").html(html);   
+        $("#main-content").html(table);   
    
 
         },
@@ -469,8 +462,6 @@ function GetOwnSession()
 function CreateUserTable()
 {
     var table = `
-    <button type='button' class='btn btn-primary col-lg-1 col-md-1 col-sm-1' onClick='backToStudentTable()'>Back</button>
-                                <p class='col-lg-11 col-md-11 col-sm-11 m-3 '></p>
     <div class="col-lg-12 row m-2">
         <label class="col-lg-2">Murdoch ID</label>
         <input id="mus-field" type="text" class="form-control col-lg-10" />
@@ -558,7 +549,7 @@ function CreateAccount()
     var email = $("#email-field").val()
     var isAdmin = $("#admin-switch").prop("checked")? 1 : 0;
 
-    console.log("Is admin " + isAdmin)
+    //console.log("Is admin " + isAdmin)
 
     if(murdochID == '' || fName == '' || lName == '' || email == '')
     {

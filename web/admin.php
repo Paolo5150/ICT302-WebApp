@@ -94,6 +94,9 @@
                     <a class="nav-link" href="#" onClick="GetOwnSession()">Your sessions</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="#" onClick="backToStudentTable()">Student sessions</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="#" id="account-btn">Account</a>
                 </li>
                 <li class="nav-item">

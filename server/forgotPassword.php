@@ -27,42 +27,15 @@
 		if($result && $result->num_rows > 0)
 		{
             $data = $result->fetch_assoc(); //Get first fow
-			$now = date("Y-m-d H:i:s");
-            
-            $tokenExpiration = $data['TokenExpireTime'];
-            $tokenSaved = $data['Token'];
-            
-            if($tokenSaved != "" && $now < $tokenExpiration)
-			{
-					$reply->Status = 'fail';
-					$reply->Message = "An email was sent to you. Please follow the link to reset your password.";
-					
-            }	
-            else
-            {
-               //Generate a random string.
-                $token = bin2hex(openssl_random_pseudo_bytes(16));
 
-                $now = date("Y-m-d H:i:s");		 
-                //strtotime will convert time into an integer, so we can easily add seconds to it (expirationSeconds is defined in dbConnection, where other globals are)
-                $TokenExpireTime = strtotime('+0 days', strtotime($now)) + $expirationSeconds; 
-                // However, in the database we save time im format hh:mm:ss, so this convert the time back to that format
-                $TokenExpireTimeFormat = date('Y-m-d H:i:s', $TokenExpireTime);
+            $default = "admin";
+            //Save to db
+            $stmt = $con->prepare("update user set Password = ?, PasswordResetRequired = 1 WHERE  MurdochUserNumber = ?");	
+            $stmt->bind_param("ss", $default,$data['MurdochUserNumber']);
+            $stmt->execute();
 
-                $tempPsw = bin2hex(openssl_random_pseudo_bytes(6));
-                //Save to db
-                $stmt = $con->prepare("update user set Password = ?, PasswordResetRequired = 1, Token = ?, TokenExpireTime = ? WHERE  MurdochUserNumber = ?");	
-                $stmt->bind_param("ssss", $tempPsw,$token, $TokenExpireTimeFormat, $data['MurdochUserNumber']);
-                $stmt->execute();
-
-                $link =  $serverAddress . 'web/resetPassword.html?' . $data['MurdochUserNumber'] . '&' . $token;
-                $emailBody = "<p>Reset your password link: " . $link . "</p><h1>Use <b>" . $tempPsw . "</b> as your old password</h1>";
-                sendEmail($data['Email'], "Password reset requested", $emailBody );
-
-                $reply->Status = 'ok';
-                $reply->Message = "An email was sent to your nominated address.";
-                $reply->Data = $emailBody;
-            }
+            $reply->Status = 'ok';
+            $reply->Message = "Your password has been reset. Your new password is <b>". $default."</b>. You will be required to change your password at your next login. Please, use <b>".$default."</b> as your 'Old Password' in the form.";
         }
         else
         {
@@ -76,7 +49,7 @@
     }
     else
     {
-        echo 'wtf';
+
     }
 
 ?>

@@ -100,6 +100,42 @@ function GeneratePDF(sessionID)
   
 }
 
+function RequestBuild(platform)
+{
+    var token = getToken()
+    var mus = getMUS()
+
+    var data = {
+        Token: token,
+        MurdochUserNumber: mus,
+        Platform: platform
+    }
+
+    
+
+    DoPost("server/getBuild.php",data,(response)=>{
+        //console.log(response)
+        var obj = JSON.parse(response)
+        window.location = obj.Data;
+        })    
+}
+
+function GetBuild()
+{
+    $('#platform-modal').modal('toggle')
+
+
+    $("#modal-win-btn").click(function(){
+
+        RequestBuild("Win")
+    })
+
+    $("#modal-mac-btn").click(function(){
+
+        RequestBuild("Mac")
+    })
+    
+}
 
 
 function LogOut()
@@ -113,7 +149,7 @@ function LogOut()
       
 
     DoPost("server/logout.php",data,(response)=>{
-        console.log(response)
+       // console.log(response)
         window.location = "../index.php"   
         },
         (data, status, error)=>

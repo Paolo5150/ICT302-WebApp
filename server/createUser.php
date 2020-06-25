@@ -23,25 +23,15 @@
 		{
             $stmt = $con->prepare("INSERT INTO user (MurdochUserNumber, FirstName, LastName, Email, Password, IsAdmin, PasswordResetRequired, AccountActive) VALUES (?, ?, ?, ?, 'admin', ?, 1, 0)");
             $stmt->bind_param("ssssi", $_POST["AdminMUS"], $_POST["AdminFName"], $_POST["AdminLName"], $_POST["AdminEmail"], $_POST["AdminPriv"]);
-            $stmt->execute();
-            
-            //Generate a random string.
-            $token = bin2hex(openssl_random_pseudo_bytes(16));
+            $stmt->execute();            
 
-            $now = date("Y-m-d H:i:s");		 
-            //strtotime will convert time into an integer, so we can easily add seconds to it (expirationSeconds is defined in dbConnection, where other globals are)
-            $TokenExpireTime = strtotime('+0 days', strtotime($now)) + $expirationSeconds; 
-            // However, in the database we save time im format hh:mm:ss, so this convert the time back to that format
-            $TokenExpireTimeFormat = date('Y-m-d H:i:s', $TokenExpireTime);
-            //Save to db
-            $stmt = $con->prepare("update user set Token = ?, TokenExpireTime = ? WHERE  MurdochUserNumber = ?");	
-            $stmt->bind_param("sss", $token, $TokenExpireTimeFormat, $_POST["AdminMUS"]);
-            $stmt->execute();
 
-            $link =  $serverAddress . 'web/resetPassword.html?' . $_POST["AdminMUS"] . '&' . $token;
-            sendEmail($_POST["AdminEmail"], "Password reset required", "Reset your password link: " . $link);
             $reply->Status = 'ok';
-            $reply->Message = 'Amind user created. Default password "admin", a password reset will be required.';
+            if($_POST["AdminPriv"] == 1)
+                $reply->Message = 'Admin user created. Default password "admin", a password reset will be required.';
+            else
+                $reply->Message = 'User created. Default password "admin", a password reset will be required.';
+
         }
         else
         {

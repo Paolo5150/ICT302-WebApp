@@ -580,6 +580,8 @@ function CreateAccount()
             if(obj.Status == 'ok')
             {
                 alert(obj.Message)
+                window.location = "admin.php" //Refresh
+                
             }
     
             },
@@ -620,6 +622,8 @@ function DeleteStudent(userID)
         )
       }    
 }
+
+
 
 
 function GetCSV()

@@ -48,7 +48,27 @@
         <script src="../js/admin.js"></script>
 
     </head>
-    <body>    
+    <body> 
+    <!-- Modal used to select platform when downloading app -->   
+    <div class="modal" tabindex="-1" role="dialog" id="platform-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Platform</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Choose your operating system</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="modal-win-btn">Windows</button>
+                <button type="button" class="btn btn-primary" id="modal-mac-btn">Mac</button>
+            </div>
+            </div>
+        </div>
+    </div>
 
     <nav class="navbar navbar-expand-md navbar-light bg-light">
         <div class="mx-auto order-0">
@@ -80,7 +100,10 @@
                     <input type="file" class="custom-file-input" id="customFile">
                     <label class="custom-file-label" for="customFile">Upload student list</label>
                 </div>
-                </li>       
+                </li>   
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onClick="GetBuild()">Get app</a>
+                </li>    
                 <li class="nav-item">
                     <a class="nav-link" href="instrumentLayoutClient.php">Instrument Layout</a>
                 </li>         

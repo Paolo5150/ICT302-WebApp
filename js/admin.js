@@ -230,7 +230,7 @@ function onSessionButtonClicked(id,firstname,lastname)
 
         var table = buildSessionTable(responseData)
 
-        html += '<h3 style="margin: auto">' + firstname + ' ' +  lastname + '</h3>'
+        var html = '<h3 style="margin: auto">' + firstname + ' ' +  lastname + '</h3>'
         html += table;
         $("#main-content").html(html);   
 

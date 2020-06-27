@@ -213,6 +213,21 @@ function CreateLayoutString(ignoreEmpty = true) {
     return layoutString;
 }
 
+function CheckAtLeastOneInstrument() {
+    var list = slotDropdownContainer.getElementsByTagName("li");
+
+    for (var i = 0; i < list.length; i++) {
+        var select = list[i].getElementsByTagName("select")[0];
+        var value = select.options[select.selectedIndex].value;
+
+        //Return true if we find an instrument, otherwise keep looking
+        if (value != "Empty")
+            return true;
+    }
+
+    return false;
+}
+
 //Loads the list of all available layouts from the server
 function GetAvailableLayouts() {
     var myData = {}
@@ -271,38 +286,43 @@ function SaveLayout() {
             Value: CreateLayoutString(false)
         }
 
-        //DisplayMessage("Saving layout..."); //Let the user know the server is waiting
+        if (CheckAtLeastOneInstrument()) {
+            //DisplayMessage("Saving layout..."); //Let the user know the server is waiting
 
-        DoPost("server/saveInstrumentLayout.php?", myData, (response) => {
+            DoPost("server/saveInstrumentLayout.php?", myData, (response) => {
 
-            var obj = JSON.parse(response);
+                var obj = JSON.parse(response);
 
-            if (obj.Status == "fail") {
-                DisplayMessage(obj.Message);
+                if (obj.Status == "fail") {
+                    DisplayMessage(obj.Message);
+                    return false;
+                }
+                else if (obj.Status == "ok") {
+                    DisplayMessage(obj.Message);
+                    GetAvailableLayouts();
+                    loadedLayoutLabel.innerHTML = "Loaded layout: <b>" + configName + "</b>";
+                    //console.log(config);
+                    //console.log(layoutDropdown.value);
+                    layoutDropdown.value = configName;
+                    lastLoadedLayout = configName;
+                    //console.log(layoutDropdown.value);
+                    $("#delete-layout-btn").prop("disabled", false);
+                    $("#activate-layout-btn").prop("disabled", false);
+                    return true;
+                }
+
                 return false;
-            }
-            else if (obj.Status == "ok") {
-                DisplayMessage(obj.Message);
-                GetAvailableLayouts();
-                loadedLayoutLabel.innerHTML = "Loaded layout: <b>" + configName + "</b>";
-                //console.log(config);
-                //console.log(layoutDropdown.value);
-                layoutDropdown.value = configName;
-                lastLoadedLayout = configName;
-                //console.log(layoutDropdown.value);
-                $("#delete-layout-btn").prop("disabled", false);
-                $("#activate-layout-btn").prop("disabled", false);
-                return true;
-            }
 
-            return false;
-
-        },
-            (data, status, error) => {
-                DisplayMessage(status + ": " + error + ". Please try again or contact support.");
-                return false;
-            }
-        )
+            },
+                (data, status, error) => {
+                    DisplayMessage(status + ": " + error + ". Please try again or contact support.");
+                    return false;
+                }
+            )
+        }
+        else {
+            DisplayMessage("There must be at least one instrument in the layout before saving.");
+        }
     }
     else {
         if (lastLoadedLayout == "")
@@ -346,9 +366,8 @@ function DeleteLayout() {
         else {
             DisplayMessage(obj.Message);
 
-            if(obj.Data.IsActive == 'true')
-            {
-                
+            if (obj.Data.IsActive == 'true') {
+
                 $("#active-layout-label").html("Current Program Layout:")
             }
             GetAvailableLayouts();
@@ -463,34 +482,37 @@ function SetActiveLayout(configName) {
         }
 
         //DisplayMessage("Saving layout..."); //Let the user know the server is waiting
+        if (CheckAtLeastOneInstrument()) {
+            DoPost("server/saveInstrumentLayout.php?", myData, (response) => {
 
-        DoPost("server/saveInstrumentLayout.php?", myData, (response) => {
+                var obj = JSON.parse(response);
 
-            var obj = JSON.parse(response);
+                if (obj.Status == "fail") {
+                    DisplayMessage(obj.Message);
+                }
+                else if (obj.Status == "ok") {
+                    DisplayMessage(obj.Message);
+                    GetAvailableLayouts();
+                    loadedLayoutLabel.innerHTML = "Loaded layout: <b>" + configName + "</b>";
+                    //console.log(config);
+                    //console.log(layoutDropdown.value);
+                    layoutDropdown.value = configName;
+                    lastLoadedLayout = configName;
+                    //console.log(layoutDropdown.value);
+                    $("#delete-layout-btn").prop("disabled", false);
+                    $("#activate-layout-btn").prop("disabled", false);
+                    SaveActiveLayout(configName);
+                }
 
-            if (obj.Status == "fail") {
-                DisplayMessage(obj.Message);
-            }
-            else if (obj.Status == "ok") {
-                DisplayMessage(obj.Message);
-                GetAvailableLayouts();
-                loadedLayoutLabel.innerHTML = "Loaded layout: <b>" + configName + "</b>";
-                //console.log(config);
-                //console.log(layoutDropdown.value);
-                layoutDropdown.value = configName;
-                lastLoadedLayout = configName;
-                //console.log(layoutDropdown.value);
-                $("#delete-layout-btn").prop("disabled", false);
-                $("#activate-layout-btn").prop("disabled", false);
-                SaveActiveLayout(configName);
-            }
-
-        },
-            (data, status, error) => {
-                DisplayMessage(status + ": " + error + ". Please try again or contact support.");
-            }
-        )
-
+            },
+                (data, status, error) => {
+                    DisplayMessage(status + ": " + error + ". Please try again or contact support.");
+                }
+            )
+        }
+        else {
+            DisplayMessage("There must be at least one instrument in the layout before making it active");
+        }
     }
     else {
         if (lastLoadedLayout == "")

@@ -285,6 +285,6 @@ function Details(divId, dataContent, errorsOnly = false)
 
 function RefreshPage()
 {
-    window.location = window.location;
+    window.location.reload();
 }
 

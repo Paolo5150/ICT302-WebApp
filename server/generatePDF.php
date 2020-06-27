@@ -58,6 +58,8 @@
         $stmt->execute();
         $result = $stmt->get_result();		
 
+        $xCoord = 50;
+
         if($result && $result->num_rows > 0)
 		{
             $sessionData = $result->fetch_assoc();
@@ -76,21 +78,42 @@
             $pdf->SetY(60);
             $pdf->Cell(0,0,"Session Report (" . $sessionData['SessionID'] . ")");
             $pdf->SetY(80);
-            $pdf->SetFont('Arial','B',12);
-            $pdf->Write(0, "User:    " . $userData['FirstName'] . " " . $userData['LastName']);
+            $pdf->SetFont('Arial','',12);
+
+            $pdf->WriteHTML("<b>User:</b>" );
+            $pdf->SetX($xCoord);
+            $pdf->WriteHTML($userData['FirstName'] . " " . $userData['LastName']);
+
+
             $pdf->SetY(90);
-            $pdf->Write(0, "Murdoch ID:    " . $userData['MurdochUserNumber']);
+            $pdf->WriteHTML("<b>Murdoch ID:</b>");
+            $pdf->SetX($xCoord);
+            $pdf->WriteHTML($userData['MurdochUserNumber']);
+
             $pdf->SetY(110);
-            $pdf->Write(0, "Date:    " . $sessionData['Date']);
+            $pdf->WriteHTML("<b>Session type:</b>");
+            $pdf->SetX($xCoord);
+            $pdf->WriteHTML($sessionData['SessionName']);
+
             $pdf->SetY(120);
-            $pdf->Write(0, "Start Time:    " . $sessionData['StartTime']);
+            $pdf->WriteHTML("<b>Date:</b>" );
+            $pdf->SetX($xCoord);
+            $pdf->WriteHTML($sessionData['Date']);
+
             $pdf->SetY(130);
-            $pdf->Write(0, "End Time:    " . $sessionData['EndTime']);
+            $pdf->WriteHTML("<b>Start Time:</b>");
+            $pdf->SetX($xCoord);
+            $pdf->WriteHTML($sessionData['StartTime']);
 
             $pdf->SetY(140);
+            $pdf->WriteHTML("<b>End Time:</b>");
+            $pdf->SetX($xCoord);
+            $pdf->WriteHTML($sessionData['EndTime']);            
+
+            $pdf->SetY(150);
             $logsObj = json_decode($sessionData['Logs']);
             $pdf->SetFont('Arial','',7);
-            $line = 150;
+            $line = 160;
             $currentPage = $pdf->PageNo();
             foreach ($logsObj as $key => $value) {
                 if($pdf->PageNo() > $currentPage)
